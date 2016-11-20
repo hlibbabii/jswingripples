@@ -53,7 +53,7 @@ public class JSwingRipplesIMemberServices {
 	}
 
 	/**
-	 * Returns top declaring type of the IMember object by recursivly walking through the types that declare the object.
+	 * Returns top declaring type of the IMember object by recursively walking through the types that declare the object.
 	 * @param member
 	 * 	IMember object to evaluate
 	 * @return
@@ -75,7 +75,7 @@ public class JSwingRipplesIMemberServices {
 
 
 	/**
-	 * Evaluates degree of nesting of a given IMember object. Done thorugh recursive calls of getParent() function of IJavaElement that this object represents.
+	 * Evaluates degree of nesting of a given IMember object. Done through recursive calls of getParent() function of IJavaElement that this object represents.
 	 * @param member
 	 * 	IMember object to evaluate
 	 * @return
