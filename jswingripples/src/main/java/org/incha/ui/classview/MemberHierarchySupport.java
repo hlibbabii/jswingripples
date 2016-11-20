@@ -14,7 +14,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 
 public class MemberHierarchySupport {
-    private List<JSwingRipplesEIGNode> members = new LinkedList<JSwingRipplesEIGNode>();
+    private List<JSwingRipplesEIGNode> nodes = new LinkedList<JSwingRipplesEIGNode>();
     private Map<IMember, JSwingRipplesEIGNode> membersToNodes = new HashMap<IMember, JSwingRipplesEIGNode>();
 
     /**
@@ -25,7 +25,7 @@ public class MemberHierarchySupport {
 
         //create maps.
         for (final JSwingRipplesEIGNode node : listOfMembers) {
-            members.add(node);
+            nodes.add(node);
             membersToNodes.put(node.getNodeIMember(), node);
         }
     }
@@ -76,7 +76,7 @@ public class MemberHierarchySupport {
      * @return list of members.
      */
     public List<JSwingRipplesEIGNode> getMembers() {
-        return members;
+        return new LinkedList<JSwingRipplesEIGNode>(nodes);
     }
     /**
      * @param parent parent.
@@ -110,7 +110,7 @@ public class MemberHierarchySupport {
      * Clears data.
      */
     public void clear() {
-        this.members.clear();
+        this.nodes.clear();
         this.membersToNodes.clear();
     }
 }

@@ -65,7 +65,7 @@ public class ClassTreeRenderer extends AbstractMemberRenderer {
      * @return string containing the total search hits. If there are no search hits, the empty
      * string is returned.
      */
-    private String searchResults(JSwingRipplesEIGNode node) {
+    protected String searchResults(JSwingRipplesEIGNode node) {
         int hits = Searcher.getInstance().totalHits(node.getShortName());
         return (hits == 0 ? "" : (" (" + hits + ")"));
     }

@@ -14,6 +14,8 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.incha.core.JavaProject;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
@@ -40,7 +42,7 @@ public abstract class AbstractHierarchicalView extends JTable {
         setColumnSelectionAllowed(false);
         setShowHorizontalLines(false);
         setDragEnabled(false);
-        setRowHeight(20);
+        setRowHeight(20);        
 
         final TableCellRenderer cellRenderer = createCellRenderer();
         final TableCellRenderer headerRenderer = createHeaderRenderer();
@@ -53,7 +55,16 @@ public abstract class AbstractHierarchicalView extends JTable {
             if (headerRenderer != null) {
                 column.setHeaderRenderer(headerRenderer);
             }
-        }
+        }        
+        
+        TableRowSorter<ClassTreeDataModel> sorter = 
+        		new TableRowSorter<ClassTreeDataModel>((ClassTreeDataModel)getModel());
+        sorter.setComparator(0, new MemberComparator());
+        sorter.setComparator(1, new MarkComparator());
+        sorter.setComparator(2, new ProbabilityComparator());
+//        sorter.setComparator(4, new HitsComparator((ClassTreeRenderer)cellRenderer));
+        
+        this.setRowSorter(sorter);
 
         addMouseListener(new MouseAdapter() {
             /* (non-Javadoc)
@@ -151,6 +162,7 @@ public abstract class AbstractHierarchicalView extends JTable {
         final ClassTreeDataModel model = getClassHierarchyModel();
         return model.getValueAt(row, 0);
     }
+    
     /**
      * @param member
      * @return

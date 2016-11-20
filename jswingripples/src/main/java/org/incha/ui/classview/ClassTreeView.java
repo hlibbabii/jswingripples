@@ -3,6 +3,7 @@ package org.incha.ui.classview;
 import javax.swing.table.TableCellRenderer;
 
 import org.incha.core.JavaProject;
+import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.core.search.Searcher;
 import org.incha.ui.jripples.JRipplesViewsConstants;
 
