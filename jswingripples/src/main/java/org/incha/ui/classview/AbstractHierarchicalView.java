@@ -29,6 +29,7 @@ public abstract class AbstractHierarchicalView extends JTable {
             new LinkedList<JSwingRipplesEIGNode>());
     private Map<JSwingRipplesEIGNode, Boolean> expandedStates = new HashMap<JSwingRipplesEIGNode, Boolean>();
     private final JavaProject project;
+    public AbstractHierarchicalView instance = this;
 
     /**
      * Default constructor.
@@ -72,7 +73,7 @@ public abstract class AbstractHierarchicalView extends JTable {
              */
             @Override
             public void mouseClicked(final MouseEvent e) {
-                if (!SwingUtilities.isRightMouseButton(e)) {
+                if (!SwingUtilities.isRightMouseButton(e)) {                
                     expandOrCollapse(e.getX(), e.getY());
                 }
             }
@@ -135,8 +136,11 @@ public abstract class AbstractHierarchicalView extends JTable {
                 final int depth = getHierarchyDepth(m);
                 //collapse node
                 row++;
-                while (row < getRowCount() && depth < getHierarchyDepth(model.getValueAt(row, 0))) {
-                    model.removeRow(row);
+                while (row < getRowCount() &&
+                		depth < getHierarchyDepth(model.getValueAt(
+                				this.convertRowIndexToModel(row),
+                				this.convertColumnIndexToModel(0)))) {
+                    model.removeRow(this.convertRowIndexToModel(row));
                 }
             } else {
                 expandedStates.put(m, Boolean.TRUE);
@@ -160,7 +164,8 @@ public abstract class AbstractHierarchicalView extends JTable {
             return null;
         }
         final ClassTreeDataModel model = getClassHierarchyModel();
-        return model.getValueAt(row, 0);
+        return model.getValueAt(this.convertRowIndexToModel(row), 
+        		this.convertColumnIndexToModel(0));
     }
     
     /**
