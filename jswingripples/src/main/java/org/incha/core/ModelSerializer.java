@@ -41,6 +41,10 @@ public class ModelSerializer {
      */
     private static final String SOURCES = "sources";
     /**
+     * XML element 'repository'.
+     */
+    private static final String REPOSITORY = "repository";
+    /**
      * XML element 'project'.
      */
     private static final String PROJECT = "project";
@@ -141,6 +145,8 @@ public class ModelSerializer {
                 sources.appendChild(src);
                 src.appendChild(dom.createTextNode(f.getPath()));
             }
+            final Element repository = dom.createElement(REPOSITORY);
+            project.appendChild(repository);
 
         }
 

@@ -61,7 +61,8 @@ public class GithubSettings {
                 try {
                     github = GitHub.connectAnonymously();
                     String repo = formatURLRepo(url.getText());
-                    url.setText("");                    
+                    url.setText("");
+                    System.out.println(repo);
                     if (repo.compareTo("Error") == 0){
                     	return;
                     }
@@ -92,8 +93,14 @@ public class GithubSettings {
     
     private static String formatURLRepo (String urlRepo){
     	if(urlRepo.startsWith("https://github.com/")){
+    		if (urlRepo.endsWith(".git")){
+    			return urlRepo.split("https://github.com/")[1].split(".git")[0];
+    		}
     		return urlRepo.split("https://github.com/")[1];
     	} else if (urlRepo.startsWith("http://github.com/")){
+    		if (urlRepo.endsWith(".git")){
+    			return urlRepo.split("http://github.com/")[1].split(".git")[0];
+    		}
     		return urlRepo.split("http://github.com/")[1];
     	}
     	return "Error";
