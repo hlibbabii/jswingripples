@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
 
+import org.incha.core.JavaProject;
 import org.kohsuke.github.*;
 
 /**
@@ -18,13 +19,13 @@ public class GithubSettings {
     private static final JTextField url = new JTextField(20);
     private static final JLabel crntRepo = new JLabel("Current Repository: ");
     private static final JButton testConnection = new JButton("Test");
-    private static final JButton connect = new JButton("Connect");
-    private static String currentRepo;
+    private static final JButton connect = new JButton("Connect");    
+    private static JavaProject pr;
+   
 
-    public static JPanel getConfigPanel(){
-    	
-    	currentRepo = obtainCurrentRepo(null);
-    	crntRepo.setText(crntRepo.getText() + currentRepo);
+    public static JPanel getConfigPanel(JavaProject project){
+    	pr = project;
+    	crntRepo.setText(crntRepo.getText() + obtainCurrentRepo(pr));
 
         JPanel north = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel center = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -69,10 +70,12 @@ public class GithubSettings {
                     myGHRep = github.getRepository(repo);
                     
                     /* ---- Just for demo2 ----*/
-                    List<GHIssue> issues = myGHRep.getIssues(GHIssueState.ALL);
-                    for (GHIssue issue : issues){
-                    	System.out.println(issue.getTitle());
-                    }                    
+//                    List<GHIssue> issues = myGHRep.getIssues(GHIssueState.ALL);
+//                    for (GHIssue issue : issues){
+//                    	System.out.println(issue.getTitle());
+//                    } 
+                    
+                    pr.getGHRepo().replaceRepository(repo);                    
                     crntRepo.setText("Current Repository: " + repo);
                     /* ----------------------- */
                 } catch (IOException e1) {
@@ -87,8 +90,8 @@ public class GithubSettings {
      * This method should look for the current repository for the project
      * If there is no, return empty String 
      */
-    private static String obtainCurrentRepo(String projectName){
-    	return "";
+    private static String obtainCurrentRepo(JavaProject project){
+    	return project.getGHRepo().getCurrentRepository();
     }
     
     private static String formatURLRepo (String urlRepo){

@@ -17,7 +17,7 @@ public class BuildPath {
     /**
      * The source files property name.
      */
-    public static final String SOURCES = "sources";
+    public static final String SOURCES = ModelSerializer.SOURCES;
 
     /**
      * The list of java source folders.

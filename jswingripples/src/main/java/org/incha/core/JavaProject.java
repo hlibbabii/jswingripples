@@ -18,6 +18,10 @@ public class JavaProject {
      */
     private final BuildPath buildPath = new BuildPath(this);
     /**
+     * GitHub repository.
+     */
+    private final GitHubRepo repo = new GitHubRepo(this);
+    /**
      * Map of user objects
      */
     private final Map<String, Object> userObjects = new ConcurrentHashMap<String, Object>();
@@ -93,4 +97,9 @@ public class JavaProject {
     public void setModuleConfiguration(final ModuleConfiguration moduleConfiguration) {
         this.moduleConfiguration = moduleConfiguration;
     }
+
+	public GitHubRepo getGHRepo() {
+		// TODO Auto-generated method stub
+		return repo;
+	}
 }
