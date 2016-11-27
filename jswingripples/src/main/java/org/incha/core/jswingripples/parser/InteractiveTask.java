@@ -24,6 +24,10 @@ public abstract class InteractiveTask extends Thread {
         listener = getDummyListener();
     }
 
+    public InteractiveTask(TaskListener listener) {
+        this.listener = listener;
+    }
+
     public TaskListener getListener() {
         return listener;
     }
