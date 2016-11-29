@@ -7,7 +7,10 @@ import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -39,6 +42,7 @@ public class StartAnalysisDialog extends JDialog {
     final JButton ok = new JButton("Ok"); 
     
     private JavaProject project;
+    final Window ownerApp; 
     
     final JComboBox<String> incrementalChange = new JComboBox<String>(new DefaultComboBoxModel<String>(
         new String[]{
@@ -67,6 +71,7 @@ public class StartAnalysisDialog extends JDialog {
      */
     public StartAnalysisDialog(final Window owner, final StartAnalysisAction callback) {
         super(owner);
+        ownerApp = owner;
         startAnalysisCallback = callback;
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -234,21 +239,36 @@ public class StartAnalysisDialog extends JDialog {
             }
         });
         
-        JButton btnsearch = new JButton("Browse");
-        btnsearch.addActionListener(new ActionListener() {
+        JButton btnbrowse = new JButton("Browse");
+        btnbrowse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-               
                 final JFileChooser chooser = new JFileChooser(project.getBuildPath().getFirstPath());
-                //chooser.addChoosableFileFilter(jpegFilter);
                 chooser.setMultiSelectionEnabled(false);
-
                 if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     final File selectedFile = chooser.getSelectedFile();
                     if (selectedFile != null) {
                         mainClassFile = selectedFile;
                         className.setText(selectedFile.getName());
                     }
+                }
+            }
+        });
+        panelclassname.add(btnbrowse);
+        
+        JButton btnsearch = new JButton("Search");
+        btnsearch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                try {
+                    final MainClassSearchDialog dialog;
+                    dialog = new MainClassSearchDialog(StartAnalysisDialog.this, project);
+                    dialog.pack();
+                    dialog.setLocationRelativeTo(ownerApp);
+                    dialog.setTitle("Select the enter point");
+                    dialog.setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(StartAnalysisDialog.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -293,5 +313,14 @@ public class StartAnalysisDialog extends JDialog {
      */
     public File getMainClass() {
         return mainClassFile;
+    }
+    
+    protected void setClassName(final String classNameParam, String fileName){
+        mainClassFile = new File(fileName);
+        className.setText(classNameParam);
+    }
+    
+    protected void enableButtonOk(){
+        ok.setEnabled(true);
     }
 }
