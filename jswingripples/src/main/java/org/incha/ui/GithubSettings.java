@@ -61,8 +61,8 @@ public class GithubSettings {
                     pr.getGHRepo().replaceRepository(repo);                    
                     crntRepo.setText("Current Repository: " + repo);
                 } catch (IOException e1) {
-                	JOptionPane.showMessageDialog(null, "Check your internet conection or\nif the requested repository is public",
-                			"Conection error", JOptionPane.ERROR_MESSAGE);
+                	JOptionPane.showMessageDialog(null, "Check your internet connection or\nif the requested repository is public",
+                			"Connection error", JOptionPane.ERROR_MESSAGE);
                 }
                 
             }
