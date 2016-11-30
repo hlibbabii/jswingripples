@@ -17,8 +17,7 @@ public class GithubSettings {
 
     private static final JPanel configPanel = new JPanel(new BorderLayout());
     private static final JTextField url = new JTextField(20);
-    private static final JLabel crntRepo = new JLabel("Current Repository: ");
-    private static final JButton testConnection = new JButton("Test");
+    private static final JLabel crntRepo = new JLabel("Current Repository: ");   
     private static final JButton connect = new JButton("Connect");    
     private static JavaProject pr;
    
@@ -32,28 +31,14 @@ public class GithubSettings {
 
         north.add(new JLabel("Github URL repository: "), BorderLayout.WEST);
         north.add(url, BorderLayout.EAST);
-        north.add(testConnection, BorderLayout.EAST);
+        
         north.add(connect, BorderLayout.EAST);
         
         center.add(crntRepo,BorderLayout.WEST);
 
         configPanel.add(north, BorderLayout.NORTH);
-        configPanel.add(center, BorderLayout.CENTER);
-
-        addButtonListeners(testConnection,connect);
-
-        return configPanel;
-    }
-
-    private static void addButtonListeners(JButton testConnection, JButton connect){
-
-        testConnection.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-
+        configPanel.add(center, BorderLayout.CENTER);    
+        
         connect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -67,23 +52,18 @@ public class GithubSettings {
                     if (repo.compareTo("Error") == 0){
                     	return;
                     }
-                    myGHRep = github.getRepository(repo);
-                    
-                    /* ---- Just for demo2 ----*/
-//                    List<GHIssue> issues = myGHRep.getIssues(GHIssueState.ALL);
-//                    for (GHIssue issue : issues){
-//                    	System.out.println(issue.getTitle());
-//                    } 
-                    
+                    myGHRep = github.getRepository(repo);                   
+
                     pr.getGHRepo().replaceRepository(repo);                    
                     crntRepo.setText("Current Repository: " + repo);
-                    /* ----------------------- */
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
                 
             }
         });
+
+        return configPanel;
     }
     
     /**
@@ -94,7 +74,7 @@ public class GithubSettings {
     	return project.getGHRepo().getCurrentRepository();
     }
     
-    private static String formatURLRepo (String urlRepo){
+    protected static String formatURLRepo (String urlRepo){
     	if(urlRepo.startsWith("https://github.com/")){
     		if (urlRepo.endsWith(".git")){
     			return urlRepo.split("https://github.com/")[1].split(".git")[0];
