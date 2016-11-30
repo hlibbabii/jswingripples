@@ -20,6 +20,7 @@ public class GithubSettings {
     private static final JLabel crntRepo = new JLabel("Current Repository: ");   
     private static final JButton connect = new JButton("Connect");    
     private static JavaProject pr;
+    private static final String WRONG_FORMAT = "wrong_format";
    
 
     public static JPanel getConfigPanel(JavaProject project){
@@ -47,17 +48,21 @@ public class GithubSettings {
                 try {
                     github = GitHub.connectAnonymously();
                     String repo = formatURLRepo(url.getText());
-                    url.setText("");
-                    System.out.println(repo);
-                    if (repo.compareTo("Error") == 0){
+                    url.setText("");                    
+                    if (repo.compareTo(WRONG_FORMAT) == 0){
+                    	JOptionPane.showMessageDialog(null, "Incorrect URL format. Accepted formats are:\n"
+                    			+ "https://github.com/*.git\n"
+                    			+ "https://github.com/*",
+                    			"Format error", JOptionPane.ERROR_MESSAGE);
                     	return;
                     }
-                    myGHRep = github.getRepository(repo);                   
+                    myGHRep = github.getRepository(repo);                
 
                     pr.getGHRepo().replaceRepository(repo);                    
                     crntRepo.setText("Current Repository: " + repo);
                 } catch (IOException e1) {
-                    e1.printStackTrace();
+                	JOptionPane.showMessageDialog(null, "Check your internet conection or\nif the requested repository is public",
+                			"Conection error", JOptionPane.ERROR_MESSAGE);
                 }
                 
             }
@@ -80,13 +85,14 @@ public class GithubSettings {
     			return urlRepo.split("https://github.com/")[1].split(".git")[0];
     		}
     		return urlRepo.split("https://github.com/")[1];
-    	} else if (urlRepo.startsWith("http://github.com/")){
-    		if (urlRepo.endsWith(".git")){
-    			return urlRepo.split("http://github.com/")[1].split(".git")[0];
-    		}
-    		return urlRepo.split("http://github.com/")[1];
-    	}
-    	return "Error";
+    	} 
+//    	else if (urlRepo.startsWith("http://github.com/")){
+//    		if (urlRepo.endsWith(".git")){
+//    			return urlRepo.split("http://github.com/")[1].split(".git")[0];
+//    		}
+//    		return urlRepo.split("http://github.com/")[1];
+//    	}
+    	return WRONG_FORMAT;
     			 
     }
 }
