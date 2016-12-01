@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.incha.core.BuildPath;
 import org.incha.core.JavaProject;
-import org.incha.core.ModelSerializer;
 import org.incha.ui.buildpath.AbstractBuildPathEditor;
 
 public class SourcesEditor extends AbstractBuildPathEditor {

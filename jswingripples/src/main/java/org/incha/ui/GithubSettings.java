@@ -13,7 +13,7 @@ import org.kohsuke.github.*;
 /**
  * Created by Amoreno on 11/23/16.
  */
-public class GithubSettings {
+public class GitHubSettings {
 
     private static final JPanel configPanel = new JPanel(new BorderLayout());
     private static final JTextField url = new JTextField(20);
