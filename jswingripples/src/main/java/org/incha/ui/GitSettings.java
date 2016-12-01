@@ -113,7 +113,7 @@ class GitSettings extends JPanel {
                     .setDirectory(fileForRepository)
                     .call();
             sourcesEditor.addFileToProject(fileForRepository);
-            project.getGHRepo().replaceRepository(GithubSettings.formatURLRepo(remoteUrl));
+            project.getGHRepo().replaceRepository(GitHubSettings.formatURLRepo(remoteUrl));
         }catch (org.eclipse.jgit.api.errors.TransportException e) {
             JOptionPane.showMessageDialog(principalFrame, "Connection error, please check internet.",
                     "Inane error", JOptionPane.ERROR_MESSAGE);
