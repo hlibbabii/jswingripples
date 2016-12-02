@@ -17,13 +17,8 @@ import org.incha.core.ModelSerializer;
 import org.incha.utils.CollectionUtils;
 
 public class ModelSaver implements PropertyChangeListener {
-    /**
-     * Logger.
-     */
+
     private static final Log log = LogFactory.getLog(ModelSaver.class);
-    /**
-     * Model.
-     */
     private final JavaProjectsModel model;
     /**
      * File to save model.

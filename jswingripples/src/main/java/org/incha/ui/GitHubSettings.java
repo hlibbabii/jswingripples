@@ -14,9 +14,6 @@ import org.kohsuke.github.*;
  */
 public class GitHubSettings extends JPanel{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3049936845151322175L;
     private final JTextField url;
     private final JLabel crntRepo;   

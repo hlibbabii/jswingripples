@@ -16,9 +16,6 @@ import org.eclipse.jgit.api.Git;
 
 class GitSettings extends JPanel {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 5644243718981468086L;
 	private JTextField url = new JTextField(20);
     private JButton select = new JButton("Select");

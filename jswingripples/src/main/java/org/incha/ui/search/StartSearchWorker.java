@@ -3,7 +3,6 @@ package org.incha.ui.search;
 import org.apache.lucene.queryParser.ParseException;
 import org.graphstream.ui.view.Viewer;
 import org.incha.core.jswingripples.NodeSearchBuilder;
-import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.search.Searcher;
 import org.incha.ui.JSwingRipplesApplication;
 import org.incha.ui.TaskProgressMonitor;

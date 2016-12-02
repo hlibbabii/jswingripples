@@ -9,9 +9,6 @@ import java.util.Collection;
 
 public abstract class TaskProgressMonitor extends JPanel {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 6536994446972785911L;
 	public Collection<InteractiveTask> threadedTasks = new ArrayList<>();
 
