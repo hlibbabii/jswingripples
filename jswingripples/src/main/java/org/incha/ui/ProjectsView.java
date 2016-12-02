@@ -18,7 +18,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import org.incha.core.BuildPath;
 import org.incha.core.JavaProjectsModel;
 import org.incha.core.JavaProject;
 import org.incha.utils.CollectionUtils;

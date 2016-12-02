@@ -9,7 +9,11 @@ import java.util.Collection;
 
 public abstract class TaskProgressMonitor extends JPanel {
 
-    public Collection<InteractiveTask> threadedTasks = new ArrayList<>();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6536994446972785911L;
+	public Collection<InteractiveTask> threadedTasks = new ArrayList<>();
 
     public TaskProgressMonitor() {}
 
@@ -21,7 +25,8 @@ public abstract class TaskProgressMonitor extends JPanel {
         for (InteractiveTask threadedTask : threadedTasks) {
             if (threadedTask.isAlive() && !threadedTask.isInterrupted()) {
                 // actually kills the thread
-                threadedTask.stop();
+                threadedTask.stop(); //Do refactoring here to avoid using deprecated method
+                
             }
             threadedTask.getListener().taskFailure();
         }

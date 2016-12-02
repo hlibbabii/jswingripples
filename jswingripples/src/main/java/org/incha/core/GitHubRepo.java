@@ -1,11 +1,10 @@
 package org.incha.core;
 
-
-
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
-public class GitHubRepo {
+/**
+ * Created by zeval on 11/26/16.
+ * @author zeval
+ */
+public class GitHubRepo extends AbstractSettingsManager {
 	/**
 	 * String repository
 	 */
@@ -15,22 +14,13 @@ public class GitHubRepo {
 	 * The current repository
 	 */
 	private String repository;
-    /**
-     * Owner project.
-     */
-    private final JavaProject project;
-    /**
-     * Property change support.
-     */
-    private final PropertyChangeSupport pcs;
 	
 	/**
 	 * Default constructor.
 	 * @param javaProject
 	 */
-	public GitHubRepo(JavaProject javaProject) {
-		this.project = javaProject;
-		pcs = new PropertyChangeSupport(javaProject);
+	public GitHubRepo(JavaProject javaProject) {		
+		super(javaProject);
 	}
 	/**
 	 * Replaces the current repository.
@@ -48,33 +38,6 @@ public class GitHubRepo {
 	 */
 	public String getCurrentRepository(){
 		return repository == null ? "" : repository;
-	}
-	
-	/**
-	 * To notify if repository changes.
-	 * @param property
-	 * @param oldRepo
-	 * @param newRepo
-	 */
-    protected void firePropertyChange(
-            final String property, final String oldRepo, final String newRepo) {
-        pcs.firePropertyChange(property, oldRepo, newRepo);
-    }
-    
-    /**
-     * Wrapper of void java.beans.PropertyChangeSupport.addPropertyChangeListener(PropertyChangeListener listener)
-     * @param gitHubRepoListener
-     */
-	public void addPropertyChangeListener(PropertyChangeListener gitHubRepoListener) {
-		pcs.addPropertyChangeListener(gitHubRepoListener);		
-	}
-	/**
-	 * Wrapper of void org.incha.core.GitHubRepo.removePropertyChangeListener(PropertyChangeListener gitHubRepoListener)
-	 * @param gitHubRepoListener
-	 */
-	public void removePropertyChangeListener(PropertyChangeListener gitHubRepoListener) {
-		pcs.removePropertyChangeListener(gitHubRepoListener);
-		
 	}
 
 }

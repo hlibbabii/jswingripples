@@ -47,7 +47,7 @@ public class ProjectSettingsEditor extends JTabbedPane {
      */
     private JTabbedPane createGithubTab() {
         final JTabbedPane tp = new JTabbedPane(TOP, WRAP_TAB_LAYOUT);
-        tp.addTab("Github Settings", GitHubSettings.getConfigPanel(project));
+        tp.addTab("GitHub Settings", new GitHubSettings(project));
         return tp;
     }
 

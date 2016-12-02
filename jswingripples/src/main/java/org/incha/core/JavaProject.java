@@ -97,9 +97,11 @@ public class JavaProject {
     public void setModuleConfiguration(final ModuleConfiguration moduleConfiguration) {
         this.moduleConfiguration = moduleConfiguration;
     }
-
+    /**
+     * 
+     * @return the GitHub repository
+     */
 	public GitHubRepo getGHRepo() {
-		// TODO Auto-generated method stub
 		return repo;
 	}
 }
