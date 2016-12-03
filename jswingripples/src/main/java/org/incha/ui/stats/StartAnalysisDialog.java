@@ -24,14 +24,14 @@ import java.util.List;
 
 public class StartAnalysisDialog extends JDialog {
     private static final long serialVersionUID = 6788138046337076311L;
+    private final JTextField className = new JTextField(30);
+    private final JButton startConceptLocationButton = new JButton("Start Concept Location");
+    private final StartAnalysisAction startAnalysisCallback;
     private File mainClassFile;
-    private StartAnalysisAction startAnalysisCallback;
-    final JComboBox<String> projects;
-    final JTextField className = new JTextField(30);
-    final JButton ok = new JButton("Start Concept Location");
-    
     private JavaProject project;
-    
+
+    final JComboBox<String> projects;
+
     JComboBox<String> dependencyGraph = new JComboBox<String>(new DefaultComboBoxModel<String>(
         new String[]{
             JRipplesDefaultModulesConstants.MODULE_DEPENDENCY_BUILDER,
@@ -70,9 +70,9 @@ public class StartAnalysisDialog extends JDialog {
         getContentPane().add(center, BorderLayout.CENTER);
 
         //south pane
-        ok.setEnabled(false);
+        startConceptLocationButton.setEnabled(false);
         final JPanel south = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        ok.addActionListener(new ActionListener() {
+        startConceptLocationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 try {
@@ -83,7 +83,7 @@ public class StartAnalysisDialog extends JDialog {
                 }
             }
         });
-        south.add(ok);
+        south.add(startConceptLocationButton);
 
         final JButton cancel = new JButton("Cancel");
         cancel.addActionListener(new ActionListener() {
@@ -135,10 +135,10 @@ public class StartAnalysisDialog extends JDialog {
             if (classname.length()>sizeExtension && 
                     classname.substring(classname.length()-sizeExtension, 
                             classname.length()).toUpperCase().equals(".JAVA")){
-                ok.setEnabled(true);
+                startConceptLocationButton.setEnabled(true);
             }
             else {
-                ok.setEnabled(false);
+                startConceptLocationButton.setEnabled(false);
             }
     }
     /**
