@@ -19,6 +19,7 @@ public class JSwingRipplesApplication extends JFrame {
     private static final long serialVersionUID = 6142679404175274529L;
     private JTabbedPane viewArea;
     private JButton proceedButton;
+    private JSplitPane projectViewAndViewAreaSplit;
     private final ProjectsView projectsView;
     private final MainMenuBar mainMenuBar;
     private static JSwingRipplesApplication instance;
@@ -29,13 +30,16 @@ public class JSwingRipplesApplication extends JFrame {
         this.viewArea = viewArea;
         this.progressMonitor = progressMonitor;
         setContentPane(createMainContentPane());
-        mainMenuBar = createMainMenuBar();
+        mainMenuBar = new MainMenuBar();
         projectsView = createProjectsView();
-        getContentPane().add(createProjectViewAndViewAreaSplit(), BorderLayout.CENTER);
+        projectViewAndViewAreaSplit = createProjectViewAndViewAreaSplit();
+        getContentPane().add(projectViewAndViewAreaSplit, BorderLayout.CENTER);
         getContentPane().add(progressMonitor, BorderLayout.SOUTH);
+        setJMenuBar(mainMenuBar.getJBar());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         addJTabbedPaneMouseListener(viewArea);
         StatisticsManager.getInstance().addStatisticsChangeListener(new DefaultController());
+        new ModelSaver(JavaProjectsModel.getInstance(), JavaProjectsModel.getModelFile());
     }
 
     /**
@@ -203,8 +207,16 @@ public class JSwingRipplesApplication extends JFrame {
         mainMenuBar.getSearchMenu().getClearButton().setEnabled(true);
     }
 
-    public void enableProceedButton() {
-        proceedButton.setEnabled(true);
+    public void showAndEnableProceedButton() {
+        JSplitPane rightSide = (JSplitPane) projectViewAndViewAreaSplit.getRightComponent();
+        rightSide.setRightComponent(proceedButton); // make the button show up by setting it as the bottom part
+        rightSide.revalidate();
+    }
+
+    private void hideAndDisableProceedButton() {
+       JSplitPane rightSide = (JSplitPane) projectViewAndViewAreaSplit.getRightComponent();
+       rightSide.setRightComponent(null); // make the button disappear by changing the bottom part reference
+       rightSide.revalidate();
     }
 
     private void addJTabbedPaneMouseListener(JTabbedPane pane){
@@ -222,6 +234,7 @@ public class JSwingRipplesApplication extends JFrame {
                             if(viewArea.getTabCount() == 0){
                                 mainMenuBar.getSearchMenu().getClearButton().setEnabled(false);
                                 mainMenuBar.getSearchMenu().getSearchButton().setEnabled(false);
+                                hideAndDisableProceedButton();
                             }
                         }
                     });
@@ -244,20 +257,14 @@ public class JSwingRipplesApplication extends JFrame {
         return projectsView;
     }
 
-    private MainMenuBar createMainMenuBar() {
-        MainMenuBar mainMenuBar = new MainMenuBar();
-        setJMenuBar(mainMenuBar.getJBar());
-        return mainMenuBar;
-    }
-
     private JSplitPane createProjectViewAndViewAreaSplit() {
         return new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, projectsView, createViewAreaAndProceedButtonSplit());
     }
 
     private JSplitPane createViewAreaAndProceedButtonSplit() {
         proceedButton = new JButton("Proceed to Impact Analysis");
-        proceedButton.setEnabled(false);
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, viewArea, proceedButton);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, viewArea, null);
+        splitPane.setDividerSize(0);
         splitPane.setResizeWeight(0.95);
         splitPane.setEnabled(false);
         return splitPane;

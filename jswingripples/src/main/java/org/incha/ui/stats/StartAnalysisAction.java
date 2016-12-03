@@ -94,7 +94,7 @@ public class StartAnalysisAction implements ActionListener {
                     e1.printStackTrace();
                 }
                 StatisticsManager.getInstance().addStatistics(config, eig);
-                JSwingRipplesApplication.getInstance().enableProceedButton();
+                JSwingRipplesApplication.getInstance().showAndEnableProceedButton();
             }
 
             @Override
