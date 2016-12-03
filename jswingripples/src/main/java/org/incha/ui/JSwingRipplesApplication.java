@@ -28,36 +28,14 @@ public class JSwingRipplesApplication extends JFrame {
         super("JSwingRipples");
         this.viewArea = viewArea;
         this.progressMonitor = progressMonitor;
-        addJTabbedPaneMouseListener(viewArea);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        final JPanel contentPane = new JPanel(new BorderLayout(0, 5));
-        setContentPane(contentPane);
-        contentPane.setBorder(new EmptyBorder(2, 2, 2, 2));
-
-        mainMenuBar = new MainMenuBar();
-        setJMenuBar(mainMenuBar.getJBar());
-
-        projectsView = new ProjectsView(JavaProjectsModel.getInstance());
-        projectsView.addProjectsViewMouseListener(new ProjectsViewMouseListener() {
-            @Override
-            public void handle(final ProjectsViewMouseEvent e) {
-                handleProjectsViewMouseEvent(e);
-            }
-        });
-
-
+        setContentPane(createMainContentPane());
+        mainMenuBar = createMainMenuBar();
+        projectsView = createProjectsView();
         getContentPane().add(createProjectViewAndViewAreaSplit(), BorderLayout.CENTER);
-
-        //add progress monitor.
         getContentPane().add(progressMonitor, BorderLayout.SOUTH);
-
-        //init liteners
-        final DefaultController controller = new DefaultController();
-        StatisticsManager.getInstance().addStatisticsChangeListener(controller);
-
-        //create model saver, this class will watch for model
-        //and save it when model state changed
-        new ModelSaver(JavaProjectsModel.getInstance(), JavaProjectsModel.getModelFile());
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addJTabbedPaneMouseListener(viewArea);
+        StatisticsManager.getInstance().addStatisticsChangeListener(new DefaultController());
     }
 
     /**
@@ -255,6 +233,23 @@ public class JSwingRipplesApplication extends JFrame {
         });
     }
 
+    private ProjectsView createProjectsView() {
+        ProjectsView projectsView = new ProjectsView(JavaProjectsModel.getInstance());
+        projectsView.addProjectsViewMouseListener(new ProjectsViewMouseListener() {
+            @Override
+            public void handle(final ProjectsViewMouseEvent e) {
+                handleProjectsViewMouseEvent(e);
+            }
+        });
+        return projectsView;
+    }
+
+    private MainMenuBar createMainMenuBar() {
+        MainMenuBar mainMenuBar = new MainMenuBar();
+        setJMenuBar(mainMenuBar.getJBar());
+        return mainMenuBar;
+    }
+
     private JSplitPane createProjectViewAndViewAreaSplit() {
         return new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, projectsView, createViewAreaAndProceedButtonSplit());
     }
@@ -268,4 +263,9 @@ public class JSwingRipplesApplication extends JFrame {
         return splitPane;
     }
 
+    private JPanel createMainContentPane() {
+        JPanel contentPane = new JPanel(new BorderLayout(0, 5));
+        contentPane.setBorder(new EmptyBorder(2, 2, 2, 2));
+        return contentPane;
+    }
 }
