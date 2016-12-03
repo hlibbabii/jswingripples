@@ -1,6 +1,5 @@
 package org.incha.core.jswingripples;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 

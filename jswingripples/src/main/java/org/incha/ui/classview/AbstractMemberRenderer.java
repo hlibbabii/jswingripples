@@ -15,7 +15,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.core.jswingripples.eig.JSwingRipplesIMemberServices;
-import org.incha.core.search.Searcher;
 import org.incha.ui.jripples.EIGStatusMarks;
 
 public abstract class AbstractMemberRenderer extends DefaultTableCellRenderer {

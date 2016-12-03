@@ -16,12 +16,15 @@ import org.eclipse.jgit.api.Git;
 
 class GitSettings extends JPanel {
 
-    private JTextField url = new JTextField(20);
+	private static final long serialVersionUID = 5644243718981468086L;
+	private JTextField url = new JTextField(20);
     private JButton select = new JButton("Select");
     private SourcesEditor sourcesEditor;
     private final JFrame principalFrame;
+    private JavaProject project;
 
     GitSettings(JavaProject project){
+    	this.project = project;
         sourcesEditor = new SourcesEditor(project);
 
         principalFrame = new JFrame("Clone From GitHub");
@@ -111,6 +114,7 @@ class GitSettings extends JPanel {
                     .setDirectory(fileForRepository)
                     .call();
             sourcesEditor.addFileToProject(fileForRepository);
+            project.getGHRepo().replaceRepository(GitHubSettings.formatURLRepo(remoteUrl));
         }catch (org.eclipse.jgit.api.errors.TransportException e) {
             JOptionPane.showMessageDialog(principalFrame, "Connection error, please check internet.",
                     "Inane error", JOptionPane.ERROR_MESSAGE);
