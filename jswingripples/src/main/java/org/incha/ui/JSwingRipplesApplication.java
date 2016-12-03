@@ -18,6 +18,7 @@ import java.util.Properties;
 public class JSwingRipplesApplication extends JFrame {
     private static final long serialVersionUID = 6142679404175274529L;
     private JTabbedPane viewArea;
+    private JButton proceedButton;
     private final ProjectsView projectsView;
     private final MainMenuBar mainMenuBar;
     private static JSwingRipplesApplication instance;
@@ -43,9 +44,9 @@ public class JSwingRipplesApplication extends JFrame {
                 handleProjectsViewMouseEvent(e);
             }
         });
-        
-        final JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, projectsView, viewArea);
-        getContentPane().add(pane, BorderLayout.CENTER);
+
+
+        getContentPane().add(createProjectViewAndViewAreaSplit(), BorderLayout.CENTER);
 
         //add progress monitor.
         getContentPane().add(progressMonitor, BorderLayout.SOUTH);
@@ -215,10 +216,6 @@ public class JSwingRipplesApplication extends JFrame {
         return this.progressMonitor;
     }
 
-    public MainMenuBar getMainMenuBar() {
-        return mainMenuBar;
-    }
-
     public void addComponentAsTab(JComponent component, String tabTitle) {
         viewArea.addTab(tabTitle, component);
     }
@@ -226,6 +223,10 @@ public class JSwingRipplesApplication extends JFrame {
     public void enableSearchMenuButtons() {
         mainMenuBar.getSearchMenu().getSearchButton().setEnabled(true);
         mainMenuBar.getSearchMenu().getClearButton().setEnabled(true);
+    }
+
+    public void enableProceedButton() {
+        proceedButton.setEnabled(true);
     }
 
     private void addJTabbedPaneMouseListener(JTabbedPane pane){
@@ -252,6 +253,19 @@ public class JSwingRipplesApplication extends JFrame {
                 super.mouseClicked(e);
             }
         });
+    }
+
+    private JSplitPane createProjectViewAndViewAreaSplit() {
+        return new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, projectsView, createViewAreaAndProceedButtonSplit());
+    }
+
+    private JSplitPane createViewAreaAndProceedButtonSplit() {
+        proceedButton = new JButton("Proceed to Impact Analysis");
+        proceedButton.setEnabled(false);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, viewArea, proceedButton);
+        splitPane.setResizeWeight(0.95);
+        splitPane.setEnabled(false);
+        return splitPane;
     }
 
 }
