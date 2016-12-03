@@ -1,33 +1,25 @@
 package org.incha.ui.stats;
 
-import java.io.File; 
+import org.incha.core.JavaProject;
+import org.incha.core.JavaProjectsModel;
+import org.incha.core.ModuleConfiguration;
+import org.incha.core.Statistics;
+import org.incha.ui.jripples.JRipplesDefaultModulesConstants;
+
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.List;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JFileChooser; 
-import javax.swing.border.BevelBorder;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.DocumentEvent;
-
-import org.incha.core.JavaProject;
-import org.incha.core.JavaProjectsModel;
-import org.incha.core.ModuleConfiguration;
-import org.incha.core.Statistics;
-import org.incha.ui.jripples.JRipplesDefaultModulesConstants;
 
 
 public class StartAnalysisDialog extends JDialog {
@@ -36,25 +28,10 @@ public class StartAnalysisDialog extends JDialog {
     private StartAnalysisAction startAnalysisCallback;
     final JComboBox<String> projects;
     final JTextField className = new JTextField(30);
-    final JButton ok = new JButton("Ok"); 
+    final JButton ok = new JButton("Start Concept Location");
     
     private JavaProject project;
     
-    final JComboBox<String> incrementalChange = new JComboBox<String>(new DefaultComboBoxModel<String>(
-        new String[]{
-            JRipplesDefaultModulesConstants.MODULE_IMPACT_ANALYSIS_TITLE,
-            JRipplesDefaultModulesConstants.MODULE_IMPACT_ANALYSIS_RELAXED_TITLE,
-            JRipplesDefaultModulesConstants.MODULE_CHANGE_PROPAGATION_RELAXED_TITLE,
-            JRipplesDefaultModulesConstants.MODULE_CHANGE_PROPAGATION_TITLE,
-            JRipplesDefaultModulesConstants.MODULE_CONCEPT_LOCATION_TITLE,
-            JRipplesDefaultModulesConstants.MODULE_CONCEPT_LOCATION_RELAXED_TITLE
-        }
-    ));
-    JComboBox<String> analysis = new JComboBox<String>(new DefaultComboBoxModel<String>(
-        new String[]{
-            JRipplesDefaultModulesConstants.MODULE_IMPACT_ANALYSIS_TITLE
-        }
-    ));
     JComboBox<String> dependencyGraph = new JComboBox<String>(new DefaultComboBoxModel<String>(
         new String[]{
             JRipplesDefaultModulesConstants.MODULE_DEPENDENCY_BUILDER,
@@ -149,41 +126,6 @@ public class StartAnalysisDialog extends JDialog {
                     dependencyGraph.setSelectedItem(
                             JRipplesDefaultModulesConstants.MODULE_DEPENDENCY_BUILDER_WITH_POLYMORPHIC);
             }
-
-            //Incremental change
-            switch (cfg.getIncrementalChange()) {
-                case ModuleConfiguration.MODULE_IMPACT_ANALYSIS:
-                    incrementalChange.setSelectedItem(
-                            JRipplesDefaultModulesConstants.MODULE_IMPACT_ANALYSIS_TITLE);
-                break;
-                case ModuleConfiguration.MODULE_IMPACT_ANALYSIS_RELAXED:
-                    incrementalChange.setSelectedItem(
-                            JRipplesDefaultModulesConstants.MODULE_IMPACT_ANALYSIS_RELAXED_TITLE);
-                break;
-                case ModuleConfiguration.MODULE_CHANGE_PROPAGATION_RELAXED:
-                    incrementalChange.setSelectedItem(
-                            JRipplesDefaultModulesConstants.MODULE_CHANGE_PROPAGATION_RELAXED_TITLE);
-                break;
-                case ModuleConfiguration.MODULE_CHANGE_PROPAGATION:
-                    incrementalChange.setSelectedItem(
-                            JRipplesDefaultModulesConstants.MODULE_CHANGE_PROPAGATION_TITLE);
-                break;
-                case ModuleConfiguration.MODULE_CONCEPT_LOCATION:
-                    incrementalChange.setSelectedItem(
-                            JRipplesDefaultModulesConstants.MODULE_CONCEPT_LOCATION_TITLE);
-                break;
-                case ModuleConfiguration.MODULE_CONCEPT_LOCATION_RELAXED:
-                    incrementalChange.setSelectedItem(
-                            JRipplesDefaultModulesConstants.MODULE_CONCEPT_LOCATION_RELAXED_TITLE);
-                break;
-            }
-
-            switch(cfg.getAnalysis()) {
-                case ModuleConfiguration.MODULE_IMPACT_ANALYSIS:
-                    analysis.setSelectedItem(
-                            JRipplesDefaultModulesConstants.MODULE_IMPACT_ANALYSIS_TITLE);
-                    break;
-            }
         }
     }
     
@@ -255,19 +197,6 @@ public class StartAnalysisDialog extends JDialog {
         panelclassname.add(btnsearch);
         panel.add(panelclassname);
        
-
-        //Incremental change combobox
-        panel.add(new JLabel("Incremental Change"));
-        incrementalChange.setEditable(false);
-        panel.add(incrementalChange);
-//
-//        panel.add(new JLabel("Presentation"));
-//        panel.add(presentation);
-
-        panel.add(new JLabel("Analysis"));
-        analysis.setEditable(false);;
-        panel.add(analysis);
-
         panel.add(new JLabel("Dependency Graph"));
         dependencyGraph.setEditable(false);
         panel.add(dependencyGraph);
