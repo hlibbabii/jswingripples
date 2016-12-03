@@ -18,6 +18,8 @@ import java.util.Properties;
 public class JSwingRipplesApplication extends JFrame {
     private static final long serialVersionUID = 6142679404175274529L;
     private JTabbedPane viewArea;
+    private JButton proceedButton;
+    private JSplitPane projectViewAndViewAreaSplit;
     private final ProjectsView projectsView;
     private final MainMenuBar mainMenuBar;
     private static JSwingRipplesApplication instance;
@@ -27,35 +29,16 @@ public class JSwingRipplesApplication extends JFrame {
         super("JSwingRipples");
         this.viewArea = viewArea;
         this.progressMonitor = progressMonitor;
-        addJTabbedPaneMouseListener(viewArea);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        final JPanel contentPane = new JPanel(new BorderLayout(0, 5));
-        setContentPane(contentPane);
-        contentPane.setBorder(new EmptyBorder(2, 2, 2, 2));
-
+        setContentPane(createMainContentPane());
         mainMenuBar = new MainMenuBar();
-        setJMenuBar(mainMenuBar.getJBar());
-
-        projectsView = new ProjectsView(JavaProjectsModel.getInstance());
-        projectsView.addProjectsViewMouseListener(new ProjectsViewMouseListener() {
-            @Override
-            public void handle(final ProjectsViewMouseEvent e) {
-                handleProjectsViewMouseEvent(e);
-            }
-        });
-        
-        final JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, projectsView, viewArea);
-        getContentPane().add(pane, BorderLayout.CENTER);
-
-        //add progress monitor.
+        projectsView = createProjectsView();
+        projectViewAndViewAreaSplit = createProjectViewAndViewAreaSplit();
+        getContentPane().add(projectViewAndViewAreaSplit, BorderLayout.CENTER);
         getContentPane().add(progressMonitor, BorderLayout.SOUTH);
-
-        //init liteners
-        final DefaultController controller = new DefaultController();
-        StatisticsManager.getInstance().addStatisticsChangeListener(controller);
-
-        //create model saver, this class will watch for model
-        //and save it when model state changed
+        setJMenuBar(mainMenuBar.getJBar());
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addJTabbedPaneMouseListener(viewArea);
+        StatisticsManager.getInstance().addStatisticsChangeListener(new DefaultController());
         new ModelSaver(JavaProjectsModel.getInstance(), JavaProjectsModel.getModelFile());
     }
 
@@ -215,10 +198,6 @@ public class JSwingRipplesApplication extends JFrame {
         return this.progressMonitor;
     }
 
-    public MainMenuBar getMainMenuBar() {
-        return mainMenuBar;
-    }
-
     public void addComponentAsTab(JComponent component, String tabTitle) {
         viewArea.addTab(tabTitle, component);
     }
@@ -226,6 +205,18 @@ public class JSwingRipplesApplication extends JFrame {
     public void enableSearchMenuButtons() {
         mainMenuBar.getSearchMenu().getSearchButton().setEnabled(true);
         mainMenuBar.getSearchMenu().getClearButton().setEnabled(true);
+    }
+
+    public void showProceedButton() {
+        JSplitPane rightSide = (JSplitPane) projectViewAndViewAreaSplit.getRightComponent();
+        rightSide.setRightComponent(proceedButton); // make the button show up by setting it as the bottom part
+        rightSide.revalidate();
+    }
+
+    private void hideProceedButton() {
+       JSplitPane rightSide = (JSplitPane) projectViewAndViewAreaSplit.getRightComponent();
+       rightSide.setRightComponent(null); // make the button disappear by changing the bottom part reference
+       rightSide.revalidate();
     }
 
     private void addJTabbedPaneMouseListener(JTabbedPane pane){
@@ -243,6 +234,7 @@ public class JSwingRipplesApplication extends JFrame {
                             if(viewArea.getTabCount() == 0){
                                 mainMenuBar.getSearchMenu().getClearButton().setEnabled(false);
                                 mainMenuBar.getSearchMenu().getSearchButton().setEnabled(false);
+                                hideProceedButton();
                             }
                         }
                     });
@@ -254,4 +246,33 @@ public class JSwingRipplesApplication extends JFrame {
         });
     }
 
+    private ProjectsView createProjectsView() {
+        ProjectsView projectsView = new ProjectsView(JavaProjectsModel.getInstance());
+        projectsView.addProjectsViewMouseListener(new ProjectsViewMouseListener() {
+            @Override
+            public void handle(final ProjectsViewMouseEvent e) {
+                handleProjectsViewMouseEvent(e);
+            }
+        });
+        return projectsView;
+    }
+
+    private JSplitPane createProjectViewAndViewAreaSplit() {
+        return new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, projectsView, createViewAreaAndProceedButtonSplit());
+    }
+
+    private JSplitPane createViewAreaAndProceedButtonSplit() {
+        proceedButton = new JButton("Proceed to Impact Analysis");
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, viewArea, null);
+        splitPane.setDividerSize(0);
+        splitPane.setResizeWeight(0.95);
+        splitPane.setEnabled(false);
+        return splitPane;
+    }
+
+    private JPanel createMainContentPane() {
+        JPanel contentPane = new JPanel(new BorderLayout(0, 5));
+        contentPane.setBorder(new EmptyBorder(2, 2, 2, 2));
+        return contentPane;
+    }
 }

@@ -1,27 +1,22 @@
 package org.incha.ui.stats;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.lucene.store.FSDirectory;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.core.JavaModel;
 import org.incha.compiler.dom.JavaDomBuilder;
 import org.incha.core.JavaProject;
 import org.incha.core.JavaProjectsModel;
 import org.incha.core.ModuleConfiguration;
 import org.incha.core.StatisticsManager;
-import org.incha.core.jswingripples.GraphBuilder;
 import org.incha.core.jswingripples.JRipplesModuleRunner;
-import org.incha.core.jswingripples.NodeSearchBuilder;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.search.Indexer;
-import org.incha.core.search.LuceneConstants;
 import org.incha.ui.JSwingRipplesApplication;
 import org.incha.ui.jripples.JRipplesDefaultModulesConstants;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 public class StartAnalysisAction implements ActionListener {
     public class AnalysisFailedException extends Exception {
@@ -84,26 +79,8 @@ public class StartAnalysisAction implements ActionListener {
             config.setDependencyGraphModule(ModuleConfiguration.MODULE_DEPENDENCY_BUILDER_WITH_POLYMORPHIC);
         }
 
-        //Incremental change
-        module = (String) dialog.incrementalChange.getSelectedItem();
-        if (JRipplesDefaultModulesConstants.MODULE_IMPACT_ANALYSIS_TITLE.equals(module)) {
-            config.setIncrementalChange(ModuleConfiguration.MODULE_IMPACT_ANALYSIS);
-        } else if (JRipplesDefaultModulesConstants.MODULE_IMPACT_ANALYSIS_RELAXED_TITLE.equals(module)) {
-            config.setIncrementalChange(ModuleConfiguration.MODULE_IMPACT_ANALYSIS_RELAXED);
-        } else if (JRipplesDefaultModulesConstants.MODULE_CHANGE_PROPAGATION_RELAXED_TITLE.equals(module)) {
-            config.setIncrementalChange(ModuleConfiguration.MODULE_CHANGE_PROPAGATION_RELAXED);
-        } else if (JRipplesDefaultModulesConstants.MODULE_CHANGE_PROPAGATION_TITLE.equals(module)) {
-            config.setIncrementalChange(ModuleConfiguration.MODULE_CHANGE_PROPAGATION);
-        } else if (JRipplesDefaultModulesConstants.MODULE_CONCEPT_LOCATION_TITLE.equals(module)) {
-            config.setIncrementalChange(ModuleConfiguration.MODULE_CONCEPT_LOCATION);
-        } else if (JRipplesDefaultModulesConstants.MODULE_CONCEPT_LOCATION_RELAXED_TITLE.equals(module)) {
-            config.setIncrementalChange(ModuleConfiguration.MODULE_CONCEPT_LOCATION_RELAXED);
-        }
-
-        module = (String) dialog.analysis.getSelectedItem();
-        if (JRipplesDefaultModulesConstants.MODULE_IMPACT_ANALYSIS_TITLE.equals(module)) {
-            config.setAnalysis(ModuleConfiguration.MODULE_IMPACT_ANALYSIS);
-        }
+        config.setIncrementalChange(ModuleConfiguration.MODULE_CONCEPT_LOCATION);
+        config.setAnalysis(ModuleConfiguration.MODULE_IMPACT_ANALYSIS);
 
         project.setModuleConfiguration(config);
 
@@ -117,6 +94,7 @@ public class StartAnalysisAction implements ActionListener {
                     e1.printStackTrace();
                 }
                 StatisticsManager.getInstance().addStatistics(config, eig);
+                JSwingRipplesApplication.getInstance().showProceedButton();
             }
 
             @Override
