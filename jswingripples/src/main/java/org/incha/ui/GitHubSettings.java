@@ -4,7 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedList;
+import org.incha.core.GitHubRepo;
+ import java.util.List;
+
+import java.util.ArrayList;
+
+import java.util.Iterator;
+
+import java.util.Random;
 
 import org.incha.core.JavaProject;
 import org.kohsuke.github.*;
@@ -19,6 +30,9 @@ public class GitHubSettings extends JPanel{
     private final JLabel crntRepo;   
     private final JButton connect;    
     private final JavaProject pjct;
+    private final JButton retrieveIssuesBtn;
+    private final JLabel issuesRetrieveOk = new JLabel("Issues list retrieved successfully");
+    private final JLabel issuesRetrieveWrong = new JLabel("The issues list cannot be retrieval");
     private final static String WRONG_FORMAT = "wrong_format";
    
     /**
@@ -27,19 +41,20 @@ public class GitHubSettings extends JPanel{
      * @return
      */    
     public GitHubSettings(JavaProject project){
-    	super(new BorderLayout());
-    	this.pjct = project;
-    	url = new JTextField(20);
-    	connect = new JButton("Connect");
-    	crntRepo = new JLabel("Current Repository: ");
-    	crntRepo.setText(crntRepo.getText() + obtainCurrentRepo(pjct));
-    	
-    	configureLayout();        
+        super(new BorderLayout());
+        this.pjct = project;
+        url = new JTextField(20);
+        connect = new JButton("Connect");
+        crntRepo = new JLabel("Current Repository: ");
+        crntRepo.setText(crntRepo.getText() + obtainCurrentRepo(pjct));
+        retrieveIssuesBtn = new JButton("Retrieve open issues");
+
+        configureLayout();        
         configListeners();
     }
     
     private void configureLayout(){
-    	JPanel north = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel north = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel center = new JPanel(new FlowLayout(FlowLayout.LEFT));
         north.add(new JLabel("GitHub URL repository: "), BorderLayout.WEST);
         north.add(url, BorderLayout.EAST);
@@ -47,7 +62,8 @@ public class GitHubSettings extends JPanel{
         north.add(connect, BorderLayout.EAST);
         
         center.add(crntRepo,BorderLayout.WEST);
-
+        center.add(retrieveIssuesBtn,BorderLayout.WEST);
+        
         this.add(north, BorderLayout.NORTH);
         this.add(center, BorderLayout.CENTER);
     }
@@ -71,8 +87,8 @@ public class GitHubSettings extends JPanel{
                     }
                     /* Getting the repository is just used to verify its availability,
                      * since there is no another way to do this */
-                    github.getRepository(repo);                      
-
+                    github.getRepository(repo);
+                    
                     pjct.getGHRepo().replaceRepository(repo);                    
                     crntRepo.setText("Current Repository: " + repo);
                 } catch (IOException e1) {
@@ -84,6 +100,37 @@ public class GitHubSettings extends JPanel{
                 			"Unknown exception", JOptionPane.ERROR_MESSAGE);
                 }
                 
+            }
+        });
+        
+        retrieveIssuesBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    //establis connection with github
+                    GitHub github = GitHub.connectAnonymously();
+                    //Retrieve the current repository
+                    String repository = pjct.getGHRepo().getCurrentRepository();                    
+                    JOptionPane.showMessageDialog(new JFrame(), JSwingRipplesApplication.getHome());
+                    //Retrieve the open issues as a list from reporitory
+                    List<GHIssue> openIssuesList = new LinkedList<GHIssue>(github.getRepository(repository).getIssues(GHIssueState.OPEN));
+                    for (GHIssue gHIssue : openIssuesList) {
+                        int issueId = gHIssue.getId();
+                        int issueNumber = gHIssue.getNumber();
+                        String issueTitle = gHIssue.getTitle();
+                        System.out.println("Id: " + issueId + "----" + " Number: " + issueNumber + "----" + "Title: " + issueTitle);
+                    }            
+                    
+                    
+                    
+                } catch (IOException e1) {
+                	JOptionPane.showMessageDialog(null, "Check your internet connection or\n"
+                			+ "if the requested repository is public",
+                			"Connection error", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception e2){
+                	JOptionPane.showMessageDialog(null, "Please check existence of the repository",
+                			"Unknown exception", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }
