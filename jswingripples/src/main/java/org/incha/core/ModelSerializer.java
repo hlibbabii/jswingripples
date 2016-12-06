@@ -31,23 +31,27 @@ public class ModelSerializer {
     /**
      * XML attribute name.
      */
-    private static final String NAME_ATTR = "name";
+    protected static final String NAME_ATTR = "name";
     /**
      * XML element 'file'.
      */
-    private static final String FILE = "file";
+    protected static final String FILE = "file";
     /**
      * XML element 'resource'.
      */
-    private static final String SOURCES = "sources";
+    protected static final String SOURCES = "sources";
+    /**
+     * XML element 'repository'.
+     */
+    protected static final String REPOSITORY = "repository";
     /**
      * XML element 'project'.
      */
-    private static final String PROJECT = "project";
+    protected static final String PROJECT = "project";
     /**
      * XML element 'application'.
      */
-    private static final String APPLICATION = "application";
+    protected static final String APPLICATION = "application";
 
     /**
      * Default constructor.
@@ -82,7 +86,8 @@ public class ModelSerializer {
         for (final Element e : files) {
             project.getBuildPath().addSource(new File(e.getTextContent()));
         }
-
+        final Element repo = getFirstChildElement(projectItem, REPOSITORY);
+        project.getGHRepo().replaceRepository(repo.getTextContent());
     }
 
     /**
@@ -141,6 +146,9 @@ public class ModelSerializer {
                 sources.appendChild(src);
                 src.appendChild(dom.createTextNode(f.getPath()));
             }
+            final Element repository = dom.createElement(REPOSITORY);
+            project.appendChild(repository);
+            repository.appendChild(dom.createTextNode(p.getGHRepo().getCurrentRepository()));
 
         }
 

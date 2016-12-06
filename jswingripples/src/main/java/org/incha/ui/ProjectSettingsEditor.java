@@ -26,6 +26,7 @@ public class ProjectSettingsEditor extends JTabbedPane {
 
         addTab("Project", createProjectSettingsTab());
         addTab("Build Path", createBuildPathTab());
+        addTab("Github", createGithubTab());
     }
 
     /**
@@ -41,6 +42,15 @@ public class ProjectSettingsEditor extends JTabbedPane {
         root.add(panel);
         return root;
     }
+    /**
+     * @return
+     */
+    private JTabbedPane createGithubTab() {
+        final JTabbedPane tp = new JTabbedPane(TOP, WRAP_TAB_LAYOUT);
+        tp.addTab("GitHub Settings", new GitHubSettings(project));
+        return tp;
+    }
+
     /**
      * @return
      */

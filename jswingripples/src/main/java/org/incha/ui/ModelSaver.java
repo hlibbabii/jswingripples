@@ -17,20 +17,22 @@ import org.incha.core.ModelSerializer;
 import org.incha.utils.CollectionUtils;
 
 public class ModelSaver implements PropertyChangeListener {
-    /**
-     * Logger.
-     */
+
     private static final Log log = LogFactory.getLog(ModelSaver.class);
-    /**
-     * Model.
-     */
     private final JavaProjectsModel model;
     /**
      * File to save model.
      */
     private final File file;
 
-    private PropertyChangeListener buildPathLitener = new PropertyChangeListener() {
+    private PropertyChangeListener buildPathListener = new PropertyChangeListener() {
+        @Override
+        public void propertyChange(final PropertyChangeEvent evt) {
+            save();
+        }
+    };
+    
+    private PropertyChangeListener gitHubRepoListener = new PropertyChangeListener() {
         @Override
         public void propertyChange(final PropertyChangeEvent evt) {
             save();
@@ -49,7 +51,8 @@ public class ModelSaver implements PropertyChangeListener {
 
         //synchronize state
         for (final JavaProject p : model.getProjects()) {
-            p.getBuildPath().addPropertyChangeListener(buildPathLitener);
+            p.getBuildPath().addPropertyChangeListener(buildPathListener);
+            p.getGHRepo().addPropertyChangeListener(gitHubRepoListener);
         }
     }
 
@@ -84,14 +87,16 @@ public class ModelSaver implements PropertyChangeListener {
      * @param item
      */
     protected void projectDeleted(final JavaProject item) {
-        item.getBuildPath().removePropertyChangeListener(buildPathLitener);
+        item.getBuildPath().removePropertyChangeListener(buildPathListener);
+        item.getGHRepo().removePropertyChangeListener(gitHubRepoListener);
         save();
     }
     /**
      * @param item
      */
     protected void projectAdded(final JavaProject item) {
-        item.getBuildPath().addPropertyChangeListener(buildPathLitener);
+        item.getBuildPath().addPropertyChangeListener(buildPathListener);
+        item.getGHRepo().addPropertyChangeListener(gitHubRepoListener);
         save();
     }
 

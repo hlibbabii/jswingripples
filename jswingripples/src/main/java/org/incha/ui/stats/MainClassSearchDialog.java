@@ -8,6 +8,7 @@ import javax.swing.JDialog;
 import org.incha.core.JavaProject;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,32 +30,27 @@ public class MainClassSearchDialog extends JDialog {
     private JList list = new JList();
     private StartAnalysisDialog startAnalysisDialogCallback;
     private JButton ok = new JButton();
-    private HashMap<String, String> hmap = new HashMap<String, String>();
-    private ArrayList<String> arr = new ArrayList<String>();
+    private Map<String, String> hmap = new HashMap<String, String>();
     
     @Override
     public void setTitle(String title) {
         super.setTitle(title);
     }
     
-    
-    public void FindMainClasses(JavaProject project) throws IOException{        
+    private void FindMainClasses(JavaProject project) throws IOException{        
         String pattern = "void\\s*main\\s*\\(";
         Pattern r = Pattern.compile(pattern);
         try {
             JSwingRipplesEIG eig = new JSwingRipplesEIG(project);
             final ICompilationUnit[] units = JavaDomUtils.getCompilationUnitsWithoutMonitor(eig.getJavaProject());
             
-            //for (int i =0 ; i<units.length; i++){
             for (ICompilationUnit u : units) {
-                //ICompilationUnit u = units[i];
                 IPackageDeclaration[] P = u.getPackageDeclarations();
                 IType[] T = u.getAllTypes();
                 for (int j=0; j<P.length; j++){                    
                     
                     Matcher m = r.matcher(T[j].toString());
                     if (m.find()) {
-                        arr.add(P[j].getElementName()+"."+T[j].getElementName());
                         String fileName = u.getPath().toString().replaceAll("/", Matcher.quoteReplacement(File.separator));
                         hmap.put(P[j].getElementName()+"."+T[j].getElementName(),fileName);
                         
@@ -68,9 +64,15 @@ public class MainClassSearchDialog extends JDialog {
     }
     
     
-    public void configureList(){
+    private void configureList() {
+        final Object[] objs = new Object[3];
+        int i = 0;
+        for (String key : hmap.keySet()) {
+            objs[i] = (Object)key;
+            i++;
+        }
         list.setModel(new AbstractListModel() {
-            Object[] strings = arr.toArray();
+            Object[] strings = objs;
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
