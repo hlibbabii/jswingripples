@@ -180,8 +180,8 @@ public class StartAnalysisDialog extends JDialog {
             }
         });
         
-        JButton btnbrowse = new JButton("Browse");
-        btnbrowse.addActionListener(new ActionListener() {
+        JButton btnmanual = new JButton("Manual");
+        btnmanual.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final JFileChooser chooser = new JFileChooser(project.getBuildPath().getFirstPath());
@@ -195,10 +195,10 @@ public class StartAnalysisDialog extends JDialog {
                 }
             }
         });
-        panelclassname.add(btnbrowse);
+        panelclassname.add(btnmanual);
         
-        JButton btnsearch = new JButton("Search");
-        btnsearch.addActionListener(new ActionListener() {
+        JButton btnautomatic = new JButton("Automatic");
+        btnautomatic.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 try {
@@ -213,7 +213,7 @@ public class StartAnalysisDialog extends JDialog {
                 }
             }
         });
-        panelclassname.add(btnsearch);
+        panelclassname.add(btnautomatic);
         panel.add(panelclassname);
        
         panel.add(new JLabel("Dependency Graph"));
