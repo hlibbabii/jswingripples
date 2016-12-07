@@ -65,7 +65,7 @@ public class MainClassSearchDialog extends JDialog {
     
     
     private void configureList() {
-        final Object[] objs = new Object[3];
+        final Object[] objs = new Object[hmap.size()];
         int i = 0;
         for (String key : hmap.keySet()) {
             objs[i] = (Object)key;
