@@ -129,21 +129,10 @@ public class GitHubSettings extends JPanel{
                     //establis connection with github
                     GitHub github = GitHub.connectAnonymously();
                     //Retrieve the current repository
-                    String repository = pjct.getGHRepo().getCurrentRepository();                    
-                    JOptionPane.showMessageDialog(new JFrame(), JSwingRipplesApplication.getHome());
-                    //Retrieve the open issues as a list from reporitory
-                    String informa = github.getRepository(repository).getDescription();
-                    JOptionPane.showMessageDialog(new JFrame(), informa);
-                    List<GHIssue> openIssuesList = new LinkedList<GHIssue>(github.getRepository(repository).getIssues(GHIssueState.OPEN));
-                    
-                    JOptionPane.showMessageDialog(new JFrame(), JSwingRipplesApplication.getHome());
-                    
-                    
-
+                    String repository = pjct.getGHRepo().getCurrentRepository();
+                    //Retrieve the open issues as a list from reporitory                    
+                    List<GHIssue> openIssuesList = new LinkedList<GHIssue>(github.getRepository(repository).getIssues(GHIssueState.OPEN));                    
                     generate(openIssuesList);
-                    
-                    
-                    
                 } catch (IOException e1) {
                 	JOptionPane.showMessageDialog(null, "Check your internet connection or\n"
                 			+ "if the requested repository is public",
@@ -183,33 +172,25 @@ public class GitHubSettings extends JPanel{
     }
     
     
-    public void generate(List<GHIssue> openIssuesList) throws Exception{
-        
-        String xmlFileName = pjct.getName();
-        
+    public void generate(List<GHIssue> openIssuesList) throws Exception {        
+        String xmlFileName = pjct.getName();        
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         DOMImplementation implementation = builder.getDOMImplementation();
         Document document = implementation.createDocument(null, "project", null);
-        document.setXmlVersion("1.0");
-        
+        document.setXmlVersion("1.0");        
         //Main Node
-        Element raiz = document.getDocumentElement();
+        Element root = document.getDocumentElement();
         //Name Node
         Element nameNode = document.createElement("name");
         Text nameValue = document.createTextNode(xmlFileName);
         nameNode.appendChild(nameValue);
         //List Issue Node
-        Element listIssuesNode = document.createElement("list_issues");
-        
-        for (GHIssue gHIssue : openIssuesList) {
-            int issueId = gHIssue.getId();
-            int issueNumber = gHIssue.getNumber();
-            String issueTitle = gHIssue.getTitle();
-            System.out.println("Id: " + issueId + "----" + " Number: " + issueNumber + "----" + "Title: " + issueTitle);
-            
+        Element listIssuesNode = document.createElement("list_issues");        
+        for (GHIssue gHIssue : openIssuesList) {            
             //Issue Node
             Element issueNode = document.createElement("issue");
+            issueNode.setAttribute("id", Integer.toString(gHIssue.getId()));
             //Number Node
             Element numberIssueNode = document.createElement("number"); 
             Text numberIssueValue = document.createTextNode(Integer.toString(gHIssue.getNumber()));
@@ -217,8 +198,7 @@ public class GitHubSettings extends JPanel{
             //Title Node
             Element titleIssueNode = document.createElement("title"); 
             Text titleIssueValue = document.createTextNode(gHIssue.getTitle());
-            titleIssueNode.appendChild(titleIssueValue);
-            
+            titleIssueNode.appendChild(titleIssueValue);            
             //append numberIssueNode to issueNode
             issueNode.appendChild(numberIssueNode);
             //append titleIssueNode to issueNode
@@ -227,19 +207,14 @@ public class GitHubSettings extends JPanel{
             listIssuesNode.appendChild(issueNode);
         }
         //append nameNode to raiz
-        raiz.appendChild(nameNode); //pegamos el elemento a la raiz "Documento"
+        root.appendChild(nameNode);
         //append itemNode to raiz
-        raiz.appendChild(listIssuesNode); //pegamos el elemento a la raiz "Documento"
-        
+        root.appendChild(listIssuesNode);        
         //Generate XML
         Source source = new DOMSource(document);
         //Indicamos donde lo queremos almacenar
         Result result = new StreamResult(new java.io.File(JSwingRipplesApplication.getHome() + "/"+xmlFileName+".xml")); //nombre del archivo
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.transform(source, result);
-
-        
-    }
-    
-    
+    }    
 }
