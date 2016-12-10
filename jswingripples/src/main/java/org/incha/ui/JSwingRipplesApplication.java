@@ -81,6 +81,16 @@ public class JSwingRipplesApplication extends JFrame {
             menu.add(startAnalysis);
 
             menu.show(projectsView, e.getX(), e.getY());
+            
+            //project preferences menu item
+            final JMenuItem showIssues = new JMenuItem("Show Issues");
+            prefs.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    //TODO Action for table view
+                }
+            });
+            menu.add(showIssues);
         }
     }
     
