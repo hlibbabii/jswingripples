@@ -5,46 +5,32 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
-import org.incha.core.GitHubRepo;
- import java.util.List;
-
-import java.util.ArrayList;
-
-import java.util.Iterator;
-
-import java.util.Random;
-
-import org.incha.core.JavaProject;
-import org.kohsuke.github.*;
-
-/**
- * 
- */
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import org.kohsuke.github.*;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
+
+import org.incha.core.JavaProject;
 
 /**
  * Created by Amoreno on 11/23/16.
  */
 public class GitHubSettings extends JPanel{
 
-	private static final long serialVersionUID = 3049936845151322175L;
+    private static final long serialVersionUID = 3049936845151322175L;
     private final JTextField url;
     private final JLabel crntRepo;   
     private final JButton connect;    
