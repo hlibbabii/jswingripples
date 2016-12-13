@@ -85,22 +85,13 @@ public class JSwingRipplesApplication extends JFrame {
             showIssues.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
-                    String[] columnNames = {"Number",
-                        "Title"};
-                    Object[][] data = {
-                    {new Integer(79), "Update RS032"},
-                    {new Integer(77), "Save issues changes in the issues file (local)"},
-                    {new Integer(76), "Upload changes to GitHub"},
-                    {new Integer(75), "Change the color of a text"},
-                    {new Integer(74), "Right clic in a word and show an option menu (with the color options)"}};
                     IssuesView i = new IssuesView();
-                    i.addTableView(data, columnNames);
-                    
+                    IssuesReader r = new IssuesReader();
+                    i.addTableView(r.loadData(), r.loadColumnNames());
                     addComponentAsTab(i,"Issues from Project: "+ project.getName());
                 }
             });
             menu.add(showIssues);
-
             menu.show(projectsView, e.getX(), e.getY());
             
             
