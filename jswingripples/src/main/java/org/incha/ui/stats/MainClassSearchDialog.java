@@ -1,6 +1,5 @@
 package org.incha.ui.stats;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
@@ -8,10 +7,7 @@ import javax.swing.JDialog;
 import org.incha.core.JavaProject;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JList;
@@ -20,54 +16,53 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.incha.compiler.dom.JavaDomUtils;
-import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.AbstractListModel;
 import org.eclipse.jdt.core.IPackageDeclaration;
+import org.incha.ui.util.NullMonitor;
 
 public class MainClassSearchDialog extends JDialog {
     private JList list = new JList();
     private StartAnalysisDialog startAnalysisDialogCallback;
     private JButton ok = new JButton();
-    private Map<String, String> hmap = new HashMap<String, String>();
     
     @Override
     public void setTitle(String title) {
         super.setTitle(title);
     }
     
-    private void FindMainClasses(JavaProject project) throws IOException{        
-        String pattern = "void\\s*main\\s*\\(";
-        Pattern r = Pattern.compile(pattern);
+    private Map<String, String> findMainClasses(JavaProject project) throws IOException{
+        String patternRegex = "void\\s*main\\s*\\(";
+        Pattern pattern = Pattern.compile(patternRegex);
+        Map<String, String> mainClassToFileName = new HashMap<>();
         try {
-            JSwingRipplesEIG eig = new JSwingRipplesEIG(project);
-            final ICompilationUnit[] units = JavaDomUtils.getCompilationUnitsWithoutMonitor(eig.getJavaProject());
-            
-            for (ICompilationUnit u : units) {
-                IPackageDeclaration[] P = u.getPackageDeclarations();
-                IType[] T = u.getAllTypes();
-                for (int j=0; j<P.length; j++){                    
-                    
-                    Matcher m = r.matcher(T[j].toString());
-                    if (m.find()) {
-                        String fileName = u.getPath().toString().replaceAll("/", Matcher.quoteReplacement(File.separator));
-                        hmap.put(P[j].getElementName()+"."+T[j].getElementName(),fileName);
-                        
+            final ICompilationUnit[] units = JavaDomUtils.getCompilationUnits(project, new NullMonitor());
+            for (ICompilationUnit unit : units) {
+                IPackageDeclaration[] packageDeclarations = unit.getPackageDeclarations();
+                IType[] allTypes = unit.getAllTypes();
+                for (int j = 0; j < packageDeclarations.length; j++){
+                    Matcher matcher = pattern.matcher(allTypes[j].toString());
+                    if (matcher.find()) {
+                        String fileName =
+                                unit.getPath().toString().replaceAll("/", Matcher.quoteReplacement(File.separator));
+                        mainClassToFileName.put(
+                                packageDeclarations[j].getElementName()+"."+allTypes[j].getElementName(),fileName);
                     }
                 }
             }
         } catch (JavaModelException ex) {
             Logger.getLogger(StartAnalysisDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        return mainClassToFileName;
     }
     
     
-    private void configureList() {
-        final Object[] objs = new Object[hmap.size()];
+    private void configureList(final Map<String, String> mainClassToFileName) {
+        final Object[] objs = new Object[mainClassToFileName.size()];
         int i = 0;
-        for (String key : hmap.keySet()) {
+        for (String key : mainClassToFileName.keySet()) {
             objs[i] = (Object)key;
             i++;
         }
@@ -84,7 +79,7 @@ public class MainClassSearchDialog extends JDialog {
                 } 
                 if (evt.getClickCount() == 2) {
                     try {
-                        okActionPerformed();
+                        okActionPerformed(mainClassToFileName);
                     } catch (IOException ex) {
                         Logger.getLogger(MainClassSearchDialog.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -99,21 +94,21 @@ public class MainClassSearchDialog extends JDialog {
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         
-        FindMainClasses(project);
+       final Map<String, String> mainClassToFileName = findMainClasses(project);
         
         JScrollPane jScrollPane1 = new JScrollPane();
         
         JButton cancel = new JButton();
         
         
-        configureList();
+        configureList(mainClassToFileName);
         jScrollPane1.setViewportView(list);
         
         ok.setText("Ok");
         ok.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    okActionPerformed();
+                    okActionPerformed(mainClassToFileName);
                 } catch (IOException ex) {
                     Logger.getLogger(MainClassSearchDialog.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -160,12 +155,12 @@ public class MainClassSearchDialog extends JDialog {
         
     }
     
-    private void okActionPerformed() throws IOException {                                   
+    private void okActionPerformed(Map<String, String> mainClassToFileName) throws IOException {
         dispose();
         int index = list.getSelectedIndex();
         if (index!= -1){
             String selectedItem = list.getSelectedValue().toString();
-            startAnalysisDialogCallback.setClassName(selectedItem,hmap.get(selectedItem));
+            startAnalysisDialogCallback.setClassName(selectedItem,mainClassToFileName.get(selectedItem));
             startAnalysisDialogCallback.enableButtonOk();
         }
     }                                  
