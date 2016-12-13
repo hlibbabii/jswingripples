@@ -39,6 +39,7 @@ public class GitHubSettings extends JPanel{
     private final JLabel issuesRetrieveOk = new JLabel("Issues list retrieved successfully");
     private final JLabel issuesRetrieveWrong = new JLabel("The issues list cannot be retrieval");
     private final static String WRONG_FORMAT = "wrong_format";
+    private  GitHub github = null;
    
     /**
      * Creates JPanel for project's GitHub settings
@@ -73,14 +74,12 @@ public class GitHubSettings extends JPanel{
         this.add(center, BorderLayout.CENTER);
     }
     
-    private void configListeners(){  	   
-        
+    private void configListeners(){
+        performConnection();
         connect.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                GitHub github = null;                
-                try {
-                    github = GitHub.connectAnonymously();
+            public void actionPerformed(ActionEvent e) {        
+                try {                    
                     String repo = formatURLRepo(url.getText());
                     url.setText("");                    
                     if (repo.compareTo(WRONG_FORMAT) == 0){
@@ -92,8 +91,7 @@ public class GitHubSettings extends JPanel{
                     }
                     /* Getting the repository is just used to verify its availability,
                      * since there is no another way to do this */
-                    github.getRepository(repo);
-                    
+                    github.getRepository(repo);                    
                     pjct.getGHRepo().replaceRepository(repo);                    
                     crntRepo.setText("Current Repository: " + repo);
                 } catch (IOException e1) {
@@ -112,8 +110,6 @@ public class GitHubSettings extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    //establis connection with github
-                    GitHub github = GitHub.connectAnonymously();
                     //Retrieve the current repository
                     String repository = pjct.getGHRepo().getCurrentRepository();
                     //Retrieve the open issues as a list from reporitory                    
@@ -157,6 +153,15 @@ public class GitHubSettings extends JPanel{
     			 
     }
     
+    public void performConnection() {
+        try {
+            github = GitHub.connectAnonymously();
+        } catch (IOException e1) {
+            JOptionPane.showMessageDialog(null, "Check your internet connection or\n"
+                			+ "if the requested repository is public",
+                			"Connection error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     
     public void generate(List<GHIssue> openIssuesList) throws Exception {        
         String xmlFileName = pjct.getName();        
@@ -202,5 +207,5 @@ public class GitHubSettings extends JPanel{
         Result result = new StreamResult(new java.io.File(JSwingRipplesApplication.getHome() + File.separator +xmlFileName+".xml")); //nombre del archivo
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.transform(source, result);
-    }    
+    }
 }
