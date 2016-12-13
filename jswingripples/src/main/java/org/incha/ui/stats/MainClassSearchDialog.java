@@ -27,10 +27,52 @@ public class MainClassSearchDialog extends JDialog {
     private JList list = new JList();
     private StartAnalysisDialog startAnalysisDialogCallback;
     private JButton ok = new JButton();
+    private JButton cancel = new JButton();
     
     @Override
     public void setTitle(String title) {
         super.setTitle(title);
+    }
+
+    public MainClassSearchDialog(final StartAnalysisDialog callback, JavaProject project) throws IOException{
+        startAnalysisDialogCallback = callback;
+        setModal(true);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+
+        final Map<String, String> mainClassToFileName = findMainClasses(project);
+        configureList(mainClassToFileName);
+        configureOkButton(mainClassToFileName);
+        configureCancelButton();
+
+        JScrollPane jScrollPane1 = new JScrollPane();
+        jScrollPane1.setViewportView(list);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jScrollPane1)
+                                .addContainerGap())
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(88, 88, 88)
+                                .addComponent(ok, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(99, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(ok)
+                                        .addComponent(cancel))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
     }
     
     private Map<String, String> findMainClasses(JavaProject project) throws IOException{
@@ -63,7 +105,7 @@ public class MainClassSearchDialog extends JDialog {
         final Object[] objs = new Object[mainClassToFileName.size()];
         int i = 0;
         for (String key : mainClassToFileName.keySet()) {
-            objs[i] = (Object)key;
+            objs[i] = key;
             i++;
         }
         list.setModel(new AbstractListModel() {
@@ -88,72 +130,7 @@ public class MainClassSearchDialog extends JDialog {
         });
     }
 
-    public MainClassSearchDialog(final StartAnalysisDialog callback, JavaProject project) throws IOException{
-        ok.setEnabled(false);
-        startAnalysisDialogCallback = callback;
-        setModal(true);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        
-       final Map<String, String> mainClassToFileName = findMainClasses(project);
-        
-        JScrollPane jScrollPane1 = new JScrollPane();
-        
-        JButton cancel = new JButton();
-        
-        
-        configureList(mainClassToFileName);
-        jScrollPane1.setViewportView(list);
-        
-        ok.setText("Ok");
-        ok.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    okActionPerformed(mainClassToFileName);
-                } catch (IOException ex) {
-                    Logger.getLogger(MainClassSearchDialog.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
 
-        cancel.setText("Cancel");
-        cancel.setToolTipText("");
-        cancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelActionPerformed();
-            }
-        });
-        
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(88, 88, 88)
-                .addComponent(ok, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(99, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ok)
-                    .addComponent(cancel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        
-        
-        
-    }
     
     private void okActionPerformed(Map<String, String> mainClassToFileName) throws IOException {
         dispose();
@@ -163,9 +140,33 @@ public class MainClassSearchDialog extends JDialog {
             startAnalysisDialogCallback.setClassName(selectedItem,mainClassToFileName.get(selectedItem));
             startAnalysisDialogCallback.enableButtonOk();
         }
-    }                                  
+    }
 
-    private void cancelActionPerformed() {                                       
+    private void configureOkButton(final Map<String, String> mainClassToFileName) {
+        ok.setText("Ok");
+        ok.setEnabled(false);
+        ok.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    okActionPerformed(mainClassToFileName);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainClassSearchDialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+    }
+
+    private void configureCancelButton() {
+        cancel.setText("Cancel");
+        cancel.setToolTipText("");
+        cancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelActionPerformed();
+            }
+        });
+    }
+
+    private void cancelActionPerformed() {
         dispose();
     }        
 
