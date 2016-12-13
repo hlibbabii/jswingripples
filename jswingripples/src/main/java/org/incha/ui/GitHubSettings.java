@@ -213,7 +213,7 @@ public class GitHubSettings extends JPanel{
         //Generate XML
         Source source = new DOMSource(document);
         //Indicamos donde lo queremos almacenar
-        Result result = new StreamResult(new java.io.File(JSwingRipplesApplication.getHome() + "/"+xmlFileName+".xml")); //nombre del archivo
+        Result result = new StreamResult(new java.io.File(JSwingRipplesApplication.getHome() + File.separator +xmlFileName+".xml")); //nombre del archivo
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.transform(source, result);
     }    
