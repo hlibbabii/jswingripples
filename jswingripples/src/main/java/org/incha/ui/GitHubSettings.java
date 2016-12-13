@@ -24,6 +24,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
 import org.incha.core.JavaProject;
+import org.incha.core.ModelSerializer;
 
 /**
  * Created by Amoreno on 11/23/16.
@@ -114,7 +115,7 @@ public class GitHubSettings extends JPanel{
                     String repository = pjct.getGHRepo().getCurrentRepository();
                     //Retrieve the open issues as a list from reporitory                    
                     List<GHIssue> openIssuesList = new LinkedList<GHIssue>(github.getRepository(repository).getIssues(GHIssueState.OPEN));                    
-                    generate(openIssuesList);
+                    ModelSerializer.generate(openIssuesList, pjct.getName());
                 } catch (IOException e1) {
                 	JOptionPane.showMessageDialog(null, "Check your internet connection or\n"
                 			+ "if the requested repository is public",
