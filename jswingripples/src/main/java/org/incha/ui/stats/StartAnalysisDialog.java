@@ -2,6 +2,7 @@ package org.incha.ui.stats;
 
 import org.incha.core.*;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
+import org.incha.core.jswingripples.parser.InteractiveTask;
 import org.incha.ui.JSwingRipplesApplication;
 import org.incha.ui.jripples.JRipplesDefaultModulesConstants;
 
@@ -212,20 +213,40 @@ public class StartAnalysisDialog extends JDialog {
     }
 
     private JButton createAutomaticButton() {
-        JButton automaticButton = new JButton("Auto");
+        final JButton automaticButton = new JButton("Auto");
+        automaticButton.setEnabled(projects.getItemCount() != 0);
         automaticButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                try {
-                    final MainClassSearchDialog dialog;
-                    dialog = new MainClassSearchDialog(StartAnalysisDialog.this, project);
-                    dialog.pack();
-                    dialog.setLocationRelativeTo(ownerWindow);
-                    dialog.setTitle("Select the enter point");
-                    dialog.setVisible(true);
-                } catch (IOException ex) {
-                    Logger.getLogger(StartAnalysisDialog.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                new InteractiveTask(new InteractiveTask.TaskListener() {
+                    @Override
+                    public void taskSuccessful() {
+                        automaticButton.setEnabled(true);
+                    }
+
+                    @Override
+                    public void taskFailure() {
+                        Logger.getLogger(StartAnalysisDialog.class.getName())
+                              .log(Level.SEVERE, "Could not find main classes");
+                    }
+                }) {
+                    @Override
+                    public void run() {
+                        try {
+                            automaticButton.setEnabled(false);
+                            // dialog creation is a heavy operation, since it looks for main classes
+                            // in the entire project
+                            MainClassSearchDialog dialog = new MainClassSearchDialog(StartAnalysisDialog.this, project);
+                            dialog.pack();
+                            dialog.setLocationRelativeTo(ownerWindow);
+                            dialog.setTitle("Select entry point");
+                            dialog.setVisible(true);
+                            listener.taskSuccessful();
+                        } catch (IOException ex) {
+                            listener.taskFailure();
+                        }
+                    }
+                }.start();
             }
         });
         return automaticButton;
@@ -233,6 +254,7 @@ public class StartAnalysisDialog extends JDialog {
 
     private JButton createBrowseButton() {
         JButton browseButton = new JButton("Browse");
+        browseButton.setEnabled(projects.getItemCount() != 0);
         browseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
