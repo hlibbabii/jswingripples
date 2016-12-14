@@ -19,9 +19,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class StartAnalysisAction implements ActionListener {
-    public class AnalysisFailedException extends Exception {
-        public AnalysisFailedException(String message) { super(message); }
-    }
 	private String projectSelected;
 	
     /**

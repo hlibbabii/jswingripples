@@ -207,7 +207,6 @@ public class JSwingRipplesApplication extends JFrame {
         mainMenuBar.getSearchMenu().getClearButton().setEnabled(true);
     }
 
-    //TODO: Button controller for these methods
 
     public void showProceedButton() {
         JSplitPane rightSide = (JSplitPane) projectViewAndViewAreaSplit.getRightComponent();
