@@ -157,7 +157,9 @@ public class StartAnalysisDialog extends JDialog {
         if(JSwingRipplesApplication.getInstance().isAnotherProjectOpen()){
             String[] options = new String[]{"Yes","Cancel"};
             int result = JOptionPane.showOptionDialog(this,
-                    new String[]{"There is another analysis in progress.\n Are you sure you want to begin a start a new one? All progress from the last analysis will be lost."},
+                    new String[]{"There is another analysis in progress.\n " +
+                            "Are you sure you want to begin a start a new one? " +
+                            "All progress from the last analysis will be lost."},
                     "Another analysis in progress",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE,
