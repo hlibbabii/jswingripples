@@ -49,13 +49,11 @@ class GitSettings extends JPanel {
 
     private JPanel fieldsPanel(final ThreadHolder downloadThreadHolder) {
         JPanel panel = new JPanel(new BorderLayout());
-        //url
         final JPanel north = new JPanel(new FlowLayout(FlowLayout.LEFT));
         final JLabel jLabel = new JLabel("URL Project GitHub: ",JLabel.LEFT);
         north.add(jLabel,BorderLayout.WEST);
         north.add(url,BorderLayout.EAST);
         panel.add(north, BorderLayout.NORTH);
-        // dir
         final JPanel center = new JPanel(new FlowLayout(FlowLayout.LEFT));
         final JLabel dirSelect = new JLabel("Select Directory: ",JLabel.LEFT);
         final JLabel selected = new JLabel("", JLabel.LEFT);
@@ -74,7 +72,6 @@ class GitSettings extends JPanel {
         });
         center.add(select,BorderLayout.EAST);
         panel.add(center, BorderLayout.CENTER);
-        // cloneButton button
         final JPanel okPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         cloneButton.addActionListener(new ActionListener() {
             @Override
