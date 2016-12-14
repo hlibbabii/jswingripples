@@ -74,6 +74,9 @@ public class DefaultController implements StatisticsChangeListener {
 
         final JScrollPane comp = new JScrollPane(view);
         comp.getViewport().setBackground(Color.WHITE);
+        if(JSwingRipplesApplication.getInstance().isAnotherProjectOpen()){
+            JSwingRipplesApplication.getInstance().removeAllTabs();
+        }
         JSwingRipplesApplication.getInstance().addComponentAsTab(comp, "Project: " + project.getName());
     }
 
