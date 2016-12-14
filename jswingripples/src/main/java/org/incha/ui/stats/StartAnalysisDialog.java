@@ -1,9 +1,8 @@
 package org.incha.ui.stats;
 
-import org.incha.core.JavaProject;
-import org.incha.core.JavaProjectsModel;
-import org.incha.core.ModuleConfiguration;
-import org.incha.core.Statistics;
+import org.incha.core.*;
+import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
+import org.incha.ui.JSwingRipplesApplication;
 import org.incha.ui.jripples.JRipplesDefaultModulesConstants;
 
 import javax.swing.*;
@@ -75,12 +74,7 @@ public class StartAnalysisDialog extends JDialog {
         startConceptLocationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                try {
-                    doOk();
-                } catch (StartAnalysisAction.AnalysisFailedException ex) {
-                    // TODO: how to notify the user?
-                    ex.printStackTrace();
-                }
+                doOk();
             }
         });
         south.add(startConceptLocationButton);
@@ -203,24 +197,81 @@ public class StartAnalysisDialog extends JDialog {
         return panel;
     }
 
-    /**
-     *
-     */
     protected void doCancel() {
         dispose();
     }
-    /**
-     *
-     */
-    protected void doOk() throws StartAnalysisAction.AnalysisFailedException {
+
+    protected void doOk() {
         dispose();
-        startAnalysisCallback.startAnalysis(this);
+        startAnalysisCallback.startAnalysis(
+                createConceptLocationData(), new StartAnalysisAction.SuccessfulAnalysisAction() {
+            @Override
+            public void execute(ModuleConfiguration config, final JSwingRipplesEIG eig) {
+                JSwingRipplesApplication.getInstance().showProceedButton();
+                StatisticsManager.getInstance().addStatistics(config, eig);
+                JSwingRipplesApplication.getInstance().setProceedButtonListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        startAnalysisCallback.startAnalysis(createImpactAnalysisData(eig), createImpactAnalysisCallback());
+                    }
+                });
+            }
+        });
     }
 
-    /**
-     * @return the className
-     */
-    public File getMainClass() {
-        return mainClassFile;
+    private AnalysisData createConceptLocationData() {
+        return new AnalysisData(
+                (String) projects.getSelectedItem(),
+                mainClassFile,
+                (String) dependencyGraph.getSelectedItem(),
+                ModuleConfiguration.AnalysisModule.MODULE_CONCEPT_LOCATION,
+                new JSwingRipplesEIG(JavaProjectsModel.getInstance().getProject((String) projects.getSelectedItem())));
     }
+
+    private AnalysisData createImpactAnalysisData(JSwingRipplesEIG postConceptLocationEIG) {
+        return new AnalysisData(
+                (String) projects.getSelectedItem(),
+                mainClassFile,
+                (String) dependencyGraph.getSelectedItem(),
+                ModuleConfiguration.AnalysisModule.MODULE_IMPACT_ANALYSIS,
+                postConceptLocationEIG);
+    }
+
+    private AnalysisData createChangePropagationData(JSwingRipplesEIG postImpactAnalysisEIG) {
+        return new AnalysisData(
+                (String) projects.getSelectedItem(),
+                mainClassFile,
+                (String) dependencyGraph.getSelectedItem(),
+                ModuleConfiguration.AnalysisModule.MODULE_CHANGE_PROPAGATION,
+                postImpactAnalysisEIG);
+    }
+
+    private StartAnalysisAction.SuccessfulAnalysisAction createChangePropagationCallback(){
+        return new StartAnalysisAction.SuccessfulAnalysisAction() {
+            @Override
+            public void execute(ModuleConfiguration config, JSwingRipplesEIG eig) {
+                JSwingRipplesApplication.getInstance().hideProceedButton();
+                JSwingRipplesApplication.getInstance().resetProceedButton();
+                JSwingRipplesApplication.getInstance().refreshViewArea();
+            }
+        };
+    }
+
+    private StartAnalysisAction.SuccessfulAnalysisAction createImpactAnalysisCallback(){
+        return new StartAnalysisAction.SuccessfulAnalysisAction() {
+            @Override
+            public void execute(ModuleConfiguration config,final JSwingRipplesEIG eig) {
+                JSwingRipplesApplication.getInstance().refreshViewArea();
+                JSwingRipplesApplication.getInstance().setProceedButtonText("Proceed To Change Propagation");
+                JSwingRipplesApplication.getInstance().setProceedButtonListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        startAnalysisCallback.startAnalysis(
+                                createChangePropagationData(eig), createChangePropagationCallback());
+                    }
+                });
+            }
+        };
+    }
+
 }
