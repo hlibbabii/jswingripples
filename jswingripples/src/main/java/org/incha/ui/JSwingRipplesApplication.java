@@ -248,6 +248,10 @@ public class JSwingRipplesApplication extends JFrame {
         }
     }
 
+    public void enableProceedButton(boolean enable){
+        proceedButton.setEnabled(enable);
+    }
+
     public void refreshViewArea() {
         viewArea.repaint();
     }
