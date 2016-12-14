@@ -79,7 +79,20 @@ public class JSwingRipplesApplication extends JFrame {
             final JMenuItem startAnalysis = new JMenuItem("Start analysis");
             startAnalysis.addActionListener(new StartAnalysisAction(project.getName()));
             menu.add(startAnalysis);
-
+            
+            //project preferences menu item
+            final JMenuItem showIssues = new JMenuItem("Show Issues");
+            showIssues.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    IssuesView issuesWindow = new IssuesView();
+                    IssuesReader issuesReader = new IssuesReader(JSwingRipplesApplication.getHome()+ File.separator+project.getName()+".xml");
+                    issuesReader.load();
+                    issuesWindow.addTableView(issuesReader.loadData(), issuesReader.loadColumnNames());
+                    addComponentAsTab(issuesWindow,"Issues from Project: "+ project.getName());
+                }
+            });
+            menu.add(showIssues);
             menu.show(projectsView, e.getX(), e.getY());
         }
     }
