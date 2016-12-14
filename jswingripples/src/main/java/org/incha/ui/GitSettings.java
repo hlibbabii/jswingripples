@@ -6,8 +6,7 @@ import org.incha.core.JavaProject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -17,21 +16,25 @@ import org.eclipse.jgit.api.Git;
 class GitSettings extends JPanel {
 
 	private static final long serialVersionUID = 5644243718981468086L;
-	private JTextField url = new JTextField(20);
-    private JButton select = new JButton("Select");
-    private SourcesEditor sourcesEditor;
+	private final JTextField url = new JTextField(20);
+    private final JButton select = new JButton("Select");
+    private final JButton cloneButton = new JButton("Clone");
+    private final SourcesEditor sourcesEditor;
     private final JFrame principalFrame;
     private JavaProject project;
 
+    @SuppressWarnings("deprecated")
     GitSettings(JavaProject project){
     	this.project = project;
+        final ThreadHolder downloadThreadHolder = new ThreadHolder();
         sourcesEditor = new SourcesEditor(project);
 
         principalFrame = new JFrame("Clone From GitHub");
-        principalFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        principalFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
         principalFrame.getContentPane().setLayout(new BorderLayout(0, 3));
 
-        JPanel view = fieldsPanel();
+        JPanel view = fieldsPanel(downloadThreadHolder);
         principalFrame.getContentPane().add(view, BorderLayout.CENTER);
 
         //set frame location
@@ -40,9 +43,11 @@ class GitSettings extends JPanel {
         principalFrame.setLocationRelativeTo(JSwingRipplesApplication.getInstance());
         //show frame
         principalFrame.setVisible(true);
+        addWindowListener(downloadThreadHolder);
+
     }
 
-    private JPanel fieldsPanel() {
+    private JPanel fieldsPanel(final ThreadHolder downloadThreadHolder) {
         JPanel panel = new JPanel(new BorderLayout());
         //url
         final JPanel north = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -69,34 +74,32 @@ class GitSettings extends JPanel {
         });
         center.add(select,BorderLayout.EAST);
         panel.add(center, BorderLayout.CENTER);
-        // ok button
+        // cloneButton button
         final JPanel okPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        final JButton ok = new JButton("Ok");
-        ok.addActionListener(new ActionListener() {
+        cloneButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 try {
-                    handleOk(holder.file);
+                    handleOk(holder.file, principalFrame, downloadThreadHolder);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-                principalFrame.dispose();
             }
         });
-        okPanel.add(ok);
+        okPanel.add(cloneButton);
         panel.add(okPanel, BorderLayout.SOUTH);
         return panel;
     }
 
-    private void handleOk(File selectedFile) throws IOException {
-        String remoteUrl = url.getText();
+    private void handleOk(File selectedFile, final JFrame contextFrame, ThreadHolder downloadThreadHolder) throws IOException {
+        final String remoteUrl = url.getText();
         if (selectedFile == null || remoteUrl.equals("")) {
             JOptionPane.showMessageDialog(principalFrame, "You must enter an url and the path to clone the repository."
                     , "Inane error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         // create file to clone
-        File fileForRepository;
+        final File fileForRepository;
         try {
             fileForRepository = File.createTempFile("GiHubProject", "", selectedFile);
             if (!fileForRepository.delete()) {
@@ -107,25 +110,71 @@ class GitSettings extends JPanel {
                     , "Inane error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        // then clone
-        try {
-            Git.cloneRepository()
-                    .setURI(remoteUrl)
-                    .setDirectory(fileForRepository)
-                    .call();
-            sourcesEditor.addFileToProject(fileForRepository);
-            project.getGHRepo().replaceRepository(GitHubSettings.formatURLRepo(remoteUrl));
-        }catch (org.eclipse.jgit.api.errors.TransportException e) {
-            JOptionPane.showMessageDialog(principalFrame, "Connection error, please check internet.",
-                    "Inane error", JOptionPane.ERROR_MESSAGE);
-        } catch (org.eclipse.jgit.api.errors.InvalidRemoteException c){
-            JOptionPane.showMessageDialog(principalFrame, "Incorrect url.", "Inane error", JOptionPane.ERROR_MESSAGE);
-        }catch (GitAPIException e) {
-            e.printStackTrace();
-        }
+        startDownloadThread(remoteUrl, fileForRepository, contextFrame, downloadThreadHolder);
+    }
+
+    private void startDownloadThread(final String remoteUrl,
+                                     final File fileForRepository,
+                                     final JFrame contextFrame,
+                                     ThreadHolder downloadThreadHolder) {
+        downloadThreadHolder.downloadThread = new Thread() {
+            @Override
+            public void run() {
+                cloneButton.setText("In progress...");
+                cloneButton.setEnabled(false);
+                try {
+                    Git.cloneRepository()
+                            .setURI(remoteUrl)
+                            .setDirectory(fileForRepository)
+                            .call();
+                } catch (org.eclipse.jgit.api.errors.TransportException e) {
+                    JOptionPane.showMessageDialog(principalFrame, "Connection error, please check internet.",
+                            "Inane error", JOptionPane.ERROR_MESSAGE);
+                } catch (org.eclipse.jgit.api.errors.InvalidRemoteException c){
+                    JOptionPane.showMessageDialog(principalFrame, "Incorrect url.", "Inane error", JOptionPane.ERROR_MESSAGE);
+                } catch (GitAPIException e) {
+                    e.printStackTrace();
+                }
+                sourcesEditor.addFileToProject(fileForRepository);
+                project.getGHRepo().replaceRepository(GitHubSettings.formatURLRepo(remoteUrl));
+                contextFrame.dispose();
+            }
+        };
+        downloadThreadHolder.downloadThread.start();
+    }
+
+    private void addWindowListener(final ThreadHolder downloadThreadHolder) {
+        principalFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                String possibleChoices[] = {"Interrupt", "No"};
+                int interruptDownloadChoice = JOptionPane.NO_OPTION;
+                if (downloadThreadHolder.downloadThread != null
+                    && downloadThreadHolder.downloadThread.isAlive()
+                    && !downloadThreadHolder.downloadThread.isInterrupted()) {
+                    interruptDownloadChoice = JOptionPane.showOptionDialog(
+                            null,
+                            "A download is in progress.\nAre you sure you want to exit?",
+                            "Exit?",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.WARNING_MESSAGE,
+                            null,
+                            possibleChoices,
+                            possibleChoices[1]);
+                }
+                if (interruptDownloadChoice == JOptionPane.YES_OPTION) {
+                    downloadThreadHolder.downloadThread.stop();
+                }
+                principalFrame.dispose();
+            }
+        });
     }
 
     private class SelectedFileHolder{
         File file;
+    }
+
+    private class ThreadHolder {
+        Thread downloadThread;
     }
 }
