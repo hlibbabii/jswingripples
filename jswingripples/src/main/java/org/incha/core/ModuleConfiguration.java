@@ -22,12 +22,14 @@ import org.incha.core.jswingripples.rules.JRipplesModuleICImpactAnalysisRelaxed;
  * Manages information about the type of Analysis made by JRipples, doesn't include the actual procedures.
  */
 public class ModuleConfiguration {
-    public static final int MODULE_IMPACT_ANALYSIS = 0;
-    public static final int MODULE_IMPACT_ANALYSIS_RELAXED = 1;
-    public static final int MODULE_CHANGE_PROPAGATION_RELAXED = 2;
-    public static final int MODULE_CHANGE_PROPAGATION = 3;
-    public static final int MODULE_CONCEPT_LOCATION = 4;
-    public static final int MODULE_CONCEPT_LOCATION_RELAXED = 5;
+    public enum AnalysisModule{
+        MODULE_IMPACT_ANALYSIS,
+        MODULE_IMPACT_ANALYSIS_RELAXED,
+        MODULE_CHANGE_PROPAGATION_RELAXED,
+        MODULE_CHANGE_PROPAGATION,
+        MODULE_CONCEPT_LOCATION,
+        MODULE_CONCEPT_LOCATION_RELAXED
+    }
 
     public static final int MODULE_DEPENDENCY_BUILDER = 0;
     public static final int MODULE_DEPENDENCY_BUILDER_WITH_POLYMORPHIC = 1;
@@ -36,51 +38,36 @@ public class ModuleConfiguration {
     public static final int MODULE_VIEW_TREE = 1;
 
     private int dependencyGraphModule;
-    private int incrementalChange = MODULE_CONCEPT_LOCATION;
-    private int analysis;
+    private AnalysisModule incrementalChange = AnalysisModule.MODULE_CONCEPT_LOCATION;
+    private AnalysisModule analysis;
 
-    /**
-     * Default
-     */
     public ModuleConfiguration() {
         super();
     }
 
-    /**
-     * @param type the dependencyGraphModule to set
-     */
     public void setDependencyGraphModule(final int type) {
         this.dependencyGraphModule = type;
     }
-    /**
-     * @return the dependencyGraphModule
-     */
+
     public int getDependencyGraphModule() {
         return dependencyGraphModule;
     }
-    /**
-     * @param moduleImpactAnalysisTitle
-     */
-    public void setIncrementalChange(final int type) {
+
+    public void setIncrementalChange(final AnalysisModule type) {
         this.incrementalChange = type;
     }
-    /**
-     * @return the incremantealChange
-     */
-    public int getIncrementalChange() {
+
+    public AnalysisModule getIncrementalChange() {
         return incrementalChange;
     }
 
-    /**
-     * @param typee
-     */
-    public void setAnalysis(final int type) {
+    public void setAnalysis(final AnalysisModule type) {
         this.analysis = type;
     }
     /**
      * @return the analysis
      */
-    public int getAnalysis() {
+    public AnalysisModule getAnalysis() {
         return analysis;
     }
 
@@ -104,7 +91,7 @@ public class ModuleConfiguration {
      * @return
      */
     public boolean isAnalysisDefaultImpactSetConnections() {
-        return getIncrementalChange() != MODULE_CONCEPT_LOCATION;
+        return getIncrementalChange() != AnalysisModule.MODULE_CONCEPT_LOCATION;
     }
 
     /**
@@ -145,7 +132,7 @@ public class ModuleConfiguration {
      * @return
      */
     public static JRipplesICModule createIncrementalChangeModule(
-            final int type, final JSwingRipplesEIG eig) {
+            final AnalysisModule type, final JSwingRipplesEIG eig) {
         switch (type) {
             case MODULE_IMPACT_ANALYSIS:
                 return new JRipplesModuleICImpactAnalysis(eig);

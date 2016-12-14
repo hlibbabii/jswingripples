@@ -10,16 +10,22 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.incha.ui.JSwingRipplesApplication;
+import org.kohsuke.github.GHIssue;
+import org.w3c.dom.DOMImplementation;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -178,6 +184,52 @@ public class ModelSerializer {
 
         final DOMSource source = new DOMSource(node);
         final StreamResult result = new StreamResult(out);
+        transformer.transform(source, result);
+    }
+    
+    public static void generate(List<GHIssue> openIssuesList, String projectName) throws Exception {        
+        String xmlFileName = projectName;        
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        DOMImplementation implementation = builder.getDOMImplementation();
+        Document document = implementation.createDocument(null, "project", null);
+        document.setXmlVersion("1.0");        
+        //Main Node
+        Element root = document.getDocumentElement();
+        //Name Node
+        Element nameNode = document.createElement("name");
+        Text nameValue = document.createTextNode(xmlFileName);
+        nameNode.appendChild(nameValue);
+        //List Issue Node
+        Element listIssuesNode = document.createElement("list_issues");        
+        for (GHIssue gHIssue : openIssuesList) {            
+            //Issue Node
+            Element issueNode = document.createElement("issue");
+            issueNode.setAttribute("id", Integer.toString(gHIssue.getId()));
+            //Number Node
+            Element numberIssueNode = document.createElement("number"); 
+            Text numberIssueValue = document.createTextNode(Integer.toString(gHIssue.getNumber()));
+            numberIssueNode.appendChild(numberIssueValue);
+            //Title Node
+            Element titleIssueNode = document.createElement("title"); 
+            Text titleIssueValue = document.createTextNode(gHIssue.getTitle());
+            titleIssueNode.appendChild(titleIssueValue);            
+            //append numberIssueNode to issueNode
+            issueNode.appendChild(numberIssueNode);
+            //append titleIssueNode to issueNode
+            issueNode.appendChild(titleIssueNode);
+            //append issueNode to listIssuesNode
+            listIssuesNode.appendChild(issueNode);
+        }
+        //append nameNode to raiz
+        root.appendChild(nameNode);
+        //append itemNode to raiz
+        root.appendChild(listIssuesNode);        
+        //Generate XML
+        Source source = new DOMSource(document);
+        //Indicamos donde lo queremos almacenar
+        Result result = new StreamResult(new java.io.File(JSwingRipplesApplication.getHome() + File.separator +xmlFileName+".xml")); //nombre del archivo
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.transform(source, result);
     }
 }

@@ -9,22 +9,27 @@ import java.util.concurrent.ConcurrentHashMap;
  * Stores the information about the JavProject being worked on, like name, Objects, Statistics, etc.
  */
 public class JavaProject {
+    
     /**
      * Project name.
      */
     private final String name;
+    
     /**
      * The list of class path.
      */
     private final BuildPath buildPath = new BuildPath(this);
+    
     /**
      * GitHub repository.
      */
     private final GitHubRepo repo = new GitHubRepo(this);
+    
     /**
      * Map of user objects
      */
     private final Map<String, Object> userObjects = new ConcurrentHashMap<String, Object>();
+    
     /**
      * Current statistics for given project.
      */
@@ -49,13 +54,17 @@ public class JavaProject {
     /**
      * @return the project's source Files.
      */
-    public List<File> getSources() { return buildPath.getSources(); }
+    public List<File> getSources() {
+        return buildPath.getSources();
+    }
+    
     /**
      * @return the project name.
      */
     public String getName() {
         return name;
     }
+    
     /**
      * @param key key.
      * @return user object.
@@ -63,6 +72,7 @@ public class JavaProject {
     public Object getUserObject(final String key) {
         return userObjects.get(key);
     }
+    
     /**
      * @param key the key.
      * @param value the value.
@@ -78,6 +88,7 @@ public class JavaProject {
     public void setCurrentStatistics(final Statistics stats) {
         this.currentStatistics = stats;
     }
+    
     /**
      * @return the currentStatistics
      */
@@ -91,17 +102,19 @@ public class JavaProject {
     public ModuleConfiguration getModuleConfiguration() {
         return moduleConfiguration;
     }
+    
     /**
      * @param moduleConfiguration the moduleConfiguration to set.
      */
     public void setModuleConfiguration(final ModuleConfiguration moduleConfiguration) {
         this.moduleConfiguration = moduleConfiguration;
     }
+    
     /**
      * 
      * @return the GitHub repository
      */
-	public GitHubRepo getGHRepo() {
-		return repo;
-	}
+    public GitHubRepo getGHRepo() {
+            return repo;
+    }
 }
