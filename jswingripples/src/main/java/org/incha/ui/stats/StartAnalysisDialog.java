@@ -204,23 +204,18 @@ public class StartAnalysisDialog extends JDialog {
         return panel;
     }
 
-    /**
-     *
-     */
     protected void doCancel() {
         dispose();
     }
-    /**
-     *
-     */
+
     protected void doOk() throws StartAnalysisAction.AnalysisFailedException {
         dispose();
-        StartConceptLocation();
+        startAnalysisCallback.startAnalysis(CreateConceptLocationData());
     }
 
-    private void StartConceptLocation() throws StartAnalysisAction.AnalysisFailedException {
+    private AnalysisData CreateConceptLocationData() throws StartAnalysisAction.AnalysisFailedException {
         final JavaProject project = JavaProjectsModel.getInstance().getProject((String) projects.getSelectedItem());
-        startAnalysisCallback.startAnalysis((String) projects.getSelectedItem(),mainClassFile,
+        return new AnalysisData((String) projects.getSelectedItem(),mainClassFile,
                 (String) dependencyGraph.getSelectedItem(), new JSwingRipplesEIG(project));
     }
 

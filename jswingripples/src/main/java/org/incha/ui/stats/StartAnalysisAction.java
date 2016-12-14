@@ -54,24 +54,24 @@ public class StartAnalysisAction implements ActionListener {
         dialog.setVisible(true);
     }
 
-    public void startAnalysis(String projectName, File mainClass, String dependencyGraphModule, JSwingRipplesEIG eig) throws AnalysisFailedException {
-        if (projectName == null) {
+    public void startAnalysis(AnalysisData data) throws AnalysisFailedException {
+        if (data.projectName == null) {
             return;
         }
-        final JavaProject project = JavaProjectsModel.getInstance().getProject(projectName);
-        final JSwingRipplesEIG analysisEIG = eig;
+        final JavaProject project = JavaProjectsModel.getInstance().getProject(data.projectName);
+        final JSwingRipplesEIG eig = data.analysisEIG;
 
         String packageName;
         try {
-            if ((packageName = getPackage(mainClass)) != null) {
-                analysisEIG.setMainClass(packageName + "." + mainClass.getName().replace(".java", ""));
+            if ((packageName = getPackage(data.mainClass)) != null) {
+                eig.setMainClass(packageName + "." + data.mainClass.getName().replace(".java", ""));
             }
         } catch (JavaModelException e) {
             throw new AnalysisFailedException("Could not retrieve main class package");
         }
         final ModuleConfiguration config = new ModuleConfiguration();
         //module dependency builder
-        if (JRipplesDefaultModulesConstants.MODULE_DEPENDENCY_BUILDER.equals(dependencyGraphModule)) {
+        if (JRipplesDefaultModulesConstants.MODULE_DEPENDENCY_BUILDER.equals(data.dependencyGraphModule)) {
             config.setDependencyGraphModule(ModuleConfiguration.MODULE_DEPENDENCY_BUILDER);
         } else {
             config.setDependencyGraphModule(ModuleConfiguration.MODULE_DEPENDENCY_BUILDER_WITH_POLYMORPHIC);
@@ -86,12 +86,12 @@ public class StartAnalysisAction implements ActionListener {
             @Override
             public void runSuccessful() {
                 try {
-                    Indexer.getInstance().indexEIG(analysisEIG);
+                    Indexer.getInstance().indexEIG(eig);
                     JSwingRipplesApplication.getInstance().enableSearchMenuButtons();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-                StatisticsManager.getInstance().addStatistics(config, analysisEIG);
+                StatisticsManager.getInstance().addStatistics(config, eig);
                 JSwingRipplesApplication.getInstance().showProceedButton();
             }
 
@@ -99,12 +99,8 @@ public class StartAnalysisAction implements ActionListener {
             public void runFailure() {
 
             }
-        }).runModulesWithPriority(config.buildModules(analysisEIG));
+        }).runModulesWithPriority(config.buildModules(eig));
     }
-
-
-
-
 
     
     /**
