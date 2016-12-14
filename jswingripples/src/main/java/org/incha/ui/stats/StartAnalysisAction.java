@@ -76,8 +76,8 @@ public class StartAnalysisAction implements ActionListener {
             config.setDependencyGraphModule(ModuleConfiguration.MODULE_DEPENDENCY_BUILDER_WITH_POLYMORPHIC);
         }
 
-        config.setIncrementalChange(ModuleConfiguration.MODULE_CONCEPT_LOCATION);
-        config.setAnalysis(ModuleConfiguration.MODULE_IMPACT_ANALYSIS);
+        config.setIncrementalChange(ModuleConfiguration.AnalysisModule.MODULE_CONCEPT_LOCATION);
+        config.setAnalysis(ModuleConfiguration.AnalysisModule.MODULE_IMPACT_ANALYSIS);
 
         project.setModuleConfiguration(config);
 
@@ -99,7 +99,6 @@ public class StartAnalysisAction implements ActionListener {
 
             @Override
             public void runFailure() {
-
             }
         }).runModulesWithPriority(config.buildModules(data.analysisEIG));
     }
