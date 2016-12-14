@@ -111,3 +111,6 @@ nbactions.xml
 SearchIndexes/
 .SearchIndexes/
 jswingripples\\.SearchIndexes/
+
+# Mac DS_Store
+.DS_Store
