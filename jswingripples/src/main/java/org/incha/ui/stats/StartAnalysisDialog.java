@@ -32,7 +32,7 @@ public class StartAnalysisDialog extends JDialog {
     private final StartAnalysisAction startAnalysisCallback;
     private File mainClassFile;
     private JavaProject project;
-    final Window ownerApp; 
+    final Window ownerWindow;
     final JComboBox<String> projects;
 
     JComboBox<String> dependencyGraph = new JComboBox<String>(new DefaultComboBoxModel<String>(
@@ -47,7 +47,7 @@ public class StartAnalysisDialog extends JDialog {
      */
     public StartAnalysisDialog(final Window owner, final StartAnalysisAction callback) {
         super(owner);
-        ownerApp = owner;
+        ownerWindow = owner;
         startAnalysisCallback = callback;
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -59,7 +59,7 @@ public class StartAnalysisDialog extends JDialog {
         for (int i = 0; i < prgArray.length; i++) {
             prgArray[i] = prg.get(i).getName();
         }
-        projects = new JComboBox<String>(new DefaultComboBoxModel<String>(prgArray));
+        projects = new JComboBox<>(new DefaultComboBoxModel<>(prgArray));
         projects.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -205,7 +205,7 @@ public class StartAnalysisDialog extends JDialog {
                     final MainClassSearchDialog dialog;
                     dialog = new MainClassSearchDialog(StartAnalysisDialog.this, project);
                     dialog.pack();
-                    dialog.setLocationRelativeTo(ownerApp);
+                    dialog.setLocationRelativeTo(ownerWindow);
                     dialog.setTitle("Select the enter point");
                     dialog.setVisible(true);
                 } catch (IOException ex) {
