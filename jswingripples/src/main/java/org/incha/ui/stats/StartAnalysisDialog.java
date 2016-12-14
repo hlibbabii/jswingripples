@@ -40,10 +40,7 @@ public class StartAnalysisDialog extends JDialog {
             JRipplesDefaultModulesConstants.MODULE_DEPENDENCY_BUILDER_WITH_POLYMORPHIC
         }
     ));
-
-    /**
-     * Default constructor.
-     */
+    
     public StartAnalysisDialog(final Window owner, final StartAnalysisAction callback) {
         super(owner);
         ownerWindow = owner;
@@ -101,9 +98,6 @@ public class StartAnalysisDialog extends JDialog {
         projectChanged();
     }
 
-    /**
-     *
-     */
     protected void projectChanged() {
         project = JavaProjectsModel.getInstance().getProject((String) projects.getSelectedItem());
         
@@ -138,9 +132,7 @@ public class StartAnalysisDialog extends JDialog {
                 startConceptLocationButton.setEnabled(false);
             }
     }
-    /**
-     * @return
-     */
+
     private JPanel createCenterPanel() {
         final JPanel panel = new JPanel(new GridLayout(5, 2));
         panel.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED),
@@ -157,15 +149,10 @@ public class StartAnalysisDialog extends JDialog {
         return panel;
     }
 
-    /**
-     *
-     */
     protected void doCancel() {
         dispose();
     }
-    /**
-     *
-     */
+
     protected void doOk() {
         dispose();
         startAnalysisCallback.startAnalysis(
@@ -182,13 +169,6 @@ public class StartAnalysisDialog extends JDialog {
                 });
             }
         });
-    }
-
-    /**
-     * @return the classNameTextField
-     */
-    public File getMainClass() {
-        return mainClassFile;
     }
     
     protected void setClassName(final String classNameParam, String fileName){
