@@ -44,19 +44,11 @@ public class OpenWithIDEAction extends AbstractAction {
     @Override
     public void actionPerformed(final ActionEvent e) {
         try{
-            
-            File file = new File(node.getAbsolutePath().replaceAll("/", Matcher.quoteReplacement(File.separator)));
-            Desktop desktop = Desktop.getDesktop();
-            if (!Desktop.isDesktopSupported()) {
-                showErrorMessage();
+            if (!Desktop.isDesktopSupported() || !Desktop.getDesktop().isSupported(Desktop.Action.EDIT)) {
+                throw new Exception();
             }
-            
-            if (desktop.isSupported(Desktop.Action.EDIT)) {
-                desktop.edit(file);
-            } else if (desktop.isSupported(Desktop.Action.OPEN)){
-                desktop.edit(file);
-            }
-            
+            Desktop.getDesktop().edit(
+                    new File(node.getAbsolutePath().replaceAll("/", Matcher.quoteReplacement(File.separator))));
         } catch (Exception ex){
             showErrorMessage();
         }
