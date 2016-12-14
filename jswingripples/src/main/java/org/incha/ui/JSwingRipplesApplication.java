@@ -236,7 +236,7 @@ public class JSwingRipplesApplication extends JFrame {
     }
 
     public void refreshViewArea() {
-        viewArea.revalidate();
+        viewArea.repaint();
     }
 
     private void addJTabbedPaneMouseListener(JTabbedPane pane){
