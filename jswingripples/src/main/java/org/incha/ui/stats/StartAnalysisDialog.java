@@ -164,12 +164,8 @@ public class StartAnalysisDialog extends JDialog {
                     null,
                     options,
                     options[0]);
-            switch(result){
-                case JOptionPane.YES_OPTION:
-                    beginConceptLocation();
-                    break;
-                case JOptionPane.CANCEL_OPTION:
-                    break;
+            if(result == JOptionPane.YES_OPTION){
+                beginConceptLocation();
             }
         } else {
             beginConceptLocation();
