@@ -43,9 +43,7 @@ public class IssuesView extends JScrollPane{
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     JTable target = (JTable)e.getSource();
-                    int row = target.getSelectedRow();
-                    int column = target.getSelectedColumn();
-                    editIssue(row, column);
+                    editIssue(target.getSelectedRow(), target.getSelectedColumn());
                 }
             }
         });
