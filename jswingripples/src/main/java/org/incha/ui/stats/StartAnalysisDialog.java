@@ -156,6 +156,7 @@ public class StartAnalysisDialog extends JDialog {
 
     protected void doOk() {
         dispose();
+        JSwingRipplesApplication.getInstance().enableProceedButton(true);
         startAnalysisCallback.startAnalysis(
                 createConceptLocationData(), new StartAnalysisAction.SuccessfulAnalysisAction() {
             @Override
@@ -165,6 +166,7 @@ public class StartAnalysisDialog extends JDialog {
                 JSwingRipplesApplication.getInstance().setProceedButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        JSwingRipplesApplication.getInstance().enableProceedButton(false);
                         startAnalysisCallback.startAnalysis(createImpactAnalysisData(eig), createImpactAnalysisCallback());
                     }
                 });
@@ -212,6 +214,7 @@ public class StartAnalysisDialog extends JDialog {
 
     private JButton createAutomaticButton() {
         final JButton automaticButton = new JButton("Auto");
+        automaticButton.setEnabled(projects.getItemCount() != 0);
         automaticButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -251,6 +254,7 @@ public class StartAnalysisDialog extends JDialog {
 
     private JButton createBrowseButton() {
         JButton browseButton = new JButton("Browse");
+        browseButton.setEnabled(projects.getItemCount() != 0);
         browseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -298,6 +302,7 @@ public class StartAnalysisDialog extends JDialog {
         return new StartAnalysisAction.SuccessfulAnalysisAction() {
             @Override
             public void execute(ModuleConfiguration config, JSwingRipplesEIG eig) {
+                JSwingRipplesApplication.getInstance().enableProceedButton(true);
                 JSwingRipplesApplication.getInstance().hideProceedButton();
                 JSwingRipplesApplication.getInstance().resetProceedButton();
                 JSwingRipplesApplication.getInstance().refreshViewArea();
@@ -309,11 +314,13 @@ public class StartAnalysisDialog extends JDialog {
         return new StartAnalysisAction.SuccessfulAnalysisAction() {
             @Override
             public void execute(ModuleConfiguration config,final JSwingRipplesEIG eig) {
+                JSwingRipplesApplication.getInstance().enableProceedButton(true);
                 JSwingRipplesApplication.getInstance().refreshViewArea();
                 JSwingRipplesApplication.getInstance().setProceedButtonText("Proceed To Change Propagation");
                 JSwingRipplesApplication.getInstance().setProceedButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        JSwingRipplesApplication.getInstance().enableProceedButton(false);
                         startAnalysisCallback.startAnalysis(
                                 createChangePropagationData(eig), createChangePropagationCallback());
                     }
