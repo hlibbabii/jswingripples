@@ -85,17 +85,15 @@ public class JSwingRipplesApplication extends JFrame {
             showIssues.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
-                    IssuesView i = new IssuesView();
-                    IssuesReader r = new IssuesReader(JSwingRipplesApplication.getHome()+ File.separator+"jripples.xml");
-                    r.load();
-                    i.addTableView(r.loadData(), r.loadColumnNames());
-                    addComponentAsTab(i,"Issues from Project: "+ project.getName());
+                    IssuesView issuesWindow = new IssuesView();
+                    IssuesReader issuesReader = new IssuesReader(JSwingRipplesApplication.getHome()+ File.separator+"jripples.xml");
+                    issuesReader.load();
+                    issuesWindow.addTableView(issuesReader.loadData(), issuesReader.loadColumnNames());
+                    addComponentAsTab(issuesWindow,"Issues from Project: "+ project.getName());
                 }
             });
             menu.add(showIssues);
             menu.show(projectsView, e.getX(), e.getY());
-            
-            
         }
     }
     
