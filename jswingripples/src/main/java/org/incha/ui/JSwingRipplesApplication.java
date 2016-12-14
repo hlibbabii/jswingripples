@@ -219,6 +219,10 @@ public class JSwingRipplesApplication extends JFrame {
         proceedButton.addActionListener(al);
     }
 
+    public void setProceedButtonText(String labelText){
+        proceedButton.setText(labelText);
+    }
+
     public void hideProceedButton() {
        JSplitPane rightSide = (JSplitPane) projectViewAndViewAreaSplit.getRightComponent();
        rightSide.setRightComponent(null); // make the button disappear by changing the bottom part reference

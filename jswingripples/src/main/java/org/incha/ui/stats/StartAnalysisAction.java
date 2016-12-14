@@ -127,6 +127,6 @@ public class StartAnalysisAction implements ActionListener {
     }
 
     public interface SuccessfulAnalysisAction{
-        void execute(ModuleConfiguration config,JSwingRipplesEIG eig);
+        void execute(ModuleConfiguration config,final JSwingRipplesEIG eig);
     }
 }

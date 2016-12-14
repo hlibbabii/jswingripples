@@ -237,12 +237,37 @@ public class StartAnalysisDialog extends JDialog {
                 postConceptLocationEIG);
     }
 
-    private StartAnalysisAction.SuccessfulAnalysisAction ImpactAnalysisCallBack(){
+    private AnalysisData createChangePropagationData(JSwingRipplesEIG postImpactAnalysisEIG) {
+        return new AnalysisData(
+                (String) projects.getSelectedItem(),
+                mainClassFile,
+                (String) dependencyGraph.getSelectedItem(),
+                ModuleConfiguration.AnalysisModule.MODULE_CHANGE_PROPAGATION,
+                postImpactAnalysisEIG);
+    }
+
+    private StartAnalysisAction.SuccessfulAnalysisAction ChangePropagationCallBack(){
         return new StartAnalysisAction.SuccessfulAnalysisAction() {
             @Override
             public void execute(ModuleConfiguration config, JSwingRipplesEIG eig) {
                 JSwingRipplesApplication.getInstance().hideProceedButton();
                 JSwingRipplesApplication.getInstance().resetProceedButton();
+            }
+        };
+    }
+
+    private StartAnalysisAction.SuccessfulAnalysisAction ImpactAnalysisCallBack(){
+        return new StartAnalysisAction.SuccessfulAnalysisAction() {
+            @Override
+            public void execute(ModuleConfiguration config,final JSwingRipplesEIG eig) {
+                JSwingRipplesApplication.getInstance().setProceedButtonText("Proceed To Change Propagation");
+                JSwingRipplesApplication.getInstance().setProceedButtonListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        startAnalysisCallback.startAnalysis(
+                                createChangePropagationData(eig), ChangePropagationCallBack());
+                    }
+                });
             }
         };
     }
