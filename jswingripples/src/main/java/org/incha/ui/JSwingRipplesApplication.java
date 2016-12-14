@@ -202,6 +202,12 @@ public class JSwingRipplesApplication extends JFrame {
         viewArea.addTab(tabTitle, component);
     }
 
+    public void removeAllTabs(){
+        for(int i = 0 ; i < viewArea.getTabCount(); i++){
+            viewArea.removeTabAt(i);
+        }
+    }
+
     public void enableSearchMenuButtons() {
         mainMenuBar.getSearchMenu().getSearchButton().setEnabled(true);
         mainMenuBar.getSearchMenu().getClearButton().setEnabled(true);
@@ -241,6 +247,10 @@ public class JSwingRipplesApplication extends JFrame {
 
     public void refreshViewArea() {
         viewArea.repaint();
+    }
+
+    public boolean isAnotherProjectOpen(){
+        return viewArea.getTabCount() > 0;
     }
 
     private void addJTabbedPaneMouseListener(JTabbedPane pane){

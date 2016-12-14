@@ -155,23 +155,46 @@ public class StartAnalysisDialog extends JDialog {
     }
 
     protected void doOk() {
+        if(JSwingRipplesApplication.getInstance().isAnotherProjectOpen()){
+            String[] options = new String[]{"Yes","Cancel"};
+            int result = JOptionPane.showOptionDialog(this,
+                    new String[]{"There is another analysis in progress.\n " +
+                            "Are you sure you want to begin a start a new one? " +
+                            "All progress from the last analysis will be lost."},
+                    "Another analysis in progress",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
+            if(result == JOptionPane.YES_OPTION){
+                beginConceptLocation();
+            }
+        } else {
+            beginConceptLocation();
+        }
+
+    }
+
+    private void beginConceptLocation(){
         dispose();
         JSwingRipplesApplication.getInstance().enableProceedButton(true);
+        JSwingRipplesApplication.getInstance().setProceedButtonText("Proceed to Impact Analysis");
         startAnalysisCallback.startAnalysis(
-                createConceptLocationData(), new StartAnalysisAction.SuccessfulAnalysisAction() {
-            @Override
-            public void execute(ModuleConfiguration config, final JSwingRipplesEIG eig) {
+            createConceptLocationData(), new StartAnalysisAction.SuccessfulAnalysisAction() {
+                @Override
+                public void execute(ModuleConfiguration config, final JSwingRipplesEIG eig) {
                 JSwingRipplesApplication.getInstance().showProceedButton();
                 StatisticsManager.getInstance().addStatistics(config, eig);
                 JSwingRipplesApplication.getInstance().setProceedButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        JSwingRipplesApplication.getInstance().enableProceedButton(false);
-                        startAnalysisCallback.startAnalysis(createImpactAnalysisData(eig), createImpactAnalysisCallback());
+                    JSwingRipplesApplication.getInstance().enableProceedButton(false);
+                    startAnalysisCallback.startAnalysis(createImpactAnalysisData(eig), createImpactAnalysisCallback());
                     }
                 });
-            }
-        });
+                }
+            });
     }
     
     protected void setClassName(final String classNameParam, String fileName){
