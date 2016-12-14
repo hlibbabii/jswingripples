@@ -4,24 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.kohsuke.github.*;
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Text;
 
 import org.incha.core.JavaProject;
 import org.incha.core.ModelSerializer;
@@ -37,8 +25,6 @@ public class GitHubSettings extends JPanel{
     private final JButton connect;    
     private final JavaProject pjct;
     private final JButton retrieveIssuesBtn;
-    private final JLabel issuesRetrieveOk = new JLabel("Issues list retrieved successfully");
-    private final JLabel issuesRetrieveWrong = new JLabel("The issues list cannot be retrieval");
     private final static String WRONG_FORMAT = "wrong_format";
     private  GitHub github = null;
    
