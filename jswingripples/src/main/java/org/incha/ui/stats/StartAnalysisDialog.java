@@ -17,18 +17,21 @@ import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class StartAnalysisDialog extends JDialog {
     private static final long serialVersionUID = 6788138046337076311L;
-    private final JTextField className = new JTextField(30);
+    private final JTextField classNameTextField = new JTextField(30);
     private final JButton startConceptLocationButton = new JButton("Start Concept Location");
     private final StartAnalysisAction startAnalysisCallback;
     private File mainClassFile;
     private JavaProject project;
-
+    final Window ownerWindow;
     final JComboBox<String> projects;
 
     JComboBox<String> dependencyGraph = new JComboBox<String>(new DefaultComboBoxModel<String>(
@@ -37,12 +40,10 @@ public class StartAnalysisDialog extends JDialog {
             JRipplesDefaultModulesConstants.MODULE_DEPENDENCY_BUILDER_WITH_POLYMORPHIC
         }
     ));
-
-    /**
-     * Default constructor.
-     */
+    
     public StartAnalysisDialog(final Window owner, final StartAnalysisAction callback) {
         super(owner);
+        ownerWindow = owner;
         startAnalysisCallback = callback;
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -54,7 +55,7 @@ public class StartAnalysisDialog extends JDialog {
         for (int i = 0; i < prgArray.length; i++) {
             prgArray[i] = prg.get(i).getName();
         }
-        projects = new JComboBox<String>(new DefaultComboBoxModel<String>(prgArray));
+        projects = new JComboBox<>(new DefaultComboBoxModel<>(prgArray));
         projects.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -97,11 +98,7 @@ public class StartAnalysisDialog extends JDialog {
         projectChanged();
     }
 
-    /**
-     *
-     */
     protected void projectChanged() {
-        
         project = JavaProjectsModel.getInstance().getProject((String) projects.getSelectedItem());
         
         if (project != null) {
@@ -110,7 +107,7 @@ public class StartAnalysisDialog extends JDialog {
             //dependency graph module
             final ModuleConfiguration cfg = project.getModuleConfiguration();
             final Statistics stats = project.getCurrentStatistics();
-            className.setText(stats != null ? stats.getEIG().getMainClass() : null);
+            classNameTextField.setText(stats != null ? stats.getEIG().getMainClass() : null);
 
             switch (cfg.getDependencyGraphModule()) {
                 case ModuleConfiguration.MODULE_DEPENDENCY_BUILDER:
@@ -125,7 +122,7 @@ public class StartAnalysisDialog extends JDialog {
     
     private void verifyMainClassFileExtension(){ 
         final Integer sizeExtension = 5;
-        String classname = className.getText();
+        String classname = classNameTextField.getText();
             if (classname.length()>sizeExtension && 
                     classname.substring(classname.length()-sizeExtension, 
                             classname.length()).toUpperCase().equals(".JAVA")){
@@ -135,65 +132,20 @@ public class StartAnalysisDialog extends JDialog {
                 startConceptLocationButton.setEnabled(false);
             }
     }
-    /**
-     * @return
-     */
+
     private JPanel createCenterPanel() {
         final JPanel panel = new JPanel(new GridLayout(5, 2));
         panel.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED),
                 new EmptyBorder(3, 3, 3, 3)));
-
         panel.add(new JLabel("Java project:"));
-        projects.setEditable(false);
         panel.add(projects);
-
         panel.add(new JLabel("Class name:"));
-        
-        JPanel panelclassname = new JPanel();
-        panelclassname.setLayout(new FlowLayout(FlowLayout.LEADING,0,0));
-        panelclassname.add(className);
-        
-        className.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                verifyMainClassFileExtension();
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                verifyMainClassFileExtension();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                verifyMainClassFileExtension();
-            }
-        });
-        
-        JButton btnsearch = new JButton("Browse");
-        btnsearch.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-               
-                final JFileChooser chooser = new JFileChooser(project.getBuildPath().getFirstPath());
-                //chooser.addChoosableFileFilter(jpegFilter);
-                chooser.setMultiSelectionEnabled(false);
-
-                if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    final File selectedFile = chooser.getSelectedFile();
-                    if (selectedFile != null) {
-                        mainClassFile = selectedFile;
-                        className.setText(selectedFile.getName());
-                    }
-                }
-            }
-        });
-        panelclassname.add(btnsearch);
-        panel.add(panelclassname);
-       
+        panel.add(createMainClassFinderPanel());
         panel.add(new JLabel("Dependency Graph"));
-        dependencyGraph.setEditable(false);
         panel.add(dependencyGraph);
+        dependencyGraph.setEditable(false);
+        projects.setEditable(false);
+        addClassNameTextFieldListener();
         return panel;
     }
 
@@ -218,7 +170,83 @@ public class StartAnalysisDialog extends JDialog {
             }
         });
     }
+    
+    protected void setClassName(final String classNameParam, String fileName){
+        mainClassFile = new File(fileName);
+        classNameTextField.setText(classNameParam);
+    }
+    
+    protected void enableButtonOk(){
+        startConceptLocationButton.setEnabled(true);
+    }
 
+    private void addClassNameTextFieldListener() {
+        classNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                verifyMainClassFileExtension();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                verifyMainClassFileExtension();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                verifyMainClassFileExtension();
+            }
+        });
+    }
+
+    private JPanel createMainClassFinderPanel() {
+        JPanel mainClassFinderPanel = new JPanel();
+        mainClassFinderPanel.setLayout(new FlowLayout(FlowLayout.LEADING,0,0));
+        mainClassFinderPanel.add(classNameTextField);
+        mainClassFinderPanel.add(createBrowseButton());
+        mainClassFinderPanel.add(createAutomaticButton());
+
+        return mainClassFinderPanel;
+    }
+
+    private JButton createAutomaticButton() {
+        JButton automaticButton = new JButton("Auto");
+        automaticButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                try {
+                    final MainClassSearchDialog dialog;
+                    dialog = new MainClassSearchDialog(StartAnalysisDialog.this, project);
+                    dialog.pack();
+                    dialog.setLocationRelativeTo(ownerWindow);
+                    dialog.setTitle("Select the enter point");
+                    dialog.setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(StartAnalysisDialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        return automaticButton;
+    }
+
+    private JButton createBrowseButton() {
+        JButton browseButton = new JButton("Browse");
+        browseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                final JFileChooser chooser = new JFileChooser(project.getBuildPath().getFirstPath());
+                chooser.setMultiSelectionEnabled(false);
+                if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    final File selectedFile = chooser.getSelectedFile();
+                    if (selectedFile != null) {
+                        mainClassFile = selectedFile;
+                        classNameTextField.setText(selectedFile.getName());
+                    }
+                }
+            }
+        });
+        return browseButton;
+    }
     private AnalysisData createConceptLocationData() {
         return new AnalysisData(
                 (String) projects.getSelectedItem(),
@@ -273,5 +301,4 @@ public class StartAnalysisDialog extends JDialog {
             }
         };
     }
-
 }
