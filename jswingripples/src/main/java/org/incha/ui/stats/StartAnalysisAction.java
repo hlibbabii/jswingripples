@@ -19,9 +19,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class StartAnalysisAction implements ActionListener {
-    public class AnalysisFailedException extends Exception {
-        public AnalysisFailedException(String message) { super(message); }
-    }
 	private String projectSelected;
 	
     /**
@@ -54,33 +51,30 @@ public class StartAnalysisAction implements ActionListener {
         dialog.setVisible(true);
     }
 
-    public void startAnalysis(StartAnalysisDialog dialog) throws AnalysisFailedException {
-        final String projectName = (String) dialog.projects.getSelectedItem();
-        if (projectName == null) {
+    public void startAnalysis(final AnalysisData data, final SuccessfulAnalysisAction onSuccessAction) {
+        if (data.projectName == null) {
             return;
         }
-        final JavaProject project = JavaProjectsModel.getInstance().getProject(projectName);
-        final JSwingRipplesEIG eig = new JSwingRipplesEIG(project);
+        final JavaProject project = JavaProjectsModel.getInstance().getProject(data.projectName);
 
         String packageName;
         try {
-            if ((packageName = getPackage(dialog.getMainClass())) != null) {
-                eig.setMainClass(packageName + "." + dialog.getMainClass().getName().replace(".java", ""));
+            if ((packageName = getPackage(data.mainClass)) != null) {
+                data.analysisEIG.setMainClass(packageName + "." + data.mainClass.getName().replace(".java", ""));
             }
         } catch (JavaModelException e) {
-            throw new AnalysisFailedException("Could not retrieve main class package");
+
         }
         final ModuleConfiguration config = new ModuleConfiguration();
         //module dependency builder
-        String module = (String) dialog.dependencyGraph.getSelectedItem();
-        if (JRipplesDefaultModulesConstants.MODULE_DEPENDENCY_BUILDER.equals(module)) {
+        if (JRipplesDefaultModulesConstants.MODULE_DEPENDENCY_BUILDER.equals(data.dependencyGraphModule)) {
             config.setDependencyGraphModule(ModuleConfiguration.MODULE_DEPENDENCY_BUILDER);
         } else {
             config.setDependencyGraphModule(ModuleConfiguration.MODULE_DEPENDENCY_BUILDER_WITH_POLYMORPHIC);
         }
 
-        config.setIncrementalChange(ModuleConfiguration.MODULE_CONCEPT_LOCATION);
-        config.setAnalysis(ModuleConfiguration.MODULE_IMPACT_ANALYSIS);
+        config.setIncrementalChange(data.analysisModule);
+        config.setAnalysis(ModuleConfiguration.AnalysisModule.MODULE_IMPACT_ANALYSIS);
 
         project.setModuleConfiguration(config);
 
@@ -88,21 +82,23 @@ public class StartAnalysisAction implements ActionListener {
             @Override
             public void runSuccessful() {
                 try {
-                    Indexer.getInstance().indexEIG(eig);
+                    Indexer.getInstance().indexEIG(data.analysisEIG);
                     JSwingRipplesApplication.getInstance().enableSearchMenuButtons();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-                StatisticsManager.getInstance().addStatistics(config, eig);
-                JSwingRipplesApplication.getInstance().showProceedButton();
+                if(onSuccessAction != null){
+                    onSuccessAction.execute(config, data.analysisEIG);
+                }
+
             }
 
             @Override
             public void runFailure() {
-
             }
-        }).runModulesWithPriority(config.buildModules(eig));
+        }).runModulesWithPriority(config.buildModules(data.analysisEIG));
     }
+
     
     /**
      * projectSelected getter
@@ -128,5 +124,9 @@ public class StartAnalysisAction implements ActionListener {
             }
         }
         return null;
+    }
+
+    public interface SuccessfulAnalysisAction{
+        void execute(ModuleConfiguration config,final JSwingRipplesEIG eig);
     }
 }

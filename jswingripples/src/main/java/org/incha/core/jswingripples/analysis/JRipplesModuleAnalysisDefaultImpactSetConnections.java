@@ -69,7 +69,7 @@ public class JRipplesModuleAnalysisDefaultImpactSetConnections extends JRipplesA
      */
     protected boolean isConceptLocationModuleUsed() {
         return eig.getJavaProject().getModuleConfiguration().getIncrementalChange()
-		        == ModuleConfiguration.MODULE_CONCEPT_LOCATION;
+		        == ModuleConfiguration.AnalysisModule.MODULE_CONCEPT_LOCATION;
     }
 
 	@Override
