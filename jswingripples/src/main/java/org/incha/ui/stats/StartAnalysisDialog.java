@@ -156,6 +156,7 @@ public class StartAnalysisDialog extends JDialog {
     protected void doOk() {
         dispose();
         JSwingRipplesApplication.getInstance().enableProceedButton(true);
+        JSwingRipplesApplication.getInstance().setProceedButtonText("Proceed to Impact Analysis");
         startAnalysisCallback.startAnalysis(
                 createConceptLocationData(), new StartAnalysisAction.SuccessfulAnalysisAction() {
             @Override
