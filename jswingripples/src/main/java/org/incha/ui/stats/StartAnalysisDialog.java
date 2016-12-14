@@ -4,6 +4,7 @@ import org.incha.core.JavaProject;
 import org.incha.core.JavaProjectsModel;
 import org.incha.core.ModuleConfiguration;
 import org.incha.core.Statistics;
+import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.ui.jripples.JRipplesDefaultModulesConstants;
 
 import javax.swing.*;
@@ -214,13 +215,13 @@ public class StartAnalysisDialog extends JDialog {
      */
     protected void doOk() throws StartAnalysisAction.AnalysisFailedException {
         dispose();
-        startAnalysisCallback.startAnalysis(this);
+        StartConceptLocation();
     }
 
-    /**
-     * @return the className
-     */
-    public File getMainClass() {
-        return mainClassFile;
+    private void StartConceptLocation() throws StartAnalysisAction.AnalysisFailedException {
+        final JavaProject project = JavaProjectsModel.getInstance().getProject((String) projects.getSelectedItem());
+        startAnalysisCallback.startAnalysis((String) projects.getSelectedItem(),mainClassFile,
+                (String) dependencyGraph.getSelectedItem(), new JSwingRipplesEIG(project));
     }
+
 }
