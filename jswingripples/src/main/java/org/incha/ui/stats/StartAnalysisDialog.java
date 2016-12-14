@@ -213,6 +213,7 @@ public class StartAnalysisDialog extends JDialog {
 
     private JButton createAutomaticButton() {
         JButton automaticButton = new JButton("Auto");
+        automaticButton.setEnabled(projects.getItemCount()!=0);
         automaticButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -233,6 +234,7 @@ public class StartAnalysisDialog extends JDialog {
 
     private JButton createBrowseButton() {
         JButton browseButton = new JButton("Browse");
+        browseButton.setEnabled(projects.getItemCount()!=0);
         browseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
