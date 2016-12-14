@@ -235,6 +235,10 @@ public class JSwingRipplesApplication extends JFrame {
         }
     }
 
+    public void refreshViewArea() {
+        viewArea.revalidate();
+    }
+
     private void addJTabbedPaneMouseListener(JTabbedPane pane){
         pane.addMouseListener(new MouseAdapter() {
             @Override

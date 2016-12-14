@@ -212,7 +212,7 @@ public class StartAnalysisDialog extends JDialog {
                 JSwingRipplesApplication.getInstance().setProceedButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        startAnalysisCallback.startAnalysis(createImpactAnalysisData(eig), ImpactAnalysisCallBack());
+                        startAnalysisCallback.startAnalysis(createImpactAnalysisData(eig), createImpactAnalysisCallback());
                     }
                 });
             }
@@ -246,26 +246,28 @@ public class StartAnalysisDialog extends JDialog {
                 postImpactAnalysisEIG);
     }
 
-    private StartAnalysisAction.SuccessfulAnalysisAction ChangePropagationCallBack(){
+    private StartAnalysisAction.SuccessfulAnalysisAction createChangePropagationCallback(){
         return new StartAnalysisAction.SuccessfulAnalysisAction() {
             @Override
             public void execute(ModuleConfiguration config, JSwingRipplesEIG eig) {
                 JSwingRipplesApplication.getInstance().hideProceedButton();
                 JSwingRipplesApplication.getInstance().resetProceedButton();
+                JSwingRipplesApplication.getInstance().refreshViewArea();
             }
         };
     }
 
-    private StartAnalysisAction.SuccessfulAnalysisAction ImpactAnalysisCallBack(){
+    private StartAnalysisAction.SuccessfulAnalysisAction createImpactAnalysisCallback(){
         return new StartAnalysisAction.SuccessfulAnalysisAction() {
             @Override
             public void execute(ModuleConfiguration config,final JSwingRipplesEIG eig) {
+                JSwingRipplesApplication.getInstance().refreshViewArea();
                 JSwingRipplesApplication.getInstance().setProceedButtonText("Proceed To Change Propagation");
                 JSwingRipplesApplication.getInstance().setProceedButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         startAnalysisCallback.startAnalysis(
-                                createChangePropagationData(eig), ChangePropagationCallBack());
+                                createChangePropagationData(eig), createChangePropagationCallback());
                     }
                 });
             }
