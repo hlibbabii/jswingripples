@@ -86,7 +86,7 @@ public class JSwingRipplesApplication extends JFrame {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
                     IssuesView issuesWindow = new IssuesView();
-                    IssuesReader issuesReader = new IssuesReader(JSwingRipplesApplication.getHome()+ File.separator+"jripples.xml");
+                    IssuesReader issuesReader = new IssuesReader(JSwingRipplesApplication.getHome()+ File.separator+project.getName()+".xml");
                     issuesReader.load();
                     issuesWindow.addTableView(issuesReader.loadData(), issuesReader.loadColumnNames());
                     addComponentAsTab(issuesWindow,"Issues from Project: "+ project.getName());
