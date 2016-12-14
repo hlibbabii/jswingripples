@@ -62,7 +62,12 @@ public class GitHubSettings extends JPanel{
     }
     
     private void configListeners(){
+        
         performConnection();
+        
+        /**
+         * Listener to the button that connect the App with GitHub
+         */
         connect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {        
@@ -93,6 +98,9 @@ public class GitHubSettings extends JPanel{
             }
         });
         
+        /**
+         * Listener to the button that retrieve the issues list from GitHub
+         */
         retrieveIssuesBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -140,6 +148,9 @@ public class GitHubSettings extends JPanel{
     			 
     }
     
+    /**
+     * Method to stablish the connection between the App and GitHub
+     */
     public void performConnection() {
         try {
             github = GitHub.connectAnonymously();
@@ -149,6 +160,4 @@ public class GitHubSettings extends JPanel{
                 			"Connection error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-   
 }
