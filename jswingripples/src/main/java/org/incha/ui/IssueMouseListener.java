@@ -45,6 +45,15 @@ public class IssueMouseListener extends MouseAdapter {
         color = new JMenuItem("Green");
         color.addActionListener(new ColorListener(new Color(51, 204, 51)));
         popMenu.add(color);
+        color = new JMenuItem("Remove all colors");
+        color.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Highlighter highlighter = issueText.getHighlighter();
+                highlighter.removeAllHighlights();
+            }
+        });
+        popMenu.add(color);
         return popMenu;
     }
 
