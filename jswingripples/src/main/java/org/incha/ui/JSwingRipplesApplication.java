@@ -207,16 +207,29 @@ public class JSwingRipplesApplication extends JFrame {
         mainMenuBar.getSearchMenu().getClearButton().setEnabled(true);
     }
 
+    //TODO: Button controller for these methods
+
     public void showProceedButton() {
         JSplitPane rightSide = (JSplitPane) projectViewAndViewAreaSplit.getRightComponent();
         rightSide.setRightComponent(proceedButton); // make the button show up by setting it as the bottom part
         rightSide.revalidate();
     }
 
-    private void hideProceedButton() {
+    public void setProceedButtonListener(ActionListener al){
+        resetProceedButton();
+        proceedButton.addActionListener(al);
+    }
+
+    public void hideProceedButton() {
        JSplitPane rightSide = (JSplitPane) projectViewAndViewAreaSplit.getRightComponent();
        rightSide.setRightComponent(null); // make the button disappear by changing the bottom part reference
        rightSide.revalidate();
+    }
+
+    public void resetProceedButton() {
+        for(ActionListener al : proceedButton.getActionListeners()){
+            proceedButton.removeActionListener(al);
+        }
     }
 
     private void addJTabbedPaneMouseListener(JTabbedPane pane){
@@ -235,6 +248,7 @@ public class JSwingRipplesApplication extends JFrame {
                                 mainMenuBar.getSearchMenu().getClearButton().setEnabled(false);
                                 mainMenuBar.getSearchMenu().getSearchButton().setEnabled(false);
                                 hideProceedButton();
+                                resetProceedButton();
                             }
                         }
                     });

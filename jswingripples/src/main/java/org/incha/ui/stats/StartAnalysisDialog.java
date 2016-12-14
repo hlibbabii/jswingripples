@@ -1,10 +1,8 @@
 package org.incha.ui.stats;
 
-import org.incha.core.JavaProject;
-import org.incha.core.JavaProjectsModel;
-import org.incha.core.ModuleConfiguration;
-import org.incha.core.Statistics;
+import org.incha.core.*;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
+import org.incha.ui.JSwingRipplesApplication;
 import org.incha.ui.jripples.JRipplesDefaultModulesConstants;
 
 import javax.swing.*;
@@ -76,12 +74,7 @@ public class StartAnalysisDialog extends JDialog {
         startConceptLocationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                try {
-                    doOk();
-                } catch (StartAnalysisAction.AnalysisFailedException ex) {
-                    // TODO: how to notify the user?
-                    ex.printStackTrace();
-                }
+                doOk();
             }
         });
         south.add(startConceptLocationButton);
@@ -208,15 +201,48 @@ public class StartAnalysisDialog extends JDialog {
         dispose();
     }
 
-    protected void doOk() throws StartAnalysisAction.AnalysisFailedException {
+    protected void doOk() {
         dispose();
-        startAnalysisCallback.startAnalysis(CreateConceptLocationData());
+        startAnalysisCallback.startAnalysis(
+                createConceptLocationData(), new StartAnalysisAction.SuccessfulAnalysisAction() {
+            @Override
+            public void execute(ModuleConfiguration config, final JSwingRipplesEIG eig) {
+                JSwingRipplesApplication.getInstance().showProceedButton();
+                StatisticsManager.getInstance().addStatistics(config, eig);
+                JSwingRipplesApplication.getInstance().setProceedButtonListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        startAnalysisCallback.startAnalysis(createImpactAnalysisData(eig), ImpactAnalysisCallBack());
+                    }
+                });
+            }
+        });
     }
 
-    private AnalysisData CreateConceptLocationData() throws StartAnalysisAction.AnalysisFailedException {
-        final JavaProject project = JavaProjectsModel.getInstance().getProject((String) projects.getSelectedItem());
-        return new AnalysisData((String) projects.getSelectedItem(),mainClassFile,
-                (String) dependencyGraph.getSelectedItem(), new JSwingRipplesEIG(project));
+    private AnalysisData createConceptLocationData() {
+        return new AnalysisData(
+                (String) projects.getSelectedItem(),
+                mainClassFile,
+                (String) dependencyGraph.getSelectedItem(),
+                new JSwingRipplesEIG(JavaProjectsModel.getInstance().getProject((String) projects.getSelectedItem())));
+    }
+
+    private AnalysisData createImpactAnalysisData(JSwingRipplesEIG postConceptLocationEIG) {
+        return new AnalysisData(
+                (String) projects.getSelectedItem(),
+                mainClassFile,
+                (String) dependencyGraph.getSelectedItem(),
+                postConceptLocationEIG);
+    }
+
+    private StartAnalysisAction.SuccessfulAnalysisAction ImpactAnalysisCallBack(){
+        return new StartAnalysisAction.SuccessfulAnalysisAction() {
+            @Override
+            public void execute(ModuleConfiguration config, JSwingRipplesEIG eig) {
+                JSwingRipplesApplication.getInstance().hideProceedButton();
+                JSwingRipplesApplication.getInstance().resetProceedButton();
+            }
+        };
     }
 
 }

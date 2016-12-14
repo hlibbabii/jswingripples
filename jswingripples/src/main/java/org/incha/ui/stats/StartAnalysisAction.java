@@ -54,20 +54,19 @@ public class StartAnalysisAction implements ActionListener {
         dialog.setVisible(true);
     }
 
-    public void startAnalysis(AnalysisData data) throws AnalysisFailedException {
+    public void startAnalysis(final AnalysisData data, final SuccessfulAnalysisAction onSuccessAction) {
         if (data.projectName == null) {
             return;
         }
         final JavaProject project = JavaProjectsModel.getInstance().getProject(data.projectName);
-        final JSwingRipplesEIG eig = data.analysisEIG;
 
         String packageName;
         try {
             if ((packageName = getPackage(data.mainClass)) != null) {
-                eig.setMainClass(packageName + "." + data.mainClass.getName().replace(".java", ""));
+                data.analysisEIG.setMainClass(packageName + "." + data.mainClass.getName().replace(".java", ""));
             }
         } catch (JavaModelException e) {
-            throw new AnalysisFailedException("Could not retrieve main class package");
+            //throw new AnalysisFailedException("Could not retrieve main class package");
         }
         final ModuleConfiguration config = new ModuleConfiguration();
         //module dependency builder
@@ -86,20 +85,23 @@ public class StartAnalysisAction implements ActionListener {
             @Override
             public void runSuccessful() {
                 try {
-                    Indexer.getInstance().indexEIG(eig);
+                    Indexer.getInstance().indexEIG(data.analysisEIG);
                     JSwingRipplesApplication.getInstance().enableSearchMenuButtons();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-                StatisticsManager.getInstance().addStatistics(config, eig);
-                JSwingRipplesApplication.getInstance().showProceedButton();
+                if(onSuccessAction != null){
+                    onSuccessAction.execute(config, data.analysisEIG);
+                }
+                //JSwingRipplesApplication.getInstance().showProceedButton();
+
             }
 
             @Override
             public void runFailure() {
 
             }
-        }).runModulesWithPriority(config.buildModules(eig));
+        }).runModulesWithPriority(config.buildModules(data.analysisEIG));
     }
 
     
@@ -127,5 +129,9 @@ public class StartAnalysisAction implements ActionListener {
             }
         }
         return null;
+    }
+
+    public interface SuccessfulAnalysisAction{
+        void execute(ModuleConfiguration config,JSwingRipplesEIG eig);
     }
 }
