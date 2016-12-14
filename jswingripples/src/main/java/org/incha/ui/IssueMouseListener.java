@@ -39,11 +39,11 @@ public class IssueMouseListener extends MouseAdapter {
         JMenuItem color = new JMenuItem("Red");
         color.addActionListener(new ColorListener(new Color(255, 51, 0)));
         popMenu.add(color);
-        color = new JMenuItem("Blue");
-        color.addActionListener(new ColorListener(new Color(51, 153, 255)));
-        popMenu.add(color);
         color = new JMenuItem("Green");
         color.addActionListener(new ColorListener(new Color(51, 204, 51)));
+        popMenu.add(color);
+        color = new JMenuItem("Blue");
+        color.addActionListener(new ColorListener(new Color(51, 153, 255)));
         popMenu.add(color);
         color = new JMenuItem("Remove all colors");
         color.addActionListener(new ActionListener() {
