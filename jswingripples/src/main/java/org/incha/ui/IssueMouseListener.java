@@ -5,24 +5,18 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 /**
  * Created by constanzafierro on 13-12-16.
  */
-public class IssueMouseListener implements MouseListener {
+public class IssueMouseListener extends MouseAdapter {
     private final JTextArea issueText;
 
     public IssueMouseListener(JTextArea issueText){
         super();
         this.issueText = issueText;
     }
-    @Override
-    public void mouseClicked(MouseEvent e) {}
-
     @Override
     public void mousePressed(MouseEvent e) {
         showPopup(e);
@@ -33,30 +27,23 @@ public class IssueMouseListener implements MouseListener {
         showPopup(e);
     }
     private void showPopup(MouseEvent e) {
-        if (issueText.getSelectedText() != null) { // See if they selected something
-            JPopupMenu colorMenu = colorsPopupMenu();
+        if (issueText.getSelectedText() != null) { // See if something was selected
             if (e.isPopupTrigger()) {
-                colorMenu.show(e.getComponent(), e.getX(), e.getY());
+                colorsPopupMenu().show(e.getComponent(), e.getX(), e.getY());
             }
         }
     }
 
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-
-    @Override
-    public void mouseExited(MouseEvent e) {}
-
     private JPopupMenu colorsPopupMenu() {
         JPopupMenu popMenu = new JPopupMenu();
         JMenuItem color = new JMenuItem("Red");
-        color.addActionListener(new ColorListener(Color.RED));
+        color.addActionListener(new ColorListener(new Color(255, 51, 0)));
         popMenu.add(color);
         color = new JMenuItem("Blue");
-        color.addActionListener(new ColorListener(Color.BLUE));
+        color.addActionListener(new ColorListener(new Color(51, 153, 255)));
         popMenu.add(color);
         color = new JMenuItem("Green");
-        color.addActionListener(new ColorListener(Color.GREEN));
+        color.addActionListener(new ColorListener(new Color(51, 204, 51)));
         popMenu.add(color);
         return popMenu;
     }
