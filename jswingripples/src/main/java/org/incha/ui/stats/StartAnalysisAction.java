@@ -66,7 +66,7 @@ public class StartAnalysisAction implements ActionListener {
                 data.analysisEIG.setMainClass(packageName + "." + data.mainClass.getName().replace(".java", ""));
             }
         } catch (JavaModelException e) {
-            //throw new AnalysisFailedException("Could not retrieve main class package");
+
         }
         final ModuleConfiguration config = new ModuleConfiguration();
         //module dependency builder
@@ -76,7 +76,7 @@ public class StartAnalysisAction implements ActionListener {
             config.setDependencyGraphModule(ModuleConfiguration.MODULE_DEPENDENCY_BUILDER_WITH_POLYMORPHIC);
         }
 
-        config.setIncrementalChange(ModuleConfiguration.AnalysisModule.MODULE_CONCEPT_LOCATION);
+        config.setIncrementalChange(data.analysisModule);
         config.setAnalysis(ModuleConfiguration.AnalysisModule.MODULE_IMPACT_ANALYSIS);
 
         project.setModuleConfiguration(config);
@@ -93,7 +93,6 @@ public class StartAnalysisAction implements ActionListener {
                 if(onSuccessAction != null){
                     onSuccessAction.execute(config, data.analysisEIG);
                 }
-                //JSwingRipplesApplication.getInstance().showProceedButton();
 
             }
 

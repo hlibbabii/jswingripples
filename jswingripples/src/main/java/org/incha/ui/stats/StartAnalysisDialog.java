@@ -224,6 +224,7 @@ public class StartAnalysisDialog extends JDialog {
                 (String) projects.getSelectedItem(),
                 mainClassFile,
                 (String) dependencyGraph.getSelectedItem(),
+                ModuleConfiguration.AnalysisModule.MODULE_CONCEPT_LOCATION,
                 new JSwingRipplesEIG(JavaProjectsModel.getInstance().getProject((String) projects.getSelectedItem())));
     }
 
@@ -232,6 +233,7 @@ public class StartAnalysisDialog extends JDialog {
                 (String) projects.getSelectedItem(),
                 mainClassFile,
                 (String) dependencyGraph.getSelectedItem(),
+                ModuleConfiguration.AnalysisModule.MODULE_IMPACT_ANALYSIS,
                 postConceptLocationEIG);
     }
 
