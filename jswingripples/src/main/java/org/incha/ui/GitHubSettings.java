@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.incha.core.jswingripples.parser.InteractiveTask;
 import org.kohsuke.github.*;
 
 import org.incha.core.JavaProject;
@@ -20,12 +21,13 @@ import org.incha.core.ModelSerializer;
 public class GitHubSettings extends JPanel{
 
     private static final long serialVersionUID = 3049936845151322175L;
-    private final JTextField url;
-    private final JLabel crntRepo;   
-    private final JButton connect;    
-    private final JavaProject pjct;
+    private final JTextField urlTextField;
+    private final JLabel currentRepoLabel;
+    private final JButton connectButton;
+    private final JavaProject project;
     private final JButton retrieveIssuesBtn;
-    private final static String WRONG_FORMAT = "wrong_format";
+    private static final String WRONG_FORMAT = "wrong_format";
+    private static final String CONNECT_BUTTON_TEXT = "Connect";
     private  GitHub github = null;
    
     /**
@@ -35,11 +37,11 @@ public class GitHubSettings extends JPanel{
      */    
     public GitHubSettings(JavaProject project){
         super(new BorderLayout());
-        this.pjct = project;
-        url = new JTextField(20);
-        connect = new JButton("Connect");
-        crntRepo = new JLabel("Current Repository: ");
-        crntRepo.setText(crntRepo.getText() + obtainCurrentRepo(pjct));
+        this.project = project;
+        urlTextField = new JTextField(20);
+        connectButton = new JButton("Connect");
+        currentRepoLabel = new JLabel("Current Repository: ");
+        currentRepoLabel.setText(currentRepoLabel.getText() + obtainCurrentRepo(this.project));
         retrieveIssuesBtn = new JButton("Retrieve open issues");
 
         configureLayout();        
@@ -50,15 +52,20 @@ public class GitHubSettings extends JPanel{
         JPanel north = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel center = new JPanel(new FlowLayout(FlowLayout.LEFT));
         north.add(new JLabel("GitHub URL repository: "), BorderLayout.WEST);
-        north.add(url, BorderLayout.EAST);
+        north.add(urlTextField, BorderLayout.EAST);
         
-        north.add(connect, BorderLayout.EAST);
+        north.add(connectButton, BorderLayout.EAST);
         
-        center.add(crntRepo,BorderLayout.WEST);
+        center.add(currentRepoLabel,BorderLayout.WEST);
         center.add(retrieveIssuesBtn,BorderLayout.WEST);
         
         this.add(north, BorderLayout.NORTH);
         this.add(center, BorderLayout.CENTER);
+    }
+
+    private void resetConnectButton() {
+        connectButton.setEnabled(true);
+        connectButton.setText(CONNECT_BUTTON_TEXT);
     }
     
     private void configListeners(){
@@ -66,35 +73,54 @@ public class GitHubSettings extends JPanel{
         performConnection();
         
         /**
-         * Listener to the button that connect the App with GitHub
+         * Listener to the button that connectButton the App with GitHub
          */
-        connect.addActionListener(new ActionListener() {
+        connectButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {        
-                try {                    
-                    String repo = formatURLRepo(url.getText());
-                    url.setText("");                    
-                    if (repo.compareTo(WRONG_FORMAT) == 0){
-                    	JOptionPane.showMessageDialog(null, "Incorrect URL format. Accepted formats are:\n"
-                    			+ "https://github.com/*.git\n"
-                    			+ "https://github.com/*",
-                    			"Format error", JOptionPane.ERROR_MESSAGE);
-                    	return;
+            public void actionPerformed(ActionEvent e) {
+                new InteractiveTask(new InteractiveTask.TaskListener() {
+                    @Override
+                    public void taskSuccessful() {
+                        resetConnectButton();
                     }
+
+                    @Override
+                    public void taskFailure() {
+                        resetConnectButton();
+                    }
+                }) {
+                    @Override
+                    public void run() {
+                        try {
+                            connectButton.setEnabled(false);
+                            connectButton.setText("Connecting...");
+                            String repo = formatURLRepo(urlTextField.getText());
+                            urlTextField.setText("");
+                            if (repo.compareTo(WRONG_FORMAT) == 0){
+                                JOptionPane.showMessageDialog(null, "Incorrect URL format. Accepted formats are:\n"
+                                                + "https://github.com/*.git\n"
+                                                + "https://github.com/*",
+                                        "Format error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
                     /* Getting the repository is just used to verify its availability,
                      * since there is no another way to do this */
-                    github.getRepository(repo);                    
-                    pjct.getGHRepo().replaceRepository(repo);                    
-                    crntRepo.setText("Current Repository: " + repo);
-                } catch (IOException e1) {
-                	JOptionPane.showMessageDialog(null, "Check your internet connection or\n"
-                			+ "if the requested repository is public",
-                			"Connection error", JOptionPane.ERROR_MESSAGE);
-                } catch (Exception e2){
-                	JOptionPane.showMessageDialog(null, "Please check existence of the repository",
-                			"Unknown exception", JOptionPane.ERROR_MESSAGE);
-                }
-                
+                            github.getRepository(repo);
+                            project.getGHRepo().replaceRepository(repo);
+                            currentRepoLabel.setText("Current Repository: " + repo);
+                        } catch (IOException e1) {
+                            JOptionPane.showMessageDialog(null, "Check your internet connection or\n"
+                                            + "if the requested repository is public",
+                                    "Connection error", JOptionPane.ERROR_MESSAGE);
+                            listener.taskFailure();
+                        } catch (Exception e2) {
+                            JOptionPane.showMessageDialog(null, "Please check existence of the repository",
+                                    "Unknown exception", JOptionPane.ERROR_MESSAGE);
+                            listener.taskFailure();
+                        }
+                        listener.taskSuccessful();
+                    }
+                }.start();
             }
         });
         
@@ -106,10 +132,10 @@ public class GitHubSettings extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 try {
                     //Retrieve the current repository
-                    String repository = pjct.getGHRepo().getCurrentRepository();
+                    String repository = project.getGHRepo().getCurrentRepository();
                     //Retrieve the open issues as a list from reporitory                    
                     List<GHIssue> openIssuesList = new LinkedList<GHIssue>(github.getRepository(repository).getIssues(GHIssueState.OPEN));                    
-                    ModelSerializer.generate(openIssuesList, pjct.getName());
+                    ModelSerializer.generate(openIssuesList, project.getName());
                 } catch (IOException e1) {
                 	JOptionPane.showMessageDialog(null, "Check your internet connection or\n"
                 			+ "if the requested repository is public",
@@ -133,7 +159,7 @@ public class GitHubSettings extends JPanel{
     }
     
     /**
-     * Formats an url to make it compatible with kohsuke GitHub API. 
+     * Formats an urlTextField to make it compatible with kohsuke GitHub API.
      * @param urlRepo
      * @return
      */
