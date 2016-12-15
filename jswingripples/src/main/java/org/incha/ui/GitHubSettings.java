@@ -25,9 +25,10 @@ public class GitHubSettings extends JPanel{
     private final JLabel currentRepoLabel;
     private final JButton connectButton;
     private final JavaProject project;
-    private final JButton retrieveIssuesBtn;
+    private final JButton retrieveIssuesButton;
     private static final String WRONG_FORMAT = "wrong_format";
     private static final String CONNECT_BUTTON_TEXT = "Connect";
+    private static final String RETRIEVE_ISSUES_BUTTON_TEXT = "Retrieve issues";
     private  GitHub github = null;
    
     /**
@@ -42,7 +43,7 @@ public class GitHubSettings extends JPanel{
         connectButton = new JButton("Connect");
         currentRepoLabel = new JLabel("Current Repository: ");
         currentRepoLabel.setText(currentRepoLabel.getText() + obtainCurrentRepo(this.project));
-        retrieveIssuesBtn = new JButton("Retrieve open issues");
+        retrieveIssuesButton = new JButton("Retrieve open issues");
 
         configureLayout();        
         configListeners();
@@ -57,7 +58,7 @@ public class GitHubSettings extends JPanel{
         north.add(connectButton, BorderLayout.EAST);
         
         center.add(currentRepoLabel,BorderLayout.WEST);
-        center.add(retrieveIssuesBtn,BorderLayout.WEST);
+        center.add(retrieveIssuesButton,BorderLayout.WEST);
         
         this.add(north, BorderLayout.NORTH);
         this.add(center, BorderLayout.CENTER);
@@ -67,14 +68,29 @@ public class GitHubSettings extends JPanel{
         connectButton.setEnabled(true);
         connectButton.setText(CONNECT_BUTTON_TEXT);
     }
+
+    private void resetRetrieveIssuesButton() {
+        retrieveIssuesButton.setEnabled(true);
+        retrieveIssuesButton.setText(RETRIEVE_ISSUES_BUTTON_TEXT);
+    }
     
     private void configListeners(){
-        
-        performConnection();
-        
-        /**
-         * Listener to the button that connectButton the App with GitHub
-         */
+        connectWithGitHub();
+        addConnectButtonListener();
+        addRetrieveIssuesButtonListener();
+    }
+    
+    /**
+     * This method looks for the project's current repository.
+     * If there is no, return empty String.
+     * @param project
+     * @return
+     */
+    private String obtainCurrentRepo(JavaProject project){
+    	return project.getGHRepo().getCurrentRepository();
+    }
+
+    private void addConnectButtonListener() {
         connectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -123,41 +139,51 @@ public class GitHubSettings extends JPanel{
                 }.start();
             }
         });
-        
-        /**
-         * Listener to the button that retrieve the issues list from GitHub
-         */
-        retrieveIssuesBtn.addActionListener(new ActionListener() {
+    }
+
+    private void addRetrieveIssuesButtonListener() {
+        retrieveIssuesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    //Retrieve the current repository
-                    String repository = project.getGHRepo().getCurrentRepository();
-                    //Retrieve the open issues as a list from reporitory                    
-                    List<GHIssue> openIssuesList = new LinkedList<GHIssue>(github.getRepository(repository).getIssues(GHIssueState.OPEN));                    
-                    ModelSerializer.generate(openIssuesList, project.getName());
-                } catch (IOException e1) {
-                	JOptionPane.showMessageDialog(null, "Check your internet connection or\n"
-                			+ "if the requested repository is public",
-                			"Connection error", JOptionPane.ERROR_MESSAGE);
-                } catch (Exception e2){
-                	JOptionPane.showMessageDialog(null, "Please check existence of the repository",
-                			"Unknown exception", JOptionPane.ERROR_MESSAGE);
-                }
+                new InteractiveTask(new InteractiveTask.TaskListener() {
+                    @Override
+                    public void taskSuccessful() {
+                        resetRetrieveIssuesButton();
+                    }
+
+                    @Override
+                    public void taskFailure() {
+                        resetRetrieveIssuesButton();
+                    }
+                }) {
+                    @Override
+                    public void run() {
+                        try {
+                            retrieveIssuesButton.setText("Downloading...");
+                            retrieveIssuesButton.setEnabled(false);
+                            //Retrieve the current repository
+                            String repository = project.getGHRepo().getCurrentRepository();
+                            //Retrieve the open issues as a list from repository
+                            List<GHIssue> openIssuesList =
+                                    new LinkedList<GHIssue>(github.getRepository(repository).getIssues(GHIssueState.OPEN));
+                            ModelSerializer.generate(openIssuesList, project.getName());
+                        } catch (IOException e1) {
+                            JOptionPane.showMessageDialog(null, "Check your internet connection or\n"
+                                            + "if the requested repository is public",
+                                    "Connection error", JOptionPane.ERROR_MESSAGE);
+                            listener.taskFailure();
+                        } catch (Exception e2){
+                            JOptionPane.showMessageDialog(null, "Please check existence of the repository",
+                                    "Unknown exception", JOptionPane.ERROR_MESSAGE);
+                            listener.taskFailure();
+                        }
+                        listener.taskSuccessful();
+                    }
+                }.start();
             }
         });
     }
-    
-    /**
-     * This method looks for the project's current repository.
-     * If there is no, return empty String.
-     * @param project
-     * @return
-     */
-    private String obtainCurrentRepo(JavaProject project){
-    	return project.getGHRepo().getCurrentRepository();
-    }
-    
+
     /**
      * Formats an urlTextField to make it compatible with kohsuke GitHub API.
      * @param urlRepo
@@ -173,11 +199,8 @@ public class GitHubSettings extends JPanel{
     	return WRONG_FORMAT;
     			 
     }
-    
-    /**
-     * Method to stablish the connection between the App and GitHub
-     */
-    public void performConnection() {
+
+    private void connectWithGitHub() {
         try {
             github = GitHub.connectAnonymously();
         } catch (IOException e1) {
