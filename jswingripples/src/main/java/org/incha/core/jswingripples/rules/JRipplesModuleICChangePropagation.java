@@ -124,3 +124,4 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
         InitializeStage(moduleRunner);
     }
 }
+	
