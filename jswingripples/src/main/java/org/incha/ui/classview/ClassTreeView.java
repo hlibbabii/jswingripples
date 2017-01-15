@@ -27,7 +27,7 @@ public class ClassTreeView extends AbstractHierarchicalView {
                 JRipplesViewsConstants.PROBABILITY_COLUMN_TITLE,
                 JRipplesViewsConstants.FULL_NAME_COLUMN_TITLE,
                 JRipplesViewsConstants.SEARCH_COLUMN_TITLE,
-                JRipplesViewsConstants.ANNOTACION_SUPPORT_TITLE
+                JRipplesViewsConstants.ANNOTATION_TITLE
                 );
     }
     /**
