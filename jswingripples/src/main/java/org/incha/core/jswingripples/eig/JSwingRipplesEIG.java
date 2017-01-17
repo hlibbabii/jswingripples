@@ -104,7 +104,7 @@ public final class JSwingRipplesEIG implements Cloneable{
 
 	private Set<JSwingRipplesEIGListener> eigListeners = Collections.synchronizedSet(new  HashSet<JSwingRipplesEIGListener>());
 	
-	public String annotation="";
+	
     private final JavaProject projectName;
 	boolean redoInProgress = false;
 
@@ -1079,17 +1079,5 @@ public final class JSwingRipplesEIG implements Cloneable{
      */
     public History getHistory() {
         return history;
-    }
-    /**
-     * @return the anottation.
-     */
-    public String getAnnottation(){
-    	return annotation;
-    }
-    /**
-     * set the history.
-     */
-    public void setAnottation(String annotationSupport){
-    	this.annotation=annotationSupport;
     }
 }
