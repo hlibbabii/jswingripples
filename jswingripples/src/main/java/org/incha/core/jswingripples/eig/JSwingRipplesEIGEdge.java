@@ -21,6 +21,7 @@ public class JSwingRipplesEIGEdge {
 
 	private String mark;
 	private String probability;
+	private String annotation;
 
 	private final JSwingRipplesEIG eig;
 	private Integer count=1;
@@ -205,5 +206,11 @@ public class JSwingRipplesEIGEdge {
      */
     public JSwingRipplesEIG getEig() {
         return eig;
+    }
+    public void setAnnotation(String anotation){
+    	this.annotation=anotation;
+    }
+    public String getAnnotation(){
+    	return this.annotation;
     }
 }

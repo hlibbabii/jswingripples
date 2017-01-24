@@ -85,11 +85,6 @@ public class CommonEIGRules {
 			return 0;
 
 	}
-
-
-
-
-
 	private static void filterNeighbors(final JSwingRipplesEIG eig,
 	        final JSwingRipplesEIGNode focusNode,final Set<JSwingRipplesEIGNode> neighbors) {
 		final Set<JSwingRipplesEIGNode> filteredNeighbors=new HashSet<JSwingRipplesEIGNode> ();
