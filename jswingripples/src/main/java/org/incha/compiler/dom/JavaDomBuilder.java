@@ -136,8 +136,7 @@ public class JavaDomBuilder {
     }
     
     /**
-     * Ocupamos reflexion para cambiar en JavaModelManager el field de cache.
-     * No es ideal ya que es reflection, pero no se encontro otra forma
+     * using the reflexion for change the field field of the cache in JavaModelManager.
      * @return
      */
    private static JavaModelCacheExt initializeJavaModelManager() {
