@@ -67,8 +67,14 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
                 if ((nodes[i].getMark().compareTo(EIGStatusMarks.LOCATED) != 0) && (nodes[i].getMark().compareTo(EIGStatusMarks.IMPACTED) != 0) && (nodes[i].getMark().compareTo(EIGStatusMarks.CHANGED) != 0))
                     nodes[i].setMark(EIGStatusMarks.BLANK);
                 else
-                if (!nodes[i].isTop()) impactedMemberNodes.add(nodes[i]);
-                else impactedTopNodes.add(nodes[i]);
+                if (!nodes[i].isTop()){
+                	impactedMemberNodes.add(nodes[i]);
+                	nodes[i].setAnottation("“hay que cambiar esta clase, este metodo, porque es impactada por el concepto");
+                }
+                else{
+                	impactedTopNodes.add(nodes[i]);
+                	nodes[i].setAnottation("este atributo propaga cambios porque hay otros nodos impactados");
+                }
             }
             //          Process members first
             for (final Iterator<JSwingRipplesEIGNode> iter = impactedMemberNodes.iterator(); iter.hasNext();) {
@@ -112,6 +118,7 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
             final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
         if ((rule.compareTo(EIGStatusMarks.CHANGED) == 0) || (rule.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0)) {
             CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo,rule,EIGStatusMarks.NEXT_VISIT);
+            CommonEIGRules.assignAnottationToNodeAndNeighbor(eig,nodeFrom,nodeTo,rule,"hay que cambiar esta clase, este metodo, porque" + rule);
 
         } else if (rule.compareTo(EIGStatusMarks.VISITED) == 0) {
 
@@ -124,3 +131,4 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
         InitializeStage(moduleRunner);
     }
 }
+	

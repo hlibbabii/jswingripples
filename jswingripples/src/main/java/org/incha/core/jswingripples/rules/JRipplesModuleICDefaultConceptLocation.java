@@ -89,6 +89,7 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
     public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode node, final int granularity) {
         if (rule.compareTo(EIGStatusMarks.LOCATED) == 0) {
             CommonEIGRules.assignMarkToNodeAndParents(eig, node,EIGStatusMarks.LOCATED);
+            CommonEIGRules.assignAnottationToNodeAndParents(eig, node,"hay que cambiar esta clase, este metodo por que el concepto ha sido localizado");
         } else if (rule.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0) {
             CommonEIGRules.applyRuleToNode(eig, node,rule,granularity);
 
@@ -103,6 +104,7 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
     public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
         if (rule.compareTo(EIGStatusMarks.LOCATED) == 0) {
             CommonEIGRules.assignMarkToNodeAndParents(eig, nodeFrom,EIGStatusMarks.LOCATED);
+            CommonEIGRules.assignAnottationToNodeAndParents(eig,nodeFrom,"hay que cambiar esta clase, este método por que el concepto fue localizado");
 
         } else if (rule.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0) {
             CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo, rule,EIGStatusMarks.NEXT_VISIT);

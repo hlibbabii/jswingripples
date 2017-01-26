@@ -85,11 +85,6 @@ public class CommonEIGRules {
 			return 0;
 
 	}
-
-
-
-
-
 	private static void filterNeighbors(final JSwingRipplesEIG eig,
 	        final JSwingRipplesEIGNode focusNode,final Set<JSwingRipplesEIGNode> neighbors) {
 		final Set<JSwingRipplesEIGNode> filteredNeighbors=new HashSet<JSwingRipplesEIGNode> ();
@@ -135,4 +130,25 @@ public class CommonEIGRules {
 		}
 
 	}
-}
+
+	public static void assignAnottationToNodeAndNeighbor(final JSwingRipplesEIG eig, final JSwingRipplesEIGNode nodeFrom,
+			final JSwingRipplesEIGNode nodeTo, final String rule, String text) {
+		 {
+			assignAnottationToNodeAndParents(eig, nodeFrom,text);
+			assignAnottationToNodeAndParents(eig, nodeTo, text);
+		
+		 }
+	}
+
+	public static void assignAnottationToNodeAndParents(final JSwingRipplesEIG eig, JSwingRipplesEIGNode node,
+			final String text) {
+		while (node!=null) {
+			node.setAnottation(text);;
+			if (node.isTop()) return;
+			//comment below will lead JRipples halt, but why?
+			node=eig.findParentNodeForMemberNode(node);
+			if (node==null) return;
+		}
+		
+	}
+}	

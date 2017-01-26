@@ -7,6 +7,7 @@ public class JRipplesViewsConstants {
 	public static final String MARK_COLUMN_TITLE = "Mark";
 	public static final String PROBABILITY_COLUMN_TITLE = "Probability";
 	public static final String SEARCH_COLUMN_TITLE = "Search Hits";
+	public static final String ANNOTATION_TITLE = "Comentario";
 
 	public static final String ACTION_HIDE_CHILDREN_TITLE = "Hide Children";
 	public static final String ACTION_HIDE_PARENTS_TITLE = "Hide Parents";

@@ -21,6 +21,7 @@ public  class JSwingRipplesEIGNode {
 
 	private String mark = EIGStatusMarks.BLANK;
 	private String probability;
+	public String annotation;
 
 	private final IMember nodeMember; 
 
@@ -186,6 +187,19 @@ public  class JSwingRipplesEIGNode {
      */
     private boolean isEquals(final String mark1, final String mark2) {
         return mark1 == null && mark2 == null || mark1 != null && mark1.equals(mark2);
+    }
+    /**
+     * @return the annotation.
+     */
+    public String getAnnottation(){
+    	if(annotation==null)this.annotation="";
+    	return annotation;
+    }
+    /**
+     * set the annotation.
+     */
+    public void setAnottation(String annotationSupport){
+    	this.annotation=annotationSupport;
     }
 
     /**

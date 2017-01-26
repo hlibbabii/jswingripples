@@ -103,7 +103,8 @@ public final class JSwingRipplesEIG implements Cloneable{
 	private String mainClass;
 
 	private Set<JSwingRipplesEIGListener> eigListeners = Collections.synchronizedSet(new  HashSet<JSwingRipplesEIGListener>());
-
+	
+	
     private final JavaProject projectName;
 	boolean redoInProgress = false;
 

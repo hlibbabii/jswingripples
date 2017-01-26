@@ -107,3 +107,4 @@ public class DefaultController implements StatisticsChangeListener {
     public void statisticsRemoved(final String id, final Statistics stats) {
     }
 }
+ 

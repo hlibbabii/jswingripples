@@ -12,7 +12,7 @@ import org.eclipse.jdt.core.IMember;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 
 public class ClassTreeDataModel implements TableModel {
-    /**
+	/**
      * The item list.
      */
     private final List<JSwingRipplesEIGNode> items = new LinkedList<JSwingRipplesEIGNode>();
