@@ -170,6 +170,16 @@ public class TextEditor extends JFrame {
         });
     }
 
+    public void bringToFront() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                setVisible(true);
+                setExtendedState(JFrame.NORMAL);
+            }
+        });
+    }
+
     /**
      * open a File in the Text Editor and add a new Tab to the window with
      * the file.
