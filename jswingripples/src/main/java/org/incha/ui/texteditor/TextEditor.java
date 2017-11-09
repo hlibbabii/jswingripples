@@ -186,36 +186,23 @@ public class TextEditor extends JFrame {
      * @param filename String with the path of the File.
      */
     public void openFile ( String filename ) {
+        FileOpen fileToOpen = null;
         //search if the File isn't open.
         for(FileOpen file: openFiles){
             //if found the file open, select this tab.
             if ( file.getPath().equals(filename)){
-                jTabbedPane.setSelectedIndex(openFiles.indexOf(file));
-
-                return;
+                fileToOpen = file;
             }
         };
-        FileOpen newFile = fileOpenFactory.create(filename);
-        if (newFile.open()) {
-            openFiles.add(newFile);
-            JScrollPane jScrollPane = new JScrollPane(newFile.getText());
-            jTabbedPane.addTab(newFile.getFileName(), jScrollPane);
+        if (fileToOpen == null) {
+            fileToOpen = fileOpenFactory.create(filename);
+            if (fileToOpen.open()) {
+                openFiles.add(fileToOpen);
+                JScrollPane jScrollPane = new JScrollPane(fileToOpen.getText());
+                jTabbedPane.addTab(fileToOpen.getFileName(), jScrollPane);
+            }
         }
-
-        /**
-         * if need a limit to the files open for any reason use this.
-         if(openFiles.size()<15) {
-         FileOpen newFile = new FileOpen(filename);
-         if (newFile.open()) {
-         openFiles.add(newFile);
-         JScrollPane jScrollPane = new JScrollPane(newFile.getText());
-         jTabbedPane.addTab(newFile.getFileName(), jScrollPane);
-         }
-         }
-         else{
-
-         }**/
-
+        jTabbedPane.setSelectedIndex(openFiles.indexOf(fileToOpen));
     }
 
     private void addJTabbedPaneMouseListener(final JTabbedPane pane){

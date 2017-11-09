@@ -21,13 +21,16 @@ import static org.mockito.Mockito.when;
  * Created by hlib on 02.11.17.
  */
 public class TextEditorTest extends TestCase {
-    public void testOpenFile() throws Exception {
+    public void testOpenFile2DifferentClassesOpened() throws Exception {
         /* given */
-        final String stubFileName = "stub1.java";
-        FileOpen fileOpenStub1 = createFileOpenStub(stubFileName);
+        final String stubFileName1 = "stub1.java";
+        final String stubFileName2 = "stub2.java";
+        FileOpen fileOpenStub1 = createFileOpenStub(stubFileName1);
+        FileOpen fileOpenStub2 = createFileOpenStub(stubFileName2);
 
         FileOpen.FileOpenFactory fileOpenFactoryMock = mock(FileOpen.FileOpenFactory.class);
-        when(fileOpenFactoryMock.create(stubFileName)).thenReturn(fileOpenStub1);
+        when(fileOpenFactoryMock.create(stubFileName1)).thenReturn(fileOpenStub1);
+        when(fileOpenFactoryMock.create(stubFileName2)).thenReturn(fileOpenStub2);
 
         JTabbedPane jTabbedPaneMock = spy(JTabbedPane.class);
 
@@ -39,17 +42,31 @@ public class TextEditorTest extends TestCase {
         TextEditor textEditor = new TextEditor(null,
                 fileOpenFactoryMock, textEditorElementsFactoryMock);
 
-        /* when */
-        textEditor.openFile(stubFileName);
+        /* when Class1*/
+        textEditor.openFile(stubFileName1);
 
         /* then */
         List<FileOpen> openFiles = getOpenFiles(textEditor);
-        assertEquals(stubFileName + " apparently was not added to open file list" , 1, openFiles.size());
+        assertEquals(1, openFiles.size());
 
-        FileOpen fileOpen = openFiles.get(0);
-        assertEquals(fileOpenStub1, fileOpen);
+        assertEquals(fileOpenStub1, openFiles.get(0));
 
-        verify(jTabbedPaneMock).addTab(eq(stubFileName), any(Component.class));
+        verify(jTabbedPaneMock).addTab(eq(stubFileName1), any(Component.class));
+
+        assertEquals(0, jTabbedPaneMock.getSelectedIndex());
+
+        /* when Class2*/
+        textEditor.openFile(stubFileName2);
+
+        /*then*/
+        openFiles = getOpenFiles(textEditor);
+        assertEquals(2, openFiles.size());
+
+        assertEquals(fileOpenStub2, openFiles.get(1));
+
+        verify(jTabbedPaneMock).addTab(eq(stubFileName2), any(Component.class));
+
+        assertEquals(1, jTabbedPaneMock.getSelectedIndex());
     }
 
     @SuppressWarnings("unchecked")
