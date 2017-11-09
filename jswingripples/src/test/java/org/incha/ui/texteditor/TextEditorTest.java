@@ -43,8 +43,15 @@ public class TextEditorTest extends TestCase {
         TextEditor textEditor = new TextEditor(null,
                 fileOpenFactoryMock, textEditorElementsFactoryMock);
 
+        Runnable dummyRunnable = new Runnable(){
+            @Override
+            public void run() {}
+        };
+
         /* when Class1*/
         textEditor.openFile(stubFileName1);
+        //waiting for awt dispatch thread to finish execution
+        SwingUtilities.invokeAndWait(dummyRunnable);
 
         /* then */
         List<FileOpen> openFiles = getOpenFiles(textEditor);
@@ -58,6 +65,8 @@ public class TextEditorTest extends TestCase {
 
         /* when Class2*/
         textEditor.openFile(stubFileName2);
+        //waiting for awt dispatch thread to finish execution
+        SwingUtilities.invokeAndWait(dummyRunnable);
 
         /*then*/
         openFiles = getOpenFiles(textEditor);
@@ -71,6 +80,8 @@ public class TextEditorTest extends TestCase {
 
         /* when Class1 again*/
         textEditor.openFile(stubFileName1);
+        //waiting for awt dispatch thread to finish execution
+        SwingUtilities.invokeAndWait(dummyRunnable);
 
         /*then*/
         openFiles = getOpenFiles(textEditor);

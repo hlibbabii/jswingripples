@@ -180,6 +180,25 @@ public class TextEditor extends JFrame {
         });
     }
 
+    private void addTab(final FileOpen fileOpen) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JScrollPane jScrollPane = new JScrollPane(fileOpen.getText());
+                jTabbedPane.addTab(fileOpen.getFileName(), jScrollPane);
+            }
+        });
+    }
+
+    private void setSelectedIndex(final int index) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                jTabbedPane.setSelectedIndex(index);
+            }
+        });
+    }
+
     /**
      * open a File in the Text Editor and add a new Tab to the window with
      * the file.
@@ -198,11 +217,10 @@ public class TextEditor extends JFrame {
             fileToOpen = fileOpenFactory.create(filename);
             if (fileToOpen.open()) {
                 openFiles.add(fileToOpen);
-                JScrollPane jScrollPane = new JScrollPane(fileToOpen.getText());
-                jTabbedPane.addTab(fileToOpen.getFileName(), jScrollPane);
+                addTab(fileToOpen);
             }
         }
-        jTabbedPane.setSelectedIndex(openFiles.indexOf(fileToOpen));
+        setSelectedIndex(openFiles.indexOf(fileToOpen));
     }
 
     private void addJTabbedPaneMouseListener(final JTabbedPane pane){
