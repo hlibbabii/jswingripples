@@ -22,6 +22,15 @@ import static org.mockito.Mockito.when;
  * Created by hlib on 02.11.17.
  */
 public class TextEditorTest extends TestCase {
+
+    @Override
+    protected void runTest() throws Throwable {
+        // Do nothing if the precondition does not hold.
+        if (!GraphicsEnvironment.isHeadless()) {
+            super.runTest();
+        }
+    }
+
     public void testOpenFileWhenOpeningClass1Class2ThenClass1Again() throws Exception {
         /* given */
         final String stubFileName1 = "stub1.java";
