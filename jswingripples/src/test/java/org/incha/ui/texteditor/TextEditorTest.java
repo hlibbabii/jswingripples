@@ -13,6 +13,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.when;
  * Created by hlib on 02.11.17.
  */
 public class TextEditorTest extends TestCase {
-    public void testOpenFile2DifferentClassesOpened() throws Exception {
+    public void testOpenFileWhenOpeningClass1Class2ThenClass1Again() throws Exception {
         /* given */
         final String stubFileName1 = "stub1.java";
         final String stubFileName2 = "stub2.java";
@@ -67,6 +68,17 @@ public class TextEditorTest extends TestCase {
         verify(jTabbedPaneMock).addTab(eq(stubFileName2), any(Component.class));
 
         assertEquals(1, jTabbedPaneMock.getSelectedIndex());
+
+        /* when Class1 again*/
+        textEditor.openFile(stubFileName1);
+
+        /*then*/
+        openFiles = getOpenFiles(textEditor);
+        assertEquals(2, openFiles.size());
+
+        verify(jTabbedPaneMock, times(1)).addTab(eq(stubFileName1), any(Component.class));
+
+        assertEquals(0, jTabbedPaneMock.getSelectedIndex());
     }
 
     @SuppressWarnings("unchecked")
