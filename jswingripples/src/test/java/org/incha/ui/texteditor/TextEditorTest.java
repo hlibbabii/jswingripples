@@ -1,6 +1,7 @@
 package org.incha.ui.texteditor;
 
 import junit.framework.TestCase;
+import org.eclipse.jdt.core.ISourceRange;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.incha.core.texteditor.FileOpen;
 
@@ -57,8 +58,11 @@ public class TextEditorTest extends TestCase {
             public void run() {}
         };
 
+        ISourceRange sourceRange = mock(ISourceRange.class);
+        when(sourceRange.getOffset()).thenReturn(5);
+
         /* when Class1*/
-        textEditor.openFile(stubFileName1);
+        textEditor.openFile(stubFileName1, sourceRange);
         //waiting for awt dispatch thread to finish execution
         SwingUtilities.invokeAndWait(dummyRunnable);
 
@@ -73,7 +77,7 @@ public class TextEditorTest extends TestCase {
         assertEquals(0, jTabbedPaneMock.getSelectedIndex());
 
         /* when Class2*/
-        textEditor.openFile(stubFileName2);
+        textEditor.openFile(stubFileName2, sourceRange);
         //waiting for awt dispatch thread to finish execution
         SwingUtilities.invokeAndWait(dummyRunnable);
 
@@ -88,7 +92,7 @@ public class TextEditorTest extends TestCase {
         assertEquals(1, jTabbedPaneMock.getSelectedIndex());
 
         /* when Class1 again*/
-        textEditor.openFile(stubFileName1);
+        textEditor.openFile(stubFileName1, sourceRange);
         //waiting for awt dispatch thread to finish execution
         SwingUtilities.invokeAndWait(dummyRunnable);
 
