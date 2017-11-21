@@ -4,6 +4,7 @@ package org.incha.ui;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.incha.core.JavaProject;
+import org.incha.utils.ProjectNamingUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -128,6 +129,8 @@ class GitSettings extends JPanel {
                             .setURI(remoteUrl)
                             .setDirectory(fileForRepository)
                             .call();
+                    String gitProjectName = ProjectNamingUtils.getGitProjectNameFromUrl(remoteUrl);
+                    project.setProjectName(gitProjectName);
                     sourceLoadingListener.onSourcesLoaded(project);
                 } catch (org.eclipse.jgit.api.errors.TransportException e) {
                     JOptionPane.showMessageDialog(principalFrame, "Connection error, please check internet.",
