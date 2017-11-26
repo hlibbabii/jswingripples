@@ -1,15 +1,18 @@
 package org.incha.ui.texteditor;
 
-import junit.framework.TestCase;
 import org.eclipse.jdt.core.ISourceRange;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.incha.core.texteditor.FileOpen;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -22,17 +25,16 @@ import static org.mockito.Mockito.when;
 /**
  * Created by hlib on 02.11.17.
  */
-public class TextEditorTest extends TestCase {
+public class TextEditorTest {
 
-    @Override
-    protected void runTest() throws Throwable {
-        // Do nothing if the precondition does not hold.
-        if (!GraphicsEnvironment.isHeadless()) {
-            super.runTest();
-        }
+    @Before
+    public void setUp() {
+        Assume.assumeTrue(!GraphicsEnvironment.isHeadless());
     }
 
+    @Test
     public void testOpenFileWhenOpeningClass1Class2ThenClass1Again() throws Exception {
+
         /* given */
         final String stubFileName1 = "stub1.java";
         final String stubFileName2 = "stub2.java";

@@ -1,30 +1,20 @@
 package org.incha.core;
 
+import org.junit.Test;
+import org.xml.sax.SAXException;
+
+import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import javax.xml.transform.TransformerException;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
 
-import org.xml.sax.SAXException;
+public class ModelSerializerTest {
 
-public class ModelSerializerTest extends TestCase {
-    /**
-     * Default constructor.
-     */
-    public ModelSerializerTest() {
-        super();
-    }
-    /**
-     * @param name test case name.
-     */
-    public ModelSerializerTest(final String name) {
-        super(name);
-    }
-
+    @Test
     public void testSerializeModel() throws TransformerException, SAXException, IOException {
         final JavaProjectsModel origin = new JavaProjectsModel();
         final JavaProject p = new JavaProject("JUnit1");

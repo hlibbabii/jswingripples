@@ -1,10 +1,14 @@
 package org.incha.core.jswingripples.eig.history;
 
+import org.junit.Test;
+
 import java.util.LinkedList;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class HistoryTest extends TestCase {
+public class HistoryTest {
     /**
      * list of actions.
      */
@@ -42,19 +46,7 @@ public class HistoryTest extends TestCase {
         }
     }
 
-    /**
-     * Default constructor.
-     */
-    public HistoryTest() {
-        super();
-    }
-    /**
-     * @param name test case name.
-     */
-    public HistoryTest(final String name) {
-        super(name);
-    }
-
+    @Test
     public void testHistory() {
         add(1);
         add(2);
@@ -109,6 +101,7 @@ public class HistoryTest extends TestCase {
         assertEquals(new Integer(2), actions.get(1));
     }
 
+    @Test
     public void testIgnoresEmptyQueue() {
         //check not throws any exceptions
         history.undo();

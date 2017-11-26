@@ -1,28 +1,19 @@
 package org.incha.compiler.dom;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
 import org.incha.core.simpledom.MockCompilationUnit;
 import org.incha.core.simpledom.MockLocalVariable;
 import org.incha.core.simpledom.MockMethod;
 import org.incha.core.simpledom.MockType;
+import org.junit.Test;
 
-public class JavaDomUtilsTest extends TestCase {
-    /**
-     * Default constructor.
-     */
-    public JavaDomUtilsTest() {
-        super();
-    }
-    /**
-     * @param name the test case name.
-     */
-    public JavaDomUtilsTest(final String name) {
-        super(name);
-    }
+import static org.junit.Assert.assertEquals;
 
+
+public class JavaDomUtilsTest {
+
+    @Test
     public void testGetAllTypes() throws JavaModelException {
         //create compilatino unit
         final MockType type1 = new MockType("Type1");
@@ -36,6 +27,8 @@ public class JavaDomUtilsTest extends TestCase {
 
         assertEquals(3, JavaDomUtils.getAllTypes(new ICompilationUnit[] {unit}).length);
     }
+
+    @Test
     public void testGetAllNodes() throws JavaModelException {
         //create compilatino unit
         final MockType type1 = new MockType("Type1");
@@ -51,6 +44,8 @@ public class JavaDomUtilsTest extends TestCase {
 
         assertEquals(5, JavaDomUtils.getAllNodes(unit).size());
     }
+
+    @Test
     public void testGetAllMembers() throws JavaModelException {
         //create compilatino unit
         final MockType type1 = new MockType("Type1");

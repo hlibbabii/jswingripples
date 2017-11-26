@@ -1,25 +1,17 @@
 package org.incha.core.jswingripples;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.incha.core.simpledom.MockType;
+import org.junit.Test;
 
-public class TypeHierarchySupportTest extends TestCase {
-    /**
-     * Default constructor.
-     */
-    public TypeHierarchySupportTest() {
-        super();
-    }
-    /**
-     * @param name the test case name.
-     */
-    public TypeHierarchySupportTest(final String name) {
-        super(name);
-    }
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
+public class TypeHierarchySupportTest {
+
+    @Test
     public void testGetSuperclass() throws JavaModelException {
         final MockType t1 = new MockType("a.b.c.T1");
         final MockType t2 = new MockType("a.b.c.T2");
@@ -34,6 +26,8 @@ public class TypeHierarchySupportTest extends TestCase {
         assertNull(support.getSuperclass(t3));
 
     }
+
+    @Test
     public void testGetSuperInterface() throws JavaModelException {
         final MockType t1 = new MockType("a.b.c.T1");
         final MockType t2 = new MockType("a.b.c.T2");
@@ -47,6 +41,8 @@ public class TypeHierarchySupportTest extends TestCase {
         assertEquals(1, sup.length);
         assertEquals(t2.getFullyQualifiedName(), sup[0].getFullyQualifiedName());
     }
+
+    @Test
     public void testGetSuperSuperInterface() throws JavaModelException {
         final MockType t1 = new MockType("a.b.c.T1");
         final MockType t2 = new MockType("a.b.c.T2");
@@ -61,6 +57,8 @@ public class TypeHierarchySupportTest extends TestCase {
         final IType[] sup = support.getSuperInterfaces(t1);
         assertEquals(2, sup.length);
     }
+
+    @Test
     public void testCiclicInterfaces() throws JavaModelException {
         final MockType t1 = new MockType("a.b.c.T1");
         final MockType t2 = new MockType("a.b.c.T2");

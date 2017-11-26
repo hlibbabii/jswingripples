@@ -1,12 +1,18 @@
 package org.incha.core;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-public class JavaProjectModelTest extends TestCase implements PropertyChangeListener {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+public class JavaProjectModelTest implements PropertyChangeListener {
     /**
      * Currently handled property change event.
      */
@@ -16,28 +22,13 @@ public class JavaProjectModelTest extends TestCase implements PropertyChangeList
      */
     private JavaProjectsModel model;
 
-    /**
-     * Default constructor.
-     */
-    public JavaProjectModelTest() {
-        super();
-    }
-    /**
-     * @param name the test case name.
-     */
-    public JavaProjectModelTest(final String name) {
-        super(name);
-    }
-
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         model = new JavaProjectsModel();
         model.addPropertyChangeListener(this);
     }
 
+    @Test
     public void testaddProject() {
         final JavaProject p = new JavaProject("prgname");
 
@@ -63,6 +54,7 @@ public class JavaProjectModelTest extends TestCase implements PropertyChangeList
         assertEquals("prgname_new", model.getProjects().get(0).getName());
     }
 
+    @Test
     public void testDeleteSource() {
         final JavaProject f1 = new JavaProject("name1");
         final JavaProject f2 = new JavaProject("name2");
@@ -93,6 +85,7 @@ public class JavaProjectModelTest extends TestCase implements PropertyChangeList
         assertNull(propertyChangeEvent);
     }
 
+    @Test
     public void testRenameProject() {
         /* given*/
         final JavaProject p = new JavaProject("proj");
@@ -105,6 +98,7 @@ public class JavaProjectModelTest extends TestCase implements PropertyChangeList
         assertEquals("project", model.getProjects().get(0).getName());
     }
 
+    @Test
     public void testRenameProjectToTheNameWhichAnotherProjectAlreadyHas() {
         /* given*/
         model.addProject(new JavaProject("project"));
@@ -124,11 +118,9 @@ public class JavaProjectModelTest extends TestCase implements PropertyChangeList
     public void propertyChange(final PropertyChangeEvent evt) {
         propertyChangeEvent = evt;
     }
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
-    @Override
-    protected void tearDown() throws Exception {
+
+    @After
+    public void tearDown() throws Exception {
         propertyChangeEvent = null;
         model.removePropertyChangeListener(this);
     }

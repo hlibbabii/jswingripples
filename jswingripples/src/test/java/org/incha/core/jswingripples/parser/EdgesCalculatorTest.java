@@ -1,10 +1,5 @@
 package org.incha.core.jswingripples.parser;
 
-import java.io.IOException;
-import java.util.Set;
-
-import junit.framework.TestCase;
-
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
 import org.incha.TestUtils;
@@ -24,30 +19,23 @@ import org.incha.core.jswingripples.parser.samples.TypeWithInheritance;
 import org.incha.core.jswingripples.parser.samples.TypeWithLocalVariableDependencies;
 import org.incha.core.jswingripples.parser.samples.TypeWithMethodInfovation;
 import org.incha.ui.util.NullMonitor;
+import org.junit.Before;
+import org.junit.Test;
 
-public class EdgesCalculatorTest extends TestCase {
+import java.io.IOException;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+
+
+public class EdgesCalculatorTest {
     private JavaDomBuilder builder;
     private JavaProject javaProject;
 
-    /**
-     * Default consstructor.
-     */
-    public EdgesCalculatorTest() {
-        super();
-    }
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         javaProject = new JavaProject("jinit");
         builder = new JavaDomBuilder(javaProject.getName());
-    }
-    /**
-     * @param name test case name.
-     */
-    public EdgesCalculatorTest(final String name) {
-        super(name);
     }
 
     private ICompilationUnit loadCompilationUnits(final Class<?> clazz)
@@ -60,6 +48,7 @@ public class EdgesCalculatorTest extends TestCase {
      * @throws IOException
      * @throws JavaModelException
      */
+    @Test
     public void testSuperType() throws IOException, JavaModelException {
         final ICompilationUnit superTypeUnit = loadCompilationUnits(SuperType.class);
         final ICompilationUnit mainType = loadCompilationUnits(TypeWithInheritance.class);
@@ -75,6 +64,7 @@ public class EdgesCalculatorTest extends TestCase {
      * @throws IOException
      * @throws JavaModelException
      */
+    @Test
     public void testSuperInterface() throws IOException, JavaModelException {
         final ICompilationUnit superInterface = loadCompilationUnits(AnyInterface.class);
         final ICompilationUnit mainType = loadCompilationUnits(TypeWithInheritance.class);
@@ -90,6 +80,7 @@ public class EdgesCalculatorTest extends TestCase {
      * @throws IOException
      * @throws JavaModelException
      */
+    @Test
     public void testInitalizerDependency() throws IOException, JavaModelException {
         final ICompilationUnit dependency = loadCompilationUnits(InitializerDependency.class);
         final ICompilationUnit mainType = loadCompilationUnits(TypeWithLocalVariableDependencies.class);
@@ -106,6 +97,7 @@ public class EdgesCalculatorTest extends TestCase {
      * @throws IOException
      * @throws JavaModelException
      */
+    @Test
     public void testStaticInitalizerDependency() throws IOException, JavaModelException {
         final ICompilationUnit dependency = loadCompilationUnits(StaticInitializerDependency.class);
         final ICompilationUnit mainType = loadCompilationUnits(TypeWithLocalVariableDependencies.class);
@@ -122,6 +114,7 @@ public class EdgesCalculatorTest extends TestCase {
      * @throws IOException
      * @throws JavaModelException
      */
+    @Test
     public void testInitializationInConstructor() throws IOException, JavaModelException {
         final ICompilationUnit dependency = loadCompilationUnits(InitializationInConstructorDependency.class);
         final ICompilationUnit mainType = loadCompilationUnits(TypeWithLocalVariableDependencies.class);
@@ -141,6 +134,7 @@ public class EdgesCalculatorTest extends TestCase {
      * @throws IOException
      * @throws JavaModelException
      */
+    @Test
     public void testDeclarationInConstructor() throws IOException, JavaModelException {
         final ICompilationUnit dependency = loadCompilationUnits(DeclarationInConstructorDependency.class);
         final ICompilationUnit mainType = loadCompilationUnits(TypeWithLocalVariableDependencies.class);
@@ -160,6 +154,7 @@ public class EdgesCalculatorTest extends TestCase {
      * @throws IOException
      * @throws JavaModelException
      */
+    @Test
     public void testInitializationInMethod() throws IOException, JavaModelException {
         final ICompilationUnit dependency = loadCompilationUnits(InitializationInMethodDependency.class);
         final ICompilationUnit mainType = loadCompilationUnits(TypeWithLocalVariableDependencies.class);
@@ -178,6 +173,7 @@ public class EdgesCalculatorTest extends TestCase {
      * @throws IOException
      * @throws JavaModelException
      */
+    @Test
     public void testDeclarationInMethodDependency() throws IOException, JavaModelException {
         final ICompilationUnit dependency = loadCompilationUnits(DeclarationInMethodDependency.class);
         final ICompilationUnit mainType = loadCompilationUnits(TypeWithLocalVariableDependencies.class);
@@ -195,6 +191,7 @@ public class EdgesCalculatorTest extends TestCase {
      * @throws IOException
      * @throws JavaModelException
      */
+    @Test
     public void testArrayTypeDependency() throws IOException, JavaModelException {
         final ICompilationUnit dependency = loadCompilationUnits(AnyDependency.class);
         final ICompilationUnit mainType = loadCompilationUnits(TypeWithArrayType.class);
@@ -211,6 +208,7 @@ public class EdgesCalculatorTest extends TestCase {
      * @throws IOException
      * @throws JavaModelException
      */
+    @Test
     public void testMethodCallDependency() throws IOException, JavaModelException {
 //        TypeWithMethodInfovation
         final ICompilationUnit dependency = loadCompilationUnits(TypeWithLocalVariableDependencies.class);

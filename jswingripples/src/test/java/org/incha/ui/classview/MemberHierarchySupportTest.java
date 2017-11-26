@@ -1,11 +1,5 @@
 package org.incha.ui.classview;
 
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-
-import junit.framework.TestCase;
-
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMember;
@@ -19,8 +13,18 @@ import org.incha.core.JavaProject;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.ui.util.NullMonitor;
+import org.junit.Before;
+import org.junit.Test;
 
-public class MemberHierarchySupportTest extends TestCase {
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+public class MemberHierarchySupportTest {
     private List<JSwingRipplesEIGNode> members = new LinkedList<JSwingRipplesEIGNode>();
     private final JSwingRipplesEIG eig = new JSwingRipplesEIG(new JavaProject("test"));
 
@@ -35,17 +39,8 @@ public class MemberHierarchySupportTest extends TestCase {
         public void run() {}
     };
 
-    /**
-     * Default constructor.
-     */
-    public MemberHierarchySupportTest() {
-        super();
-    }
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         final File sourcePath = TestUtils.findSourceForClass(MemberHierarchySupportTest.class);
 
         final JavaDomBuilder builder = new JavaDomBuilder("test");
@@ -80,14 +75,8 @@ public class MemberHierarchySupportTest extends TestCase {
             }
         });
     }
-    /**
-     * @param name test case name.
-     */
-    public MemberHierarchySupportTest(final String name) {
-        super(name);
-    }
 
-
+    @Test
     public void testGetRootTypes() {
         final MemberHierarchySupport support = new MemberHierarchySupport(members);
         final JSwingRipplesEIGNode[] roots = support.getRootTypes();
@@ -95,9 +84,8 @@ public class MemberHierarchySupportTest extends TestCase {
         assertEquals(MemberHierarchySupportTest.class.getName(),
                 ((IType) roots[0].getNodeIMember()).getFullyQualifiedName());
     }
-    /**
-     * Tests get parent method.
-     */
+
+    @Test
     public void testGetParent() {
         final MemberHierarchySupport support = new MemberHierarchySupport(members);
         final JSwingRipplesEIGNode[] roots = support.getRootTypes();
@@ -107,9 +95,8 @@ public class MemberHierarchySupportTest extends TestCase {
         final JSwingRipplesEIGNode[] children = support.getChildren(root);
         assertTrue(root == support.getParent(children[0]));
     }
-    /**
-     * Tests get depth method.
-     */
+
+    @Test
     public void testGetDepth() {
         final MemberHierarchySupport support = new MemberHierarchySupport(members);
         final JSwingRipplesEIGNode typeChildForTest = getMemberByName("TypeChildForTest");
@@ -121,6 +108,7 @@ public class MemberHierarchySupportTest extends TestCase {
         assertEquals(3, support.getHierarchyDepth(methodRun));
         assertEquals(2, support.getHierarchyDepth(method));
     }
+
     /**
      * @param string
      * @return

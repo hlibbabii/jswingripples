@@ -1,13 +1,20 @@
 package org.incha.core;
 
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.List;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-public class BuildPathTest extends TestCase implements PropertyChangeListener {
+public class BuildPathTest implements PropertyChangeListener {
     /**
      * Currently handled property change event.
      */
@@ -17,28 +24,16 @@ public class BuildPathTest extends TestCase implements PropertyChangeListener {
      */
     private BuildPath buildPath;
 
-    /**
-     * Default constructor.
-     */
-    public BuildPathTest() {
-        super();
-    }
-    /**
-     * @param name the test case name.
-     */
-    public BuildPathTest(final String name) {
-        super(name);
-    }
-
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         buildPath = new JavaProject("JUnit").getBuildPath();
         buildPath.addPropertyChangeListener(this);
     }
 
+    @Test
     public void testAddSource() {
         final File f = new File("/a/b/c/d");
 
@@ -63,6 +58,8 @@ public class BuildPathTest extends TestCase implements PropertyChangeListener {
         assertEquals(1, buildPath.getSources().size());
         assertNull(propertyChangeEvent);
     }
+
+    @Test
     public void testDeleteSource() {
         final File f1 = new File("/a/b/c/d");
         final File f2 = new File("/a/b/c/e");
@@ -100,11 +97,9 @@ public class BuildPathTest extends TestCase implements PropertyChangeListener {
     public void propertyChange(final PropertyChangeEvent evt) {
         propertyChangeEvent = evt;
     }
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
-    @Override
-    protected void tearDown() throws Exception {
+
+    @After
+    public void tearDown() throws Exception {
         propertyChangeEvent = null;
         buildPath.removePropertyChangeListener(this);
     }
