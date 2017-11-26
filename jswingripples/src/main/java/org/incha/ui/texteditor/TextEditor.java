@@ -1,10 +1,13 @@
 package org.incha.ui.texteditor;
 
+import org.eclipse.jdt.core.ISourceRange;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.incha.core.texteditor.FileOpen;
 import org.incha.ui.JSwingRipplesApplication;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +18,7 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 public class TextEditor extends JFrame {
 
@@ -181,30 +185,17 @@ public class TextEditor extends JFrame {
     }
 
     private void addTab(final FileOpen fileOpen) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                JScrollPane jScrollPane = new JScrollPane(fileOpen.getText());
-                jTabbedPane.addTab(fileOpen.getFileName(), jScrollPane);
-            }
-        });
-    }
-
-    private void setSelectedIndex(final int index) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                jTabbedPane.setSelectedIndex(index);
-            }
-        });
+        JScrollPane jScrollPane = new JScrollPane(fileOpen.getText());
+        jTabbedPane.addTab(fileOpen.getFileName(), jScrollPane);
     }
 
     /**
      * open a File in the Text Editor and add a new Tab to the window with
      * the file.
      * @param filename String with the path of the File.
+     * @param classElementSourceRange object that contains the position of the class element to display in the source code
      */
-    public void openFile ( String filename ) {
+    public void openFile(String filename, ISourceRange classElementSourceRange) {
         FileOpen fileToOpen = null;
         //search if the File isn't open.
         for(FileOpen file: openFiles){
@@ -220,7 +211,41 @@ public class TextEditor extends JFrame {
                 addTab(fileToOpen);
             }
         }
-        setSelectedIndex(openFiles.indexOf(fileToOpen));
+        openElementInEditor(openFiles.indexOf(fileToOpen), classElementSourceRange);
+    }
+
+    private void scrollToPosition(final JScrollPane scrollPane, final ISourceRange classElementSourceRange) {
+        Executors.newSingleThreadExecutor().submit(new Runnable() {
+            @Override
+            public void run() {
+                final RSyntaxTextArea rSyntaxTextArea = (RSyntaxTextArea) scrollPane.getViewport().getView();
+                int classElementEndPosition = classElementSourceRange.getOffset() + classElementSourceRange.getLength();
+                Rectangle rectangle = null;
+
+                /* waiting for UI to be created to know to which place (rectangle) to scroll/*/
+                while (rectangle == null) {
+                    try {
+                        rectangle = rSyntaxTextArea.modelToView(classElementEndPosition);
+                    } catch (BadLocationException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                final Rectangle rect = rectangle;
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        rSyntaxTextArea.scrollRectToVisible(rect);
+                        rSyntaxTextArea.setCaretPosition(classElementSourceRange.getOffset());
+                    }
+                });
+            }
+        });
+    }
+
+    private void openElementInEditor(final int index, final ISourceRange sourceRange) {
+        jTabbedPane.setSelectedIndex(index);
+        JScrollPane scrollPane = (JScrollPane) jTabbedPane.getComponentAt(index);
+        scrollToPosition(scrollPane, sourceRange);
     }
 
     private void addJTabbedPaneMouseListener(final JTabbedPane pane){
