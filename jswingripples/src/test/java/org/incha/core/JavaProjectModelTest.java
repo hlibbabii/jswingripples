@@ -93,6 +93,30 @@ public class JavaProjectModelTest extends TestCase implements PropertyChangeList
         assertNull(propertyChangeEvent);
     }
 
+    public void testRenameProject() {
+        /* given*/
+        final JavaProject p = new JavaProject("proj");
+        model.addProject(p);
+
+        /* when */
+        model.renameProject("proj", "project");
+
+        /* then */
+        assertEquals("project", model.getProjects().get(0).getName());
+    }
+
+    public void testRenameProjectToTheNameWhichAnotherProjectAlreadyHas() {
+        /* given*/
+        model.addProject(new JavaProject("project"));
+        model.addProject(new JavaProject("proj"));
+
+        /* when */
+        model.renameProject("proj", "project");
+
+        /* then */
+        assertEquals("project_new", model.getProjects().get(1).getName());
+    }
+
     /* (non-Javadoc)
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
