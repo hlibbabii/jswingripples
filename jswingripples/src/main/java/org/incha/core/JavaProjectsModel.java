@@ -127,6 +127,16 @@ public class JavaProjectsModel {
         }
         return null;
     }
+
+    public void renameProject(String oldName, String newName) {
+        JavaProject project = getProjectByName(oldName);
+        if (project == null) {
+            throw new AssertionError("The project " + oldName + " should exist, otherwise it can't have been renamed.");
+        }
+        deleteProject(project);
+        project.setProjectName(newName);
+        addProject(project);
+    }
     /**
      * @return
      */
