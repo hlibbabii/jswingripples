@@ -4,11 +4,6 @@
  */
 package org.incha.core.jswingripples.rules;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.incha.core.jswingripples.JRipplesICModule;
@@ -16,6 +11,15 @@ import org.incha.core.jswingripples.JRipplesModuleRunner;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.ui.jripples.EIGStatusMarks;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author Maksym Petrenko
  *
@@ -24,12 +28,37 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
     private static final Log log = LogFactory.getLog(JRipplesModuleICChangePropagation.class);
     private final JSwingRipplesEIG eig;
 
+    private static final Map<String, List<String>> rulesForMarks
+            = new HashMap<String, List<String>>(){{
+        put(EIGStatusMarks.NEXT_VISIT, Arrays.asList(
+                EIGStatusMarks.CHANGED,
+                EIGStatusMarks.VISITED_CONTINUE,
+                EIGStatusMarks.VISITED
+        ));
+        put(EIGStatusMarks.CHANGED, Arrays.asList(
+                EIGStatusMarks.CHANGED
+        ));
+        put(EIGStatusMarks.VISITED_CONTINUE, Arrays.asList(
+                EIGStatusMarks.CHANGED,
+                EIGStatusMarks.VISITED_CONTINUE
+        ));
+    }};
+
+
     /**
      * @param eig eig.
      */
     public JRipplesModuleICChangePropagation(final JSwingRipplesEIG eig) {
         super();
         this.eig = eig;
+    }
+
+    private boolean isNullOrBlank(String mark) {
+        return mark == null || mark.compareTo(EIGStatusMarks.BLANK) == 0;
+    }
+
+    protected Set<String> getRulesForNullOrBlankMark() {
+        return null;
     }
 	/*
 	 * (non-Javadoc)
@@ -39,22 +68,12 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
 	@Override
     public Set<String> GetAvailableRulesForMark(final String mark) {
 
-		if (mark == null) {
-			return null;
-		} else if (mark.compareTo(EIGStatusMarks.BLANK) == 0) {
-			return null;
-		} else if (mark.compareTo(EIGStatusMarks.NEXT_VISIT) == 0) {
-			final String marks[] = { EIGStatusMarks.CHANGED, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.VISITED };
-			return (new LinkedHashSet<String>(Arrays.asList(marks)));
-		} else if (mark.compareTo(EIGStatusMarks.CHANGED) == 0) {
-			final String marks[] = { EIGStatusMarks.CHANGED};
-			return (new LinkedHashSet<String>(Arrays.asList(marks)));
-		} else if (mark.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0) {
-			final String marks[] = { EIGStatusMarks.CHANGED,EIGStatusMarks.VISITED_CONTINUE};
-			return (new LinkedHashSet<String>(Arrays.asList(marks)));
+		if (isNullOrBlank(mark)) {
+			return getRulesForNullOrBlankMark();
 		} else {
-			return null;
-		}
+            List<String> rules = rulesForMarks.get(mark);
+            return rules != null ? new LinkedHashSet<>(rules): null;
+        }
 	}
 
     @Override
