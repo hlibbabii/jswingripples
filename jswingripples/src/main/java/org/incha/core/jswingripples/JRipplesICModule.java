@@ -93,4 +93,9 @@ public abstract class JRipplesICModule extends JRipplesModule {
 
 	 */
 	public abstract void ApplyRuleAtNode(String rule, JSwingRipplesEIGNode nodeFrom, JSwingRipplesEIGNode nodeTo);
+
+    @Override
+    public void runModuleWithinRunner(JRipplesModuleRunner moduleRunner) {
+        InitializeStage(moduleRunner);
+    }
 }

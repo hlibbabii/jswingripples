@@ -112,9 +112,5 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
         }
 	}
 
-    @Override
-    public void runModuleWithinRunner(JRipplesModuleRunner moduleRunner) {
-        InitializeStage(moduleRunner);
-    }
 }
 	

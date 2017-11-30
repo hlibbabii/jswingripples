@@ -107,9 +107,4 @@ public class JRipplesModuleICImpactAnalysis extends JRipplesICModule {
             log.error(e);
         }
 	}
-
-	@Override
-	public void runModuleWithinRunner(JRipplesModuleRunner moduleRunner) {
-		InitializeStage(moduleRunner);
-	}
 }

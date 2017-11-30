@@ -95,11 +95,6 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
         }
 	}
 
-    @Override
-    public void runModuleWithinRunner(JRipplesModuleRunner moduleRunner) {
-        InitializeStage(moduleRunner);
-    }
-
     private JSwingRipplesEIGNode getMainClassNode(final JSwingRipplesEIGNode[] nodes) {
         for (JSwingRipplesEIGNode node : nodes) {
             final IMember member = node.getNodeIMember();
