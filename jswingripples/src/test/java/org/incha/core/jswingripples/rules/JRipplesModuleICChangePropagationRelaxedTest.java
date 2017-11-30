@@ -23,6 +23,7 @@ public class JRipplesModuleICChangePropagationRelaxedTest {
         assertEquals(setOf3, cp.GetAvailableRulesForMark(EIGStatusMarks.NEXT_VISIT));
 
         assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.LOCATED));
+        assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.IMPACTED));
         assertEquals(new LinkedHashSet<>(Arrays.asList(
                 EIGStatusMarks.CHANGED
         )), cp.GetAvailableRulesForMark(EIGStatusMarks.CHANGED));

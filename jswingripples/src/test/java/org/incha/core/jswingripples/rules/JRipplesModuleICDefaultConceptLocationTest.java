@@ -23,6 +23,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         assertEquals(new LinkedHashSet<>(Arrays.asList(
                 EIGStatusMarks.LOCATED
         )), cp.GetAvailableRulesForMark(EIGStatusMarks.LOCATED));
+        assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.IMPACTED));
         assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.CHANGED));
 
         assertEquals(new LinkedHashSet<>(Arrays.asList(
