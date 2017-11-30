@@ -21,6 +21,7 @@ public class JRipplesModuleICChangePropagationTest {
                 EIGStatusMarks.CHANGED, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.VISITED
         )), cp.GetAvailableRulesForMark(EIGStatusMarks.NEXT_VISIT));
 
+        assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.LOCATED));
         assertEquals(new LinkedHashSet<>(Arrays.asList(
                 EIGStatusMarks.CHANGED
         )), cp.GetAvailableRulesForMark(EIGStatusMarks.CHANGED));
