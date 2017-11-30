@@ -12,12 +12,8 @@ import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.ui.jripples.EIGStatusMarks;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,22 +24,6 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
     private static final Log log = LogFactory.getLog(JRipplesModuleICChangePropagation.class);
     private final JSwingRipplesEIG eig;
 
-    private static final Map<String, List<String>> rulesForMarks
-            = new HashMap<String, List<String>>(){{
-        put(EIGStatusMarks.NEXT_VISIT, Arrays.asList(
-                EIGStatusMarks.CHANGED,
-                EIGStatusMarks.VISITED_CONTINUE,
-                EIGStatusMarks.VISITED
-        ));
-        put(EIGStatusMarks.CHANGED, Arrays.asList(
-                EIGStatusMarks.CHANGED
-        ));
-        put(EIGStatusMarks.VISITED_CONTINUE, Arrays.asList(
-                EIGStatusMarks.CHANGED,
-                EIGStatusMarks.VISITED_CONTINUE
-        ));
-    }};
-
 
     /**
      * @param eig eig.
@@ -53,28 +33,15 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
         this.eig = eig;
     }
 
-    private boolean isNullOrBlank(String mark) {
-        return mark == null || mark.compareTo(EIGStatusMarks.BLANK) == 0;
-    }
-
+    @Override
     protected Set<String> getRulesForNullOrBlankMark() {
-        return null;
+        return getStrictRulesForNullOrBlank();
     }
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.severe.jripples.modules.interfaces.JRipplesICModule#GetAvailableRulesForMark(java.lang.String)
-	 */
-	@Override
-    public Set<String> GetAvailableRulesForMark(final String mark) {
 
-		if (isNullOrBlank(mark)) {
-			return getRulesForNullOrBlankMark();
-		} else {
-            List<String> rules = rulesForMarks.get(mark);
-            return rules != null ? new LinkedHashSet<>(rules): null;
-        }
-	}
+    @Override
+    protected String getSpecificMark() {
+        return EIGStatusMarks.CHANGED;
+    }
 
     @Override
     public void InitializeStage(JRipplesModuleRunner moduleRunner) {
@@ -117,12 +84,12 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
         moduleRunner.moduleFinished();
     }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.severe.jripples.modules.interfaces.JRipplesICModule#ApplyRuleAtNode(java.lang.String,
-	 *      java.lang.String)
-	 */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.severe.jripples.modules.interfaces.JRipplesICModule#ApplyRuleAtNode(java.lang.String,
+     *      java.lang.String)
+     */
 	@Override
     public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode node, final int granularity) {
         try {

@@ -4,10 +4,6 @@
  */
 package org.incha.core.jswingripples.rules;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.incha.core.jswingripples.JRipplesICModule;
@@ -15,6 +11,8 @@ import org.incha.core.jswingripples.JRipplesModuleRunner;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.ui.jripples.EIGStatusMarks;
+
+import java.util.Set;
 
 /**
  * @author Maksym Petrenko
@@ -31,33 +29,15 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
         this.eig = eig;
     }
 
-    /*
-	 * (non-Javadoc)
-	 *
-	 * @see org.severe.jripples.modules.interfaces.JRipplesICModule#GetAvailableRulesForMark(java.lang.String)
-	 */
-	@Override
-    public Set<String> GetAvailableRulesForMark(final String mark) {
+    @Override
+    protected Set<String> getRulesForNullOrBlankMark() {
+        return getStrictRulesForNullOrBlank();
+    }
 
-		if (mark == null) {
-
-			return null;
-		} else if (mark.compareTo(EIGStatusMarks.BLANK) == 0) {
-			return null;
-
-		} else if (mark.compareTo(EIGStatusMarks.NEXT_VISIT) == 0) {
-			final String marks[] = { EIGStatusMarks.LOCATED, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.VISITED };
-			return (new LinkedHashSet<>(Arrays.asList(marks)));
-		} else if (mark.compareTo(EIGStatusMarks.LOCATED) == 0) {
-			final String marks[] = { EIGStatusMarks.LOCATED};
-			return (new LinkedHashSet<>(Arrays.asList(marks)));
-		} else if (mark.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0) {
-			final String marks[] = { EIGStatusMarks.LOCATED,EIGStatusMarks.VISITED_CONTINUE};
-			return (new LinkedHashSet<>(Arrays.asList(marks)));
-		} else {
-			return null;
-		}
-	}
+    @Override
+    protected String getSpecificMark() {
+        return EIGStatusMarks.LOCATED;
+    }
 
     @Override
     public void InitializeStage(JRipplesModuleRunner moduleRunner) {
@@ -79,12 +59,12 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
     }
 
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.severe.jripples.modules.interfaces.JRipplesICModule#ApplyRuleAtNode(java.lang.String,
-	 *      java.lang.String)
-	 */
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.severe.jripples.modules.interfaces.JRipplesICModule#ApplyRuleAtNode(java.lang.String,
+     *      java.lang.String)
+     */
 	@Override
     public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode node, final int granularity) {
         if (rule.compareTo(EIGStatusMarks.LOCATED) == 0) {

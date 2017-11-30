@@ -4,11 +4,6 @@
  */
 package org.incha.core.jswingripples.rules;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.incha.core.jswingripples.JRipplesICModule;
@@ -16,6 +11,10 @@ import org.incha.core.jswingripples.JRipplesModuleRunner;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.ui.jripples.EIGStatusMarks;
+
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 /**
  * @author Maksym Petrenko
  *
@@ -36,30 +35,15 @@ public class JRipplesModuleICImpactAnalysis extends JRipplesICModule {
         super();
         this.eig = eig;
     }
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.severe.jripples.modules.interfaces.JRipplesICModule#GetAvailableRulesForMark(java.lang.String)
-	 */
-	@Override
-    public Set<String> GetAvailableRulesForMark(final String mark) {
 
-		if (mark == null) {
-			return null;
-		} else if (mark.compareTo(EIGStatusMarks.BLANK) == 0) {
-			return null;
-		} else if (mark.compareTo(EIGStatusMarks.NEXT_VISIT) == 0) {
-			final String marks[] = { EIGStatusMarks.IMPACTED, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.VISITED };
-			return (new LinkedHashSet<String>(Arrays.asList(marks)));
-		} else if (mark.compareTo(EIGStatusMarks.IMPACTED) == 0) {
-			final String marks[] = { EIGStatusMarks.IMPACTED};
-			return (new LinkedHashSet<String>(Arrays.asList(marks)));
-		} else if (mark.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0) {
-			final String marks[] = { EIGStatusMarks.IMPACTED,EIGStatusMarks.VISITED_CONTINUE};
-			return (new LinkedHashSet<String>(Arrays.asList(marks)));
-		} else {
-			return null;
-		}
+	@Override
+	protected Set<String> getRulesForNullOrBlankMark() {
+		return getStrictRulesForNullOrBlank();
+	}
+
+	@Override
+	protected String getSpecificMark() {
+		return EIGStatusMarks.IMPACTED;
 	}
 
 	@Override
