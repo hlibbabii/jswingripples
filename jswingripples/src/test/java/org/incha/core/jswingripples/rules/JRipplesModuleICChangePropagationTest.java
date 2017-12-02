@@ -1,5 +1,6 @@
 package org.incha.core.jswingripples.rules;
 
+import org.apache.commons.logging.Log;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -17,6 +18,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -66,6 +69,72 @@ public class JRipplesModuleICChangePropagationTest {
         )), cp.GetAvailableRulesForMark(EIGStatusMarks.VISITED_CONTINUE));
 
         assertEquals(null, cp.GetAvailableRulesForMark("unknown_mark"));
+    }
+
+    @Test
+    public void testApplyRuleAtNode() {
+        /* given */
+        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
+        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
+
+        JRipplesModuleICChangePropagation cp
+                = new JRipplesModuleICChangePropagation(eig);
+
+        PowerMockito.mockStatic(CommonEIGRules.class);
+        PowerMockito.doNothing().when(CommonEIGRules.class);
+        CommonEIGRules.applyRuleToNode(
+                Matchers.<JSwingRipplesEIG>any(),
+                Matchers.<JSwingRipplesEIGNode>any(),
+                Matchers.<String>any(),
+                Matchers.anyInt()
+        );
+
+        /* when */
+        cp.ApplyRuleAtNode(EIGStatusMarks.IMPACTED, node, 0);
+
+        /* then*/
+        PowerMockito.verifyStatic(CommonEIGRules.class);
+        CommonEIGRules.applyRuleToNode(eig, node, EIGStatusMarks.IMPACTED, 0);
+
+    }
+
+    @Test
+    public void testApplyRuleAtNodeWithExceptionThrown() throws Exception {
+        /* given */
+        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
+        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
+        Exception toBeThrown = new RuntimeException();
+        Log log = mock(Log.class);
+
+        JRipplesModuleICChangePropagation cp
+                = new JRipplesModuleICChangePropagation(eig);
+        setFinalField(cp, log);
+
+
+        PowerMockito.mockStatic(CommonEIGRules.class);
+        PowerMockito.doThrow(toBeThrown)
+                .when(CommonEIGRules.class);
+        CommonEIGRules.applyRuleToNode(
+                Matchers.<JSwingRipplesEIG>any(),
+                Matchers.<JSwingRipplesEIGNode>any(),
+                Matchers.<String>any(),
+                Matchers.anyInt()
+        );
+
+        /* when */
+        cp.ApplyRuleAtNode(EIGStatusMarks.IMPACTED, node, 0);
+
+        /* then*/
+        verify(log).error(toBeThrown);
+    }
+
+    private void setFinalField(Object where, Object what) throws Exception {
+        Field logField = where.getClass().getDeclaredField("log");
+        logField.setAccessible(true);
+        Field modifiersField = Field.class.getDeclaredField("modifiers");
+        modifiersField.setAccessible(true);
+        modifiersField.setInt(logField, logField.getModifiers() & ~Modifier.FINAL);
+        logField.set(where, what);
     }
 
     @Test
