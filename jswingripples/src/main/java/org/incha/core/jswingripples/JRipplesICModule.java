@@ -4,11 +4,14 @@
  */
 package org.incha.core.jswingripples;
 
+import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+import org.incha.core.jswingripples.rules.CommonEIGRules;
 import org.incha.ui.jripples.EIGStatusMarks;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +23,13 @@ import java.util.Set;
  *
  */
 public abstract class JRipplesICModule extends JRipplesModule {
+
+	protected final JSwingRipplesEIG eig;
+
+	public JRipplesICModule(JSwingRipplesEIG eig) {
+		super();
+		this.eig = eig;
+	}
 
 	private final Map<String, List<String>> rulesForMarks
 			= new HashMap<String, List<String>>(){{
@@ -40,8 +50,6 @@ public abstract class JRipplesICModule extends JRipplesModule {
 	}};
 
 	protected abstract Set<String> getRulesForNullOrBlankMark();
-
-	public abstract void InitializeStage(JRipplesModuleRunner moduleRunner);
 	/**
 	 * Returns a set of marks (names of propagation rules), available for a node with the supplied current mark. This is called to determine which propagation rules can still be applied to a particular node and display this rules in GUI.
 	 * @param mark
@@ -72,7 +80,55 @@ public abstract class JRipplesICModule extends JRipplesModule {
 	}
 
 	protected abstract String getSpecificMark();
-	/**
+
+	public void InitializeStage(JRipplesModuleRunner moduleRunner) {
+		final JSwingRipplesEIGNode[] nodes = eig.getAllNodes();
+		final Set<JSwingRipplesEIGNode> impactedMemberNodes = new LinkedHashSet<JSwingRipplesEIGNode>();
+		final Set<JSwingRipplesEIGNode> impactedTopNodes = new LinkedHashSet<JSwingRipplesEIGNode>();
+		if (nodes != null) {
+			for (int i = 0; i < nodes.length; i++) {
+				if ((nodes[i].getMark().compareTo(EIGStatusMarks.LOCATED) != 0) && (nodes[i].getMark().compareTo(EIGStatusMarks.IMPACTED) != 0) && (nodes[i].getMark().compareTo(EIGStatusMarks.CHANGED) != 0))
+					nodes[i].setMark(EIGStatusMarks.BLANK);
+				else
+				if (!nodes[i].isTop()){
+					impactedMemberNodes.add(nodes[i]);
+					setClassAnnotation(nodes[i]);
+				} else{
+					impactedTopNodes.add(nodes[i]);
+					setClassElementAnnotation(nodes[i]);
+				}
+			}
+			//          Process members first
+			for (final Iterator<JSwingRipplesEIGNode> iter = impactedMemberNodes.iterator(); iter.hasNext();) {
+				final JSwingRipplesEIGNode impacted_node = iter.next();
+				impacted_node.setMark(EIGStatusMarks.NEXT_VISIT);
+				CommonEIGRules.applyRuleToNode(eig, impacted_node, getSpecificMark(),0);
+			}
+
+			//          Process top nodes if any
+			for (final Iterator<JSwingRipplesEIGNode> iter = impactedTopNodes.iterator(); iter.hasNext();) {
+				final JSwingRipplesEIGNode impacted_node = iter.next();
+
+				if ( (impacted_node.getMark().compareTo(getSpecificMark()) != 0)) {
+					impacted_node.setMark(EIGStatusMarks.NEXT_VISIT);
+					CommonEIGRules.applyRuleToNode(eig, impacted_node, getSpecificMark(),0);
+				}
+			}
+
+		}
+		eig.getHistory().clear();
+		moduleRunner.moduleFinished();
+	}
+
+    protected void setClassElementAnnotation(JSwingRipplesEIGNode node) {
+		// Do nothing
+    }
+
+    protected void setClassAnnotation(JSwingRipplesEIGNode node) {
+		// Do nothing
+    }
+
+    /**
 	 * Applies the selected propagation rule at the selected node.
 	 * @param rule
 	 *  rule to apply

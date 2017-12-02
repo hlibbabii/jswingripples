@@ -7,13 +7,10 @@ package org.incha.core.jswingripples.rules;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.incha.core.jswingripples.JRipplesICModule;
-import org.incha.core.jswingripples.JRipplesModuleRunner;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.ui.jripples.EIGStatusMarks;
 
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -22,15 +19,16 @@ import java.util.Set;
  */
 public class JRipplesModuleICChangePropagation extends JRipplesICModule {
     private static final Log log = LogFactory.getLog(JRipplesModuleICChangePropagation.class);
-    private final JSwingRipplesEIG eig;
+
+    private static final String CLASS_ELEMENT_ANNOTATION = "este atributo propaga cambios porque hay otros nodos impactados";
+    private static final String CLASS_ANNOTATION = "“hay que cambiar esta clase, este metodo, porque es impactada por el concepto";
 
 
     /**
      * @param eig eig.
      */
     public JRipplesModuleICChangePropagation(final JSwingRipplesEIG eig) {
-        super();
-        this.eig = eig;
+        super(eig);
     }
 
     @Override
@@ -44,44 +42,14 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
     }
 
     @Override
-    public void InitializeStage(JRipplesModuleRunner moduleRunner) {
-        final JSwingRipplesEIGNode[] nodes = eig.getAllNodes();
-        final Set<JSwingRipplesEIGNode> impactedMemberNodes = new LinkedHashSet<JSwingRipplesEIGNode>();
-        final Set<JSwingRipplesEIGNode> impactedTopNodes = new LinkedHashSet<JSwingRipplesEIGNode>();
-        if (nodes != null) {
-            for (int i = 0; i < nodes.length; i++) {
-                if ((nodes[i].getMark().compareTo(EIGStatusMarks.LOCATED) != 0) && (nodes[i].getMark().compareTo(EIGStatusMarks.IMPACTED) != 0) && (nodes[i].getMark().compareTo(EIGStatusMarks.CHANGED) != 0))
-                    nodes[i].setMark(EIGStatusMarks.BLANK);
-                else
-                if (!nodes[i].isTop()){
-                	impactedMemberNodes.add(nodes[i]);
-                	nodes[i].setAnottation("“hay que cambiar esta clase, este metodo, porque es impactada por el concepto");
-                }
-                else{
-                	impactedTopNodes.add(nodes[i]);
-                	nodes[i].setAnottation("este atributo propaga cambios porque hay otros nodos impactados");
-                }
-            }
-            //          Process members first
-            for (final Iterator<JSwingRipplesEIGNode> iter = impactedMemberNodes.iterator(); iter.hasNext();) {
-                final JSwingRipplesEIGNode impacted_node = iter.next();
-                impacted_node.setMark(EIGStatusMarks.NEXT_VISIT);
-                CommonEIGRules.applyRuleToNode(eig, impacted_node,EIGStatusMarks.CHANGED,0);
-            }
+    protected void setClassElementAnnotation(JSwingRipplesEIGNode node) {
+        node.setAnottation(JRipplesModuleICChangePropagation.CLASS_ELEMENT_ANNOTATION);
+    }
 
-            //          Process top nodes if any
-            for (final Iterator<JSwingRipplesEIGNode> iter = impactedTopNodes.iterator(); iter.hasNext();) {
-                final JSwingRipplesEIGNode impacted_node = iter.next();
+    @Override
+    protected void setClassAnnotation(JSwingRipplesEIGNode node) {
+        node.setAnottation(JRipplesModuleICChangePropagation.CLASS_ANNOTATION);
 
-                if ( (impacted_node.getMark().compareTo(EIGStatusMarks.CHANGED) != 0)) {
-                    impacted_node.setMark(EIGStatusMarks.NEXT_VISIT);
-                    CommonEIGRules.applyRuleToNode(eig, impacted_node,EIGStatusMarks.CHANGED,0);
-                }
-            }
-
-        }
-        eig.getHistory().clear();
-        moduleRunner.moduleFinished();
     }
 
     /*
