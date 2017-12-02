@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CommonEIGRules.class)
@@ -104,5 +105,25 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         PowerMockito.verifyStatic(CommonEIGRules.class);
         CommonEIGRules.assignAnottationToNodeAndParents(eq(eig), eq(node), anyString());
     }
+
+    @Test
+    public void testApplyRuleAtNodeWithImpactedRuleShouldDoNothing() {
+        /* given */
+        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
+        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
+
+        JRipplesModuleICDefaultConceptLocation cp
+                = new JRipplesModuleICDefaultConceptLocation(eig);
+
+        PowerMockito.mockStatic(CommonEIGRules.class);
+
+        /* when */
+        cp.ApplyRuleAtNode(EIGStatusMarks.IMPACTED, node, 1);
+
+        /* then*/
+        PowerMockito.verifyStatic(CommonEIGRules.class, never());
+    }
+
+
 
 }
