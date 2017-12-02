@@ -56,11 +56,11 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.VISITED_CONTINUE, node, 0);
+        cp.ApplyRuleAtNode(EIGStatusMarks.VISITED_CONTINUE, node, 1);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.applyRuleToNode(eig, node, EIGStatusMarks.VISITED_CONTINUE, 0);
+        CommonEIGRules.applyRuleToNode(eig, node, EIGStatusMarks.VISITED_CONTINUE, 1);
 
     }
 
@@ -76,7 +76,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.VISITED, node, 0);
+        cp.ApplyRuleAtNode(EIGStatusMarks.VISITED, node, 1);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
@@ -95,7 +95,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.LOCATED, node, 0);
+        cp.ApplyRuleAtNode(EIGStatusMarks.LOCATED, node, 1);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
