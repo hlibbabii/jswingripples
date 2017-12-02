@@ -52,21 +52,6 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.severe.jripples.modules.interfaces.JRipplesICModule#ApplyRuleAtNode(java.lang.String,
-     *      java.lang.String)
-     */
-	@Override
-    public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode node, final int granularity) {
-        try {
-            CommonEIGRules.applyRuleToNode(eig, node,rule,granularity);
-        } catch (final Exception e) {
-            log.error(e);
-        }
-	}
-
 	@Override
     public void ApplyRuleAtNode(final String rule,
             final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {

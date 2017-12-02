@@ -108,7 +108,7 @@ public class JRipplesModuleICChangePropagationTest {
 
         JRipplesModuleICChangePropagation cp
                 = new JRipplesModuleICChangePropagation(eig);
-        setFinalField(cp, log);
+        setFinalFieldOfParent(cp, log);
 
 
         PowerMockito.mockStatic(CommonEIGRules.class);
@@ -128,8 +128,8 @@ public class JRipplesModuleICChangePropagationTest {
         verify(log).error(toBeThrown);
     }
 
-    private void setFinalField(Object where, Object what) throws Exception {
-        Field logField = where.getClass().getDeclaredField("log");
+    private void setFinalFieldOfParent(Object where, Object what) throws Exception {
+        Field logField = where.getClass().getSuperclass().getDeclaredField("log");
         logField.setAccessible(true);
         Field modifiersField = Field.class.getDeclaredField("modifiers");
         modifiersField.setAccessible(true);

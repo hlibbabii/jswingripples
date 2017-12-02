@@ -4,9 +4,12 @@
  */
 package org.incha.core.jswingripples;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.core.jswingripples.rules.CommonEIGRules;
+import org.incha.core.jswingripples.rules.JRipplesModuleICChangePropagation;
 import org.incha.ui.jripples.EIGStatusMarks;
 
 import java.util.Arrays;
@@ -23,6 +26,9 @@ import java.util.Set;
  *
  */
 public abstract class JRipplesICModule extends JRipplesModule {
+
+	private static final Log log = LogFactory.getLog(JRipplesModuleICChangePropagation.class);
+
 
 	protected final JSwingRipplesEIG eig;
 
@@ -128,17 +134,14 @@ public abstract class JRipplesICModule extends JRipplesModule {
 		// Do nothing
     }
 
+	public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode node, final int granularity) {
+		try {
+			CommonEIGRules.applyRuleToNode(eig, node,rule,granularity);
+		} catch (final Exception e) {
+			log.error(e);
+		}
+	}
     /**
-	 * Applies the selected propagation rule at the selected node.
-	 * @param rule
-	 *  rule to apply
-	 * @param node
-	 *  node to apply the rule at
-	 * @param granularity
-	 * granularity at which the rule is applied
-	 */
-	public abstract void ApplyRuleAtNode(String rule, JSwingRipplesEIGNode node, int granularity);
-	/**
 	 * Applies the selected propagation rule at the selected node using the particular dependency instead of the whole dependency graph.
 	 * @param rule
 	 * rule to apply
