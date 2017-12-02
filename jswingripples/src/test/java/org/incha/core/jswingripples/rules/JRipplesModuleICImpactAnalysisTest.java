@@ -315,6 +315,7 @@ public class JRipplesModuleICImpactAnalysisTest {
         cp.ApplyRuleAtNode(EIGStatusMarks.IMPACTED, node, node2);
 
         /* then*/
+        PowerMockito.verifyStatic(CommonEIGRules.class);
         CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2, EIGStatusMarks.IMPACTED, EIGStatusMarks.NEXT_VISIT);
     }
 }
