@@ -318,4 +318,24 @@ public class JRipplesModuleICImpactAnalysisTest {
         PowerMockito.verifyStatic(CommonEIGRules.class);
         CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2, EIGStatusMarks.IMPACTED, EIGStatusMarks.NEXT_VISIT);
     }
+
+    @Test
+    public void testApplyRuleAtNodeWith4ParamsWithChangedRule() {
+        /* given */
+        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
+        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
+        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
+
+        JRipplesModuleICImpactAnalysis cp
+                = new JRipplesModuleICImpactAnalysis(eig);
+
+        PowerMockito.mockStatic(CommonEIGRules.class);
+
+        /* when */
+        cp.ApplyRuleAtNode(EIGStatusMarks.CHANGED, node, node2);
+
+        /* then*/
+        PowerMockito.verifyStatic(CommonEIGRules.class, never());
+
+    }
 }

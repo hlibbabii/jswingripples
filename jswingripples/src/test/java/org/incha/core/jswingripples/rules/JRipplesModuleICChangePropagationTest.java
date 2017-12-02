@@ -30,6 +30,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -236,6 +237,106 @@ public class JRipplesModuleICChangePropagationTest {
         jSwingRipplesEIGNode.setMark(mark);
 
         return jSwingRipplesEIGNode;
+    }
+
+    @Test
+    public void testApplyRuleAtNodeWith4ParamsWithVisitedContinueRule() {
+        /* given */
+        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
+        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
+        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
+
+        JRipplesModuleICChangePropagation cp
+                = new JRipplesModuleICChangePropagation(eig);
+
+        PowerMockito.mockStatic(CommonEIGRules.class);
+
+        /* when */
+        cp.ApplyRuleAtNode(EIGStatusMarks.VISITED_CONTINUE, node, node2);
+
+        /* then*/
+        PowerMockito.verifyStatic(CommonEIGRules.class);
+        CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.NEXT_VISIT);
+
+    }
+
+    @Test
+    public void testApplyRuleAtNodeWith4ParamsWithVisitedRule() {
+        /* given */
+        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
+        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
+        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
+
+        JRipplesModuleICChangePropagation cp
+                = new JRipplesModuleICChangePropagation(eig);
+
+        PowerMockito.mockStatic(CommonEIGRules.class);
+
+        /* when */
+        cp.ApplyRuleAtNode(EIGStatusMarks.VISITED, node, node2);
+
+        /* then*/
+        PowerMockito.verifyStatic(CommonEIGRules.class);
+        CommonEIGRules.applyRuleToNode(eig, node, EIGStatusMarks.VISITED, 0);
+    }
+
+    @Test
+    public void testApplyRuleAtNodeWith4ParamsWithLocatedRule() {
+        /* given */
+        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
+        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
+        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
+
+        JRipplesModuleICChangePropagation cp
+                = new JRipplesModuleICChangePropagation(eig);
+
+        PowerMockito.mockStatic(CommonEIGRules.class);
+
+        /* when */
+        cp.ApplyRuleAtNode(EIGStatusMarks.LOCATED, node, node2);
+
+        /* then*/
+        PowerMockito.verifyStatic(CommonEIGRules.class, never());
+    }
+
+    @Test
+    public void testApplyRuleAtNodeWith4ParamsWithImpactedRuleShouldDoNothing() {
+        /* given */
+        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
+        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
+        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
+
+        JRipplesModuleICChangePropagation cp
+                = new JRipplesModuleICChangePropagation(eig);
+
+        PowerMockito.mockStatic(CommonEIGRules.class);
+
+        /* when */
+        cp.ApplyRuleAtNode(EIGStatusMarks.IMPACTED, node, node2);
+
+        /* then*/
+        PowerMockito.verifyStatic(CommonEIGRules.class, never());
+    }
+
+    @Test
+    public void testApplyRuleAtNodeWith4ParamsWithChangedRule() {
+        /* given */
+        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
+        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
+        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
+
+        JRipplesModuleICChangePropagation cp
+                = new JRipplesModuleICChangePropagation(eig);
+
+        PowerMockito.mockStatic(CommonEIGRules.class);
+
+        /* when */
+        cp.ApplyRuleAtNode(EIGStatusMarks.CHANGED, node, node2);
+
+        /* then*/
+        PowerMockito.verifyStatic(CommonEIGRules.class);
+        CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2, EIGStatusMarks.CHANGED, EIGStatusMarks.NEXT_VISIT);
+
     }
 
 }
