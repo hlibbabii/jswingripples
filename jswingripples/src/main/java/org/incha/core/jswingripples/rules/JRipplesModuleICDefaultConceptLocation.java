@@ -65,33 +65,30 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
      */
 	@Override
     public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode node, final int granularity) {
-        if (rule.compareTo(EIGStatusMarks.LOCATED) == 0) {
-            CommonEIGRules.assignMarkToNodeAndParents(eig, node,EIGStatusMarks.LOCATED);
-            CommonEIGRules.assignAnottationToNodeAndParents(eig, node,"hay que cambiar esta clase, este metodo por que el concepto ha sido localizado");
-        } else if (rule.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0) {
+        if (EIGStatusMarks.VISITED_CONTINUE.equals(rule)) {
             CommonEIGRules.applyRuleToNode(eig, node,rule,granularity);
+        } else {
+            apply(rule, node);
+        }
+	}
 
-        } else if (rule.compareTo(EIGStatusMarks.VISITED) == 0) {
+    @Override
+    public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
+        if (EIGStatusMarks.VISITED_CONTINUE.equals(rule)) {
+            CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo, rule,EIGStatusMarks.NEXT_VISIT);
+        } else {
+            apply(rule, nodeFrom);
+        }
+    }
 
+    private void apply(String rule, JSwingRipplesEIGNode node) {
+        if (EIGStatusMarks.LOCATED.equals(rule)) {
+            CommonEIGRules.assignMarkToNodeAndParents(eig, node, rule);
+            CommonEIGRules.assignAnottationToNodeAndParents(eig,node,"hay que cambiar esta clase, este método por que el concepto fue localizado");
+        } else if (EIGStatusMarks.VISITED.equals(rule)) {
             CommonEIGRules.applyRuleToNode(eig, node,rule,0);
         }
-
-	}
-
-	@Override
-    public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
-        if (rule.compareTo(EIGStatusMarks.LOCATED) == 0) {
-            CommonEIGRules.assignMarkToNodeAndParents(eig, nodeFrom,EIGStatusMarks.LOCATED);
-            CommonEIGRules.assignAnottationToNodeAndParents(eig,nodeFrom,"hay que cambiar esta clase, este método por que el concepto fue localizado");
-
-        } else if (rule.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0) {
-            CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo, rule,EIGStatusMarks.NEXT_VISIT);
-
-        } else if (rule.compareTo(EIGStatusMarks.VISITED) == 0) {
-
-            CommonEIGRules.applyRuleToNode(eig, nodeFrom,rule,0);
-        }
-	}
+    }
 
     private JSwingRipplesEIGNode getMainClassNode(final JSwingRipplesEIGNode[] nodes) {
         for (JSwingRipplesEIGNode node : nodes) {
