@@ -53,24 +53,24 @@ public class JRipplesModuleICImpactAnalysisTest {
         JRipplesModuleICImpactAnalysis cp
                 = new JRipplesModuleICImpactAnalysis(null);
 
-        assertEquals(null, cp.GetAvailableRulesForMark(null));
-        assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.BLANK));
+        assertEquals(null, cp.getAvailableRulesForMark(null));
+        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.BLANK));
 
         assertEquals(new LinkedHashSet<>(Arrays.asList(
                 EIGStatusMarks.IMPACTED, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.VISITED
-        )), cp.GetAvailableRulesForMark(EIGStatusMarks.NEXT_VISIT));
+        )), cp.getAvailableRulesForMark(EIGStatusMarks.NEXT_VISIT));
 
-        assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.LOCATED));
+        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.LOCATED));
         assertEquals(new LinkedHashSet<>(Arrays.asList(
                 EIGStatusMarks.IMPACTED
-        )), cp.GetAvailableRulesForMark(EIGStatusMarks.IMPACTED));
-        assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.CHANGED));
+        )), cp.getAvailableRulesForMark(EIGStatusMarks.IMPACTED));
+        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.CHANGED));
 
         assertEquals(new LinkedHashSet<>(Arrays.asList(
                 EIGStatusMarks.IMPACTED, EIGStatusMarks.VISITED_CONTINUE
-        )), cp.GetAvailableRulesForMark(EIGStatusMarks.VISITED_CONTINUE));
+        )), cp.getAvailableRulesForMark(EIGStatusMarks.VISITED_CONTINUE));
 
-        assertEquals(null, cp.GetAvailableRulesForMark("unknown_mark"));
+        assertEquals(null, cp.getAvailableRulesForMark("unknown_mark"));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class JRipplesModuleICImpactAnalysisTest {
         );
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.IMPACTED, node, 0);
+        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, 0);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
@@ -124,7 +124,7 @@ public class JRipplesModuleICImpactAnalysisTest {
         );
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.IMPACTED, node, 0);
+        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, 0);
 
         /* then*/
         verify(log).error(toBeThrown);
@@ -173,7 +173,7 @@ public class JRipplesModuleICImpactAnalysisTest {
                 = new JRipplesModuleICImpactAnalysis(mockedEig);
 
         /* when */
-        cp.InitializeStage(mockedModuleRunner);
+        cp.initializeStage(mockedModuleRunner);
 
         /* then */
 
@@ -253,7 +253,7 @@ public class JRipplesModuleICImpactAnalysisTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.VISITED_CONTINUE, node, node2);
+        cp.applyRuleAtNode(EIGStatusMarks.VISITED_CONTINUE, node, node2);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
@@ -279,7 +279,7 @@ public class JRipplesModuleICImpactAnalysisTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.VISITED, node, node2);
+        cp.applyRuleAtNode(EIGStatusMarks.VISITED, node, node2);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
@@ -299,7 +299,7 @@ public class JRipplesModuleICImpactAnalysisTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.LOCATED, node, node2);
+        cp.applyRuleAtNode(EIGStatusMarks.LOCATED, node, node2);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class, never());
@@ -318,7 +318,7 @@ public class JRipplesModuleICImpactAnalysisTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.IMPACTED, node, node2);
+        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, node2);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
@@ -342,7 +342,7 @@ public class JRipplesModuleICImpactAnalysisTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.CHANGED, node, node2);
+        cp.applyRuleAtNode(EIGStatusMarks.CHANGED, node, node2);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class, never());

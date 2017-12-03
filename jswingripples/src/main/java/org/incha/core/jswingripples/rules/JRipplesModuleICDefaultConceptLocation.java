@@ -35,7 +35,7 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
     }
 
     @Override
-    public void InitializeStage(JRipplesModuleRunner moduleRunner) {
+    public void initializeStage(JRipplesModuleRunner moduleRunner) {
         final JSwingRipplesEIGNode[] nodes = eig.getAllNodes();
         if (nodes != null) {
             for (int i = 0; i < nodes.length; i++) {
@@ -57,11 +57,11 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
     /*
      * (non-Javadoc)
      *
-     * @see org.severe.jripples.modules.interfaces.JRipplesICModule#ApplyRuleAtNode(java.lang.String,
+     * @see org.severe.jripples.modules.interfaces.JRipplesICModule#applyRuleAtNode(java.lang.String,
      *      java.lang.String)
      */
 	@Override
-    public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode node, final int granularity) {
+    public void applyRuleAtNode(final String rule, final JSwingRipplesEIGNode node, final int granularity) {
         if (EIGStatusMarks.VISITED_CONTINUE.equals(rule)) {
             CommonEIGRules.applyRuleToNode(eig, node,rule,granularity);
         } else {
@@ -70,7 +70,7 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
 	}
 
     @Override
-    public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
+    public void applyRuleAtNode(final String rule, final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
         if (EIGStatusMarks.VISITED_CONTINUE.equals(rule)) {
             CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo, rule,EIGStatusMarks.NEXT_VISIT);
         } else {

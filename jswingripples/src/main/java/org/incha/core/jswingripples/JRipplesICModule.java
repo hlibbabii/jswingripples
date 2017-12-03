@@ -63,7 +63,7 @@ public abstract class JRipplesICModule extends JRipplesModule {
 	 * @return
 	 * 	a set of marks (of type String)
 	 */
-	public Set<String> GetAvailableRulesForMark(final String mark) {
+	public Set<String> getAvailableRulesForMark(final String mark) {
 
 		if (mark == null || mark.compareTo(EIGStatusMarks.BLANK) == 0) {
 			return getRulesForNullOrBlankMark();
@@ -87,7 +87,7 @@ public abstract class JRipplesICModule extends JRipplesModule {
 
 	protected abstract String getSpecificMark();
 
-	public void InitializeStage(JRipplesModuleRunner moduleRunner) {
+	public void initializeStage(JRipplesModuleRunner moduleRunner) {
 		final JSwingRipplesEIGNode[] nodes = eig.getAllNodes();
 		final Set<JSwingRipplesEIGNode> impactedMemberNodes = new LinkedHashSet<JSwingRipplesEIGNode>();
 		final Set<JSwingRipplesEIGNode> impactedTopNodes = new LinkedHashSet<JSwingRipplesEIGNode>();
@@ -139,7 +139,7 @@ public abstract class JRipplesICModule extends JRipplesModule {
 		//Do nothing
 	}
 
-	public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode node, final int granularity) {
+	public void applyRuleAtNode(final String rule, final JSwingRipplesEIGNode node, final int granularity) {
 		try {
 			CommonEIGRules.applyRuleToNode(eig, node,rule,granularity);
 		} catch (final Exception e) {
@@ -156,7 +156,7 @@ public abstract class JRipplesICModule extends JRipplesModule {
 	 * node, to which the rule propagates
 
 	 */
-	public void ApplyRuleAtNode(final String rule,  final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
+	public void applyRuleAtNode(final String rule, final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
 		if ((rule.compareTo(getSpecificMark()) == 0) || (rule.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0)) {
 			CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo,rule,EIGStatusMarks.NEXT_VISIT);
 			assignAnnotations(nodeFrom, nodeTo, rule);
@@ -168,6 +168,6 @@ public abstract class JRipplesICModule extends JRipplesModule {
 
     @Override
     public void runModuleWithinRunner(JRipplesModuleRunner moduleRunner) {
-        InitializeStage(moduleRunner);
+        initializeStage(moduleRunner);
     }
 }

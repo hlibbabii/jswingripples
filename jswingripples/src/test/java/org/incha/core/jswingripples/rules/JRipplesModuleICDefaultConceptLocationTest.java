@@ -26,23 +26,23 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         JRipplesModuleICDefaultConceptLocation cp
                 = new JRipplesModuleICDefaultConceptLocation(null);
 
-        assertEquals(null, cp.GetAvailableRulesForMark(null));
-        assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.BLANK));
+        assertEquals(null, cp.getAvailableRulesForMark(null));
+        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.BLANK));
         assertEquals(new LinkedHashSet<>(Arrays.asList(
                 EIGStatusMarks.LOCATED, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.VISITED
-        )), cp.GetAvailableRulesForMark(EIGStatusMarks.NEXT_VISIT));
+        )), cp.getAvailableRulesForMark(EIGStatusMarks.NEXT_VISIT));
 
         assertEquals(new LinkedHashSet<>(Arrays.asList(
                 EIGStatusMarks.LOCATED
-        )), cp.GetAvailableRulesForMark(EIGStatusMarks.LOCATED));
-        assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.IMPACTED));
-        assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.CHANGED));
+        )), cp.getAvailableRulesForMark(EIGStatusMarks.LOCATED));
+        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.IMPACTED));
+        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.CHANGED));
 
         assertEquals(new LinkedHashSet<>(Arrays.asList(
                 EIGStatusMarks.LOCATED, EIGStatusMarks.VISITED_CONTINUE
-        )), cp.GetAvailableRulesForMark(EIGStatusMarks.VISITED_CONTINUE));
+        )), cp.getAvailableRulesForMark(EIGStatusMarks.VISITED_CONTINUE));
 
-        assertEquals(null, cp.GetAvailableRulesForMark("unknown_mark"));
+        assertEquals(null, cp.getAvailableRulesForMark("unknown_mark"));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.VISITED_CONTINUE, node, 1);
+        cp.applyRuleAtNode(EIGStatusMarks.VISITED_CONTINUE, node, 1);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
@@ -77,7 +77,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.VISITED, node, 1);
+        cp.applyRuleAtNode(EIGStatusMarks.VISITED, node, 1);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
@@ -96,7 +96,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.LOCATED, node, 1);
+        cp.applyRuleAtNode(EIGStatusMarks.LOCATED, node, 1);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
@@ -118,7 +118,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.IMPACTED, node, 1);
+        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, 1);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class, never());
@@ -137,7 +137,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.VISITED_CONTINUE, node, node2);
+        cp.applyRuleAtNode(EIGStatusMarks.VISITED_CONTINUE, node, node2);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
@@ -158,7 +158,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.VISITED, node, node2);
+        cp.applyRuleAtNode(EIGStatusMarks.VISITED, node, node2);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
@@ -178,7 +178,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.LOCATED, node, node2);
+        cp.applyRuleAtNode(EIGStatusMarks.LOCATED, node, node2);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
@@ -201,7 +201,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.ApplyRuleAtNode(EIGStatusMarks.IMPACTED, node, node2);
+        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, node2);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class, never());

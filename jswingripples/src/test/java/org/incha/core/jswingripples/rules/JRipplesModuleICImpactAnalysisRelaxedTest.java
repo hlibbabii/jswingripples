@@ -17,21 +17,21 @@ public class JRipplesModuleICImpactAnalysisRelaxedTest {
                 EIGStatusMarks.IMPACTED, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.VISITED
         ));
 
-        assertEquals(setOf3, cp.GetAvailableRulesForMark(null));
-        assertEquals(setOf3, cp.GetAvailableRulesForMark(EIGStatusMarks.BLANK));
-        assertEquals(setOf3, cp.GetAvailableRulesForMark(EIGStatusMarks.NEXT_VISIT));
+        assertEquals(setOf3, cp.getAvailableRulesForMark(null));
+        assertEquals(setOf3, cp.getAvailableRulesForMark(EIGStatusMarks.BLANK));
+        assertEquals(setOf3, cp.getAvailableRulesForMark(EIGStatusMarks.NEXT_VISIT));
 
-        assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.LOCATED));
+        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.LOCATED));
         assertEquals(new LinkedHashSet<>(Arrays.asList(
                 EIGStatusMarks.IMPACTED
-        )), cp.GetAvailableRulesForMark(EIGStatusMarks.IMPACTED));
-        assertEquals(null, cp.GetAvailableRulesForMark(EIGStatusMarks.CHANGED));
+        )), cp.getAvailableRulesForMark(EIGStatusMarks.IMPACTED));
+        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.CHANGED));
 
         assertEquals(new LinkedHashSet<>(Arrays.asList(
                 EIGStatusMarks.IMPACTED, EIGStatusMarks.VISITED_CONTINUE
-        )), cp.GetAvailableRulesForMark(EIGStatusMarks.VISITED_CONTINUE));
+        )), cp.getAvailableRulesForMark(EIGStatusMarks.VISITED_CONTINUE));
 
-        assertEquals(null, cp.GetAvailableRulesForMark("unknown_mark"));
+        assertEquals(null, cp.getAvailableRulesForMark("unknown_mark"));
     }
 
 }
