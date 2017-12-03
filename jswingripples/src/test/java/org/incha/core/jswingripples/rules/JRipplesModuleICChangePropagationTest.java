@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doReturn;
@@ -257,6 +258,10 @@ public class JRipplesModuleICChangePropagationTest {
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
         CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.NEXT_VISIT);
+        PowerMockito.verifyStatic(CommonEIGRules.class);
+        CommonEIGRules.assignAnottationToNodeAndNeighbor(
+                eq(eig), eq(node), eq(node2),
+                eq(EIGStatusMarks.VISITED_CONTINUE), anyString());
 
     }
 
@@ -278,6 +283,10 @@ public class JRipplesModuleICChangePropagationTest {
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
         CommonEIGRules.applyRuleToNode(eig, node, EIGStatusMarks.VISITED, 0);
+        PowerMockito.verifyStatic(CommonEIGRules.class, never());
+        CommonEIGRules.assignAnottationToNodeAndNeighbor(
+                eq(eig), eq(node), eq(node2),
+                eq(EIGStatusMarks.VISITED), anyString());
     }
 
     @Test
@@ -336,7 +345,10 @@ public class JRipplesModuleICChangePropagationTest {
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
         CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2, EIGStatusMarks.CHANGED, EIGStatusMarks.NEXT_VISIT);
-
+        PowerMockito.verifyStatic(CommonEIGRules.class);
+        CommonEIGRules.assignAnottationToNodeAndNeighbor(
+                eq(eig), eq(node), eq(node2),
+                eq(EIGStatusMarks.CHANGED), anyString());
     }
 
 }
