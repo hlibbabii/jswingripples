@@ -26,19 +26,25 @@ public class CommonEIGRules {
 		//3. filter them based on the specified granularity
 		//4. apply mark to the member and the neighbors
 		//5. verify bottom-up the consistency of the marks of all involved parties and in between
-		final Set<JSwingRipplesEIGNode> targets=new HashSet<JSwingRipplesEIGNode> ();
-		if (granularity==0) targets.add(node);
-		else if (granularity<0) targets.add(findParent(eig, node,granularity));
-		else findMembers(eig, node,targets,granularity,0);
+		final Set<JSwingRipplesEIGNode> targets= new HashSet<>();
+		if (granularity==0) {
+			targets.add(node);
+		} else if (granularity<0) {
+			targets.add(findParent(eig, node,granularity));
+		} else {
+			findMembers(eig, node,targets,granularity,0);
+		}
 
 		for (final JSwingRipplesEIGNode n:targets) {
 			assignMarkToNodeAndParents(eig, n,newMark);
 
 		}
-		if (newMark.compareTo(EIGStatusMarks.VISITED)==0) return;
+		if (newMark.compareTo(EIGStatusMarks.VISITED)==0) {
+			return;
+		}
 
-		final Set<JSwingRipplesEIGNode> membersOfTargets=new HashSet <JSwingRipplesEIGNode>(targets);
-		final Set<JSwingRipplesEIGNode> membersOfTargetsAux=new HashSet <JSwingRipplesEIGNode>(targets);
+		final Set<JSwingRipplesEIGNode> membersOfTargets= new HashSet<>(targets);
+		final Set<JSwingRipplesEIGNode> membersOfTargetsAux= new HashSet<>(targets);
 		while (membersOfTargetsAux.size()>0) {
 			final JSwingRipplesEIGNode n=membersOfTargetsAux.iterator().next();
 			membersOfTargetsAux.remove(n);
@@ -60,12 +66,17 @@ public class CommonEIGRules {
 	public static void assignMarkToNodeAndParents(final JSwingRipplesEIG eig, JSwingRipplesEIGNode node, final String mark) {
 
 		while (node!=null) {
-			if (getImportance(mark)>getImportance(node.getMark()))
+			if (getImportance(mark)>getImportance(node.getMark())) {
 				node.setMark(mark);
-			if (node.isTop()) return;
+			}
+			if (node.isTop()) {
+				return;
+			}
 			//comment below will lead JRipples halt, but why?
 			node=eig.findParentNodeForMemberNode(node);
-			if (node==null) return;
+			if (node==null) {
+				return;
+			}
 		}
 	}
 
@@ -85,13 +96,14 @@ public class CommonEIGRules {
 			return 0;
 
 	}
+
 	private static void filterNeighbors(final JSwingRipplesEIG eig,
 	        final JSwingRipplesEIGNode focusNode,final Set<JSwingRipplesEIGNode> neighbors) {
-		final Set<JSwingRipplesEIGNode> filteredNeighbors=new HashSet<JSwingRipplesEIGNode> ();
-		final int granulrity=checkNestingLevel(eig, eig.findTopNodeForIMember(focusNode.getNodeIMember()),focusNode);
+		final Set<JSwingRipplesEIGNode> filteredNeighbors= new HashSet<>();
+		final int granularity=checkNestingLevel(eig, eig.findTopNodeForIMember(focusNode.getNodeIMember()),focusNode);
 
 		for (final JSwingRipplesEIGNode neighbor:neighbors) {
-			if (checkNestingLevel(eig, eig.findTopNodeForIMember(neighbor.getNodeIMember()),neighbor)==granulrity)
+			if (checkNestingLevel(eig, eig.findTopNodeForIMember(neighbor.getNodeIMember()),neighbor)==granularity)
 				filteredNeighbors.add(neighbor);
 		}
 		neighbors.clear();
@@ -100,10 +112,14 @@ public class CommonEIGRules {
 	}
 	private static int checkNestingLevel(final JSwingRipplesEIG eig,
 	        final JSwingRipplesEIGNode currentNode, final JSwingRipplesEIGNode neededNode) {
-		if (currentNode.equals(neededNode)) return 0;
+		if (currentNode.equals(neededNode)) {
+			return 0;
+		}
 		for (final JSwingRipplesEIGNode member:eig.getNodeMembers(currentNode)) {
 			final int k=checkNestingLevel(eig, member, neededNode);
-			if (k!=-1) return k+1;
+			if (k!=-1) {
+				return k+1;
+			}
 		}
 		return -1;
 	}
@@ -143,11 +159,15 @@ public class CommonEIGRules {
 	public static void assignAnottationToNodeAndParents(final JSwingRipplesEIG eig, JSwingRipplesEIGNode node,
 			final String text) {
 		while (node!=null) {
-			node.setAnottation(text);;
-			if (node.isTop()) return;
+			node.setAnottation(text);
+			if (node.isTop()) {
+				return;
+			}
 			//comment below will lead JRipples halt, but why?
 			node=eig.findParentNodeForMemberNode(node);
-			if (node==null) return;
+			if (node==null) {
+				return;
+			}
 		}
 		
 	}
