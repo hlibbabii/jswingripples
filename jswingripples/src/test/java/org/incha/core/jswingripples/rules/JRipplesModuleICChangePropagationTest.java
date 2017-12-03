@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.incha.TestUtils;
 import org.incha.core.jswingripples.JRipplesModuleRunner;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
@@ -18,8 +19,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -110,7 +109,7 @@ public class JRipplesModuleICChangePropagationTest {
 
         JRipplesModuleICChangePropagation cp
                 = new JRipplesModuleICChangePropagation(eig);
-        setFinalFieldOfParent(cp, log);
+        TestUtils.setFinalFieldOfParent(cp, log);
 
 
         PowerMockito.mockStatic(CommonEIGRules.class);
@@ -128,15 +127,6 @@ public class JRipplesModuleICChangePropagationTest {
 
         /* then*/
         verify(log).error(toBeThrown);
-    }
-
-    private void setFinalFieldOfParent(Object where, Object what) throws Exception {
-        Field logField = where.getClass().getSuperclass().getDeclaredField("log");
-        logField.setAccessible(true);
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(logField, logField.getModifiers() & ~Modifier.FINAL);
-        logField.set(where, what);
     }
 
     @Test
