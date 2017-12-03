@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doReturn;
@@ -258,6 +259,11 @@ public class JRipplesModuleICImpactAnalysisTest {
         PowerMockito.verifyStatic(CommonEIGRules.class);
         CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.NEXT_VISIT);
 
+        PowerMockito.verifyStatic(CommonEIGRules.class, never());
+        CommonEIGRules.assignAnottationToNodeAndNeighbor(
+                eq(eig), eq(node), eq(node2),
+                eq(EIGStatusMarks.VISITED_CONTINUE), anyString());
+
     }
 
     @Test
@@ -317,6 +323,10 @@ public class JRipplesModuleICImpactAnalysisTest {
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
         CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2, EIGStatusMarks.IMPACTED, EIGStatusMarks.NEXT_VISIT);
+        PowerMockito.verifyStatic(CommonEIGRules.class, never());
+        CommonEIGRules.assignAnottationToNodeAndNeighbor(
+                eq(eig), eq(node), eq(node2),
+                eq(EIGStatusMarks.IMPACTED), anyString());
     }
 
     @Test
