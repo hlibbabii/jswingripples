@@ -134,6 +134,11 @@ public abstract class JRipplesICModule extends JRipplesModule {
 		// Do nothing
     }
 
+	protected void assignAnnotations(JSwingRipplesEIGNode nodeFrom, JSwingRipplesEIGNode nodeTo,
+									 String rule) {
+		//Do nothing
+	}
+
 	public void ApplyRuleAtNode(final String rule, final JSwingRipplesEIGNode node, final int granularity) {
 		try {
 			CommonEIGRules.applyRuleToNode(eig, node,rule,granularity);
@@ -151,7 +156,15 @@ public abstract class JRipplesICModule extends JRipplesModule {
 	 * node, to which the rule propagates
 
 	 */
-	public abstract void ApplyRuleAtNode(String rule, JSwingRipplesEIGNode nodeFrom, JSwingRipplesEIGNode nodeTo);
+	public void ApplyRuleAtNode(final String rule,  final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
+		if ((rule.compareTo(getSpecificMark()) == 0) || (rule.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0)) {
+			CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo,rule,EIGStatusMarks.NEXT_VISIT);
+			assignAnnotations(nodeFrom, nodeTo, rule);
+		} else if (rule.compareTo(EIGStatusMarks.VISITED) == 0) {
+
+			CommonEIGRules.applyRuleToNode(eig, nodeFrom,rule,0);
+		}
+	}
 
     @Override
     public void runModuleWithinRunner(JRipplesModuleRunner moduleRunner) {

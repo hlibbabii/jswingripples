@@ -22,6 +22,7 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
 
     private static final String CLASS_ELEMENT_ANNOTATION = "este atributo propaga cambios porque hay otros nodos impactados";
     private static final String CLASS_ANNOTATION = "“hay que cambiar esta clase, este metodo, porque es impactada por el concepto";
+    private static final String CHANGE_PROPAGATION_ANNOTATION = "hay que cambiar esta clase, este metodo, porque";
 
 
     /**
@@ -49,21 +50,13 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
     @Override
     protected void setClassAnnotation(JSwingRipplesEIGNode node) {
         node.setAnottation(JRipplesModuleICChangePropagation.CLASS_ANNOTATION);
-
     }
 
 	@Override
-    public void ApplyRuleAtNode(final String rule,
-            final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
-        if ((rule.compareTo(EIGStatusMarks.CHANGED) == 0) || (rule.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0)) {
-            CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo,rule,EIGStatusMarks.NEXT_VISIT);
-            CommonEIGRules.assignAnottationToNodeAndNeighbor(eig,nodeFrom,nodeTo,rule,"hay que cambiar esta clase, este metodo, porque" + rule);
-
-        } else if (rule.compareTo(EIGStatusMarks.VISITED) == 0) {
-
-            CommonEIGRules.applyRuleToNode(eig, nodeFrom,rule,0);
-        }
-	}
+    protected void assignAnnotations(JSwingRipplesEIGNode nodeFrom, JSwingRipplesEIGNode nodeTo,
+                                     String rule) {
+        CommonEIGRules.assignAnottationToNodeAndNeighbor(eig,nodeFrom,nodeTo,rule, CHANGE_PROPAGATION_ANNOTATION + rule);
+    }
 
 }
 	

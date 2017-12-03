@@ -8,7 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
-import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.ui.jripples.EIGStatusMarks;
 
 import java.util.Set;
@@ -40,16 +39,4 @@ public class JRipplesModuleICImpactAnalysis extends JRipplesICModule {
 	protected String getSpecificMark() {
 		return EIGStatusMarks.IMPACTED;
 	}
-
-	@Override
-    public void ApplyRuleAtNode(final String rule,  final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
-        if ((rule.compareTo(EIGStatusMarks.IMPACTED) == 0) || (rule.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0)) {
-            CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo,rule,EIGStatusMarks.NEXT_VISIT);
-
-        } else if (rule.compareTo(EIGStatusMarks.VISITED) == 0) {
-
-            CommonEIGRules.applyRuleToNode(eig, nodeFrom,rule,0);
-        }
-	}
-
 }

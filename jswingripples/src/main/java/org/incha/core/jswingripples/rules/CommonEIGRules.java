@@ -1,17 +1,17 @@
 package org.incha.core.jswingripples.rules;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.ui.jripples.EIGStatusMarks;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class CommonEIGRules {
 
 	//---------------Edge Level-------------------------------------------------
-	protected static void assignMarkToNodeAndNeighbor(final JSwingRipplesEIG eig,
+	public static void assignMarkToNodeAndNeighbor(final JSwingRipplesEIG eig,
 	        final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo, final String markForNode, final String markForNeighbors) {
 		assignMarkToNodeAndParents(eig, nodeFrom,markForNode);
 		assignMarkToNodeAndParents(eig, nodeTo, markForNeighbors);
