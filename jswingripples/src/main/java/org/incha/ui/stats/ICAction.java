@@ -1,12 +1,5 @@
 package org.incha.ui.stats;
 
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-
 import org.eclipse.jdt.core.IJavaElement;
 import org.incha.compiler.dom.JavaDomUtils;
 import org.incha.core.ModuleConfiguration;
@@ -15,6 +8,11 @@ import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.core.jswingripples.eig.history.CompoundUndoAction;
 import org.incha.core.jswingripples.eig.history.UndoAction;
 import org.incha.ui.jripples.EIGStatusMarks;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.List;
 
 class ICAction extends AbstractAction {
     private static final long serialVersionUID = -300064190936944986L;
@@ -82,9 +80,9 @@ class ICAction extends AbstractAction {
 
             try {
                 if (toNode == null) {
-                    module.ApplyRuleAtNode(rule, fromNode, granularity);
+                    module.applyRuleAtNode(rule, fromNode, granularity);
                 } else if (toNode != null) {
-                    module.ApplyRuleAtNode(rule, fromNode, toNode);
+                    module.applyRuleAtNode(rule, fromNode, toNode);
                 }
                 if (context != null) {
                     context.repaint();
