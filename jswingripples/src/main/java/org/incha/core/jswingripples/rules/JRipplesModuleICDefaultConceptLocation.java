@@ -38,8 +38,8 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
     public void initializeStage(JRipplesModuleRunner moduleRunner) {
         final JSwingRipplesEIGNode[] nodes = eig.getAllNodes();
         if (nodes != null) {
-            for (int i = 0; i < nodes.length; i++) {
-                nodes[i].setMark(EIGStatusMarks.BLANK);
+            for (JSwingRipplesEIGNode node : nodes) {
+                node.setMark(EIGStatusMarks.BLANK);
             }
 
             if (eig.getMainClass() != null) {
@@ -63,7 +63,7 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
 	@Override
     public void applyRuleAtNode(final String rule, final JSwingRipplesEIGNode node, final int granularity) {
         if (EIGStatusMarks.VISITED_CONTINUE.equals(rule)) {
-            CommonEIGRules.applyRuleToNode(eig, node,rule,granularity);
+            CommonEIGRules.applyRuleToNode(eig, node, rule, granularity);
         } else {
             apply(rule, node);
         }
@@ -81,7 +81,7 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
     private void apply(String rule, JSwingRipplesEIGNode node) {
         if (EIGStatusMarks.LOCATED.equals(rule)) {
             CommonEIGRules.assignMarkToNodeAndParents(eig, node, rule);
-            CommonEIGRules.assignAnottationToNodeAndParents(eig,node,"hay que cambiar esta clase, este método por que el concepto fue localizado");
+            CommonEIGRules.assignAnnotationToNodeAndParents(eig,node,"hay que cambiar esta clase, este método por que el concepto fue localizado");
         } else if (EIGStatusMarks.VISITED.equals(rule)) {
             CommonEIGRules.applyRuleToNode(eig, node,rule,0);
         }

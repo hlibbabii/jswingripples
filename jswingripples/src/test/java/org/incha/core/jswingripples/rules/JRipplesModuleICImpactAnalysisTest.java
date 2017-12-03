@@ -260,9 +260,9 @@ public class JRipplesModuleICImpactAnalysisTest {
         CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.NEXT_VISIT);
 
         PowerMockito.verifyStatic(CommonEIGRules.class, never());
-        CommonEIGRules.assignAnottationToNodeAndNeighbor(
+        CommonEIGRules.assignAnnotationToNodeAndNeighbor(
                 eq(eig), eq(node), eq(node2),
-                eq(EIGStatusMarks.VISITED_CONTINUE), anyString());
+                anyString());
 
     }
 
@@ -324,9 +324,9 @@ public class JRipplesModuleICImpactAnalysisTest {
         PowerMockito.verifyStatic(CommonEIGRules.class);
         CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2, EIGStatusMarks.IMPACTED, EIGStatusMarks.NEXT_VISIT);
         PowerMockito.verifyStatic(CommonEIGRules.class, never());
-        CommonEIGRules.assignAnottationToNodeAndNeighbor(
+        CommonEIGRules.assignAnnotationToNodeAndNeighbor(
                 eq(eig), eq(node), eq(node2),
-                eq(EIGStatusMarks.IMPACTED), anyString());
+                anyString());
     }
 
     @Test

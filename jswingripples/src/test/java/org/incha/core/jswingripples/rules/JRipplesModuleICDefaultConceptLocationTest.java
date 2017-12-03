@@ -103,7 +103,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         CommonEIGRules.assignMarkToNodeAndParents(eig, node, EIGStatusMarks.LOCATED);
 
         PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.assignAnottationToNodeAndParents(eq(eig), eq(node), anyString());
+        CommonEIGRules.assignAnnotationToNodeAndParents(eq(eig), eq(node), anyString());
     }
 
     @Test
@@ -185,7 +185,7 @@ public class JRipplesModuleICDefaultConceptLocationTest {
         CommonEIGRules.assignMarkToNodeAndParents(eig, node, EIGStatusMarks.LOCATED);
 
         PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.assignAnottationToNodeAndParents(eq(eig), eq(node), anyString());
+        CommonEIGRules.assignAnnotationToNodeAndParents(eq(eig), eq(node), anyString());
     }
 
     @Test

@@ -13,8 +13,8 @@ import org.incha.core.jswingripples.rules.JRipplesModuleICChangePropagation;
 import org.incha.ui.jripples.EIGStatusMarks;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +46,7 @@ public abstract class JRipplesICModule extends JRipplesModule {
 				EIGStatusMarks.VISITED_CONTINUE,
 				EIGStatusMarks.VISITED
 		));
-		put(specificMark, Arrays.asList(
+		put(specificMark, Collections.singletonList(
 				specificMark
 		));
 		put(EIGStatusMarks.VISITED_CONTINUE, Arrays.asList(
@@ -65,7 +65,7 @@ public abstract class JRipplesICModule extends JRipplesModule {
 	 */
 	public Set<String> getAvailableRulesForMark(final String mark) {
 
-		if (mark == null || mark.compareTo(EIGStatusMarks.BLANK) == 0) {
+		if (mark == null || EIGStatusMarks.BLANK.equals(mark)) {
 			return getRulesForNullOrBlankMark();
 		} else {
 			List<String> rules = rulesForMarks.get(mark);
@@ -89,35 +89,36 @@ public abstract class JRipplesICModule extends JRipplesModule {
 
 	public void initializeStage(JRipplesModuleRunner moduleRunner) {
 		final JSwingRipplesEIGNode[] nodes = eig.getAllNodes();
-		final Set<JSwingRipplesEIGNode> impactedMemberNodes = new LinkedHashSet<JSwingRipplesEIGNode>();
-		final Set<JSwingRipplesEIGNode> impactedTopNodes = new LinkedHashSet<JSwingRipplesEIGNode>();
+		final Set<JSwingRipplesEIGNode> impactedMemberNodes = new LinkedHashSet<>();
+		final Set<JSwingRipplesEIGNode> impactedTopNodes = new LinkedHashSet<>();
 		if (nodes != null) {
-			for (int i = 0; i < nodes.length; i++) {
-				if ((nodes[i].getMark().compareTo(EIGStatusMarks.LOCATED) != 0) && (nodes[i].getMark().compareTo(EIGStatusMarks.IMPACTED) != 0) && (nodes[i].getMark().compareTo(EIGStatusMarks.CHANGED) != 0))
-					nodes[i].setMark(EIGStatusMarks.BLANK);
-				else
-				if (!nodes[i].isTop()){
-					impactedMemberNodes.add(nodes[i]);
-					setClassAnnotation(nodes[i]);
-				} else{
-					impactedTopNodes.add(nodes[i]);
-					setClassElementAnnotation(nodes[i]);
+			List<String> importantMarksList = Arrays.asList(
+					EIGStatusMarks.LOCATED,
+					EIGStatusMarks.IMPACTED,
+					EIGStatusMarks.CHANGED
+			);
+			for (JSwingRipplesEIGNode node : nodes) {
+				if (!importantMarksList.contains(node.getMark()))
+					node.setMark(EIGStatusMarks.BLANK);
+				else if (!node.isTop()) {
+					impactedMemberNodes.add(node);
+					setClassAnnotation(node);
+				} else {
+					impactedTopNodes.add(node);
+					setClassElementAnnotation(node);
 				}
 			}
 			//          Process members first
-			for (final Iterator<JSwingRipplesEIGNode> iter = impactedMemberNodes.iterator(); iter.hasNext();) {
-				final JSwingRipplesEIGNode impacted_node = iter.next();
+			for (final JSwingRipplesEIGNode impacted_node : impactedMemberNodes) {
 				impacted_node.setMark(EIGStatusMarks.NEXT_VISIT);
-				CommonEIGRules.applyRuleToNode(eig, impacted_node, getSpecificMark(),0);
+				CommonEIGRules.applyRuleToNode(eig, impacted_node, getSpecificMark(), 0);
 			}
 
 			//          Process top nodes if any
-			for (final Iterator<JSwingRipplesEIGNode> iter = impactedTopNodes.iterator(); iter.hasNext();) {
-				final JSwingRipplesEIGNode impacted_node = iter.next();
-
-				if ( (impacted_node.getMark().compareTo(getSpecificMark()) != 0)) {
+			for (final JSwingRipplesEIGNode impacted_node : impactedTopNodes) {
+				if (!getSpecificMark().equals(impacted_node.getMark())) {
 					impacted_node.setMark(EIGStatusMarks.NEXT_VISIT);
-					CommonEIGRules.applyRuleToNode(eig, impacted_node, getSpecificMark(),0);
+					CommonEIGRules.applyRuleToNode(eig, impacted_node, getSpecificMark(), 0);
 				}
 			}
 
@@ -157,11 +158,10 @@ public abstract class JRipplesICModule extends JRipplesModule {
 
 	 */
 	public void applyRuleAtNode(final String rule, final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
-		if ((rule.compareTo(getSpecificMark()) == 0) || (rule.compareTo(EIGStatusMarks.VISITED_CONTINUE) == 0)) {
+		if (getSpecificMark().equals(rule) || EIGStatusMarks.VISITED_CONTINUE.equals(rule)) {
 			CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo,rule,EIGStatusMarks.NEXT_VISIT);
 			assignAnnotations(nodeFrom, nodeTo, rule);
-		} else if (rule.compareTo(EIGStatusMarks.VISITED) == 0) {
-
+		} else if (EIGStatusMarks.VISITED.equals(rule)) {
 			CommonEIGRules.applyRuleToNode(eig, nodeFrom,rule,0);
 		}
 	}

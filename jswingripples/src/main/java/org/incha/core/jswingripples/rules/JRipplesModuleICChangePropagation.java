@@ -48,7 +48,7 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
 	@Override
     protected void assignAnnotations(JSwingRipplesEIGNode nodeFrom, JSwingRipplesEIGNode nodeTo,
                                      String rule) {
-        CommonEIGRules.assignAnottationToNodeAndNeighbor(eig,nodeFrom,nodeTo,rule, CHANGE_PROPAGATION_ANNOTATION + rule);
+        CommonEIGRules.assignAnnotationToNodeAndNeighbor(eig, nodeFrom, nodeTo, CHANGE_PROPAGATION_ANNOTATION + rule);
     }
 
 }

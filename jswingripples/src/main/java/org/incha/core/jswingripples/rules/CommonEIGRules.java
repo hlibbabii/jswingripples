@@ -39,7 +39,7 @@ public class CommonEIGRules {
 			assignMarkToNodeAndParents(eig, n,newMark);
 
 		}
-		if (newMark.compareTo(EIGStatusMarks.VISITED)==0) {
+		if (EIGStatusMarks.VISITED.equals(newMark)) {
 			return;
 		}
 
@@ -147,17 +147,17 @@ public class CommonEIGRules {
 
 	}
 
-	public static void assignAnottationToNodeAndNeighbor(final JSwingRipplesEIG eig, final JSwingRipplesEIGNode nodeFrom,
-			final JSwingRipplesEIGNode nodeTo, final String rule, String text) {
+	public static void assignAnnotationToNodeAndNeighbor(final JSwingRipplesEIG eig, final JSwingRipplesEIGNode nodeFrom,
+														 final JSwingRipplesEIGNode nodeTo, String text) {
 		 {
-			assignAnottationToNodeAndParents(eig, nodeFrom,text);
-			assignAnottationToNodeAndParents(eig, nodeTo, text);
+			assignAnnotationToNodeAndParents(eig, nodeFrom, text);
+			assignAnnotationToNodeAndParents(eig, nodeTo, text);
 		
 		 }
 	}
 
-	public static void assignAnottationToNodeAndParents(final JSwingRipplesEIG eig, JSwingRipplesEIGNode node,
-			final String text) {
+	public static void assignAnnotationToNodeAndParents(final JSwingRipplesEIG eig, JSwingRipplesEIGNode node,
+														final String text) {
 		while (node!=null) {
 			node.setAnottation(text);
 			if (node.isTop()) {
