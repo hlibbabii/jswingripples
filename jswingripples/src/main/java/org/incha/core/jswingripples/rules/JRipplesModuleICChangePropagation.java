@@ -4,8 +4,6 @@
  */
 package org.incha.core.jswingripples.rules;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
@@ -18,16 +16,11 @@ import java.util.Set;
  *
  */
 public class JRipplesModuleICChangePropagation extends JRipplesICModule {
-    private static final Log log = LogFactory.getLog(JRipplesModuleICChangePropagation.class);
 
     private static final String CLASS_ELEMENT_ANNOTATION = "este atributo propaga cambios porque hay otros nodos impactados";
     private static final String CLASS_ANNOTATION = "“hay que cambiar esta clase, este metodo, porque es impactada por el concepto";
     private static final String CHANGE_PROPAGATION_ANNOTATION = "hay que cambiar esta clase, este metodo, porque";
 
-
-    /**
-     * @param eig eig.
-     */
     public JRipplesModuleICChangePropagation(final JSwingRipplesEIG eig) {
         super(eig);
     }

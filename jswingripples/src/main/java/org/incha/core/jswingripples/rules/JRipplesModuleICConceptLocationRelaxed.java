@@ -13,9 +13,7 @@ import java.util.Set;
  *
  */
 public class JRipplesModuleICConceptLocationRelaxed extends JRipplesModuleICDefaultConceptLocation{
-	/**
-     * @param eig
-     */
+
     public JRipplesModuleICConceptLocationRelaxed(final JSwingRipplesEIG eig) {
         super(eig);
     }

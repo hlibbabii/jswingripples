@@ -17,15 +17,7 @@ import java.util.Set;
  */
 public class JRipplesModuleICImpactAnalysis extends JRipplesICModule {
     private static final Log log = LogFactory.getLog(JRipplesModuleICImpactAnalysis.class);
-//algorithm
-//1. Identify all members or parents at specified granularity
-//2. find all neighbors of these members
-//3. filter them based on the specified granularity
-//4. apply mark to the member and the neighbors
-//5. verify bottom-up the consistency of the marks of all involved parties and in between
-    /**
-     * @param eig the eig.
-     */
+
     public JRipplesModuleICImpactAnalysis(final JSwingRipplesEIG eig) {
         super(eig);
     }

@@ -13,9 +13,7 @@ import java.util.Set;
  *
  */
 public class JRipplesModuleICImpactAnalysisRelaxed extends JRipplesModuleICImpactAnalysis {
-	/**
-     * @param eig
-     */
+
     public JRipplesModuleICImpactAnalysisRelaxed(final JSwingRipplesEIG eig) {
         super(eig);
     }

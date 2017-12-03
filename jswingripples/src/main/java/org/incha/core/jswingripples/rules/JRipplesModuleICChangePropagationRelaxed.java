@@ -13,9 +13,7 @@ import java.util.Set;
  *
  */
 public class JRipplesModuleICChangePropagationRelaxed extends JRipplesModuleICChangePropagation {
-	/**
-     * @param eig
-     */
+
     public JRipplesModuleICChangePropagationRelaxed(final JSwingRipplesEIG eig) {
         super(eig);
     }

@@ -20,9 +20,6 @@ import java.util.Set;
  */
 public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
 
-	/**
-     * @param eig the eig.
-     */
     public JRipplesModuleICDefaultConceptLocation(final JSwingRipplesEIG eig) {
         super(eig);
     }
