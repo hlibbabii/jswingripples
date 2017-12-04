@@ -1,7 +1,5 @@
 package org.incha.core.jswingripples.rules;
 
-import org.apache.commons.logging.Log;
-import org.incha.TestUtils;
 import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.JRipplesModuleRunner;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
@@ -68,52 +66,12 @@ public class JRipplesModuleICImpactAnalysisTest extends JRipplesModuleICTest {
 
     @Test
     public void testApplyRuleAtNode() {
-        /* given */
-
-        PowerMockito.mockStatic(CommonEIGRules.class);
-        PowerMockito.doNothing().when(CommonEIGRules.class);
-        CommonEIGRules.applyRuleToNode(
-                Matchers.<JSwingRipplesEIG>any(),
-                Matchers.<JSwingRipplesEIGNode>any(),
-                Matchers.<String>any(),
-                Matchers.anyInt()
-        );
-
-        /* when */
-        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, 0);
-
-        /* then*/
-        PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.applyRuleToNode(eig, node, EIGStatusMarks.IMPACTED, 0);
-
+        super.testApplyRuleAtNode();
     }
 
     @Test
     public void testApplyRuleAtNodeWithExceptionThrown() throws Exception {
-        /* given */
-        Exception toBeThrown = new RuntimeException();
-        Log log = mock(Log.class);
-
-        JRipplesModuleICImpactAnalysis cp
-                = new JRipplesModuleICImpactAnalysis(eig);
-        TestUtils.setFinalFieldOfParent(cp, log);
-
-
-        PowerMockito.mockStatic(CommonEIGRules.class);
-        PowerMockito.doThrow(toBeThrown)
-                .when(CommonEIGRules.class);
-        CommonEIGRules.applyRuleToNode(
-                Matchers.<JSwingRipplesEIG>any(),
-                Matchers.<JSwingRipplesEIGNode>any(),
-                Matchers.<String>any(),
-                Matchers.anyInt()
-        );
-
-        /* when */
-        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, 0);
-
-        /* then*/
-        verify(log).error(toBeThrown);
+        super.testApplyRuleAtNodeWithExceptionThrown();
     }
 
     @Test

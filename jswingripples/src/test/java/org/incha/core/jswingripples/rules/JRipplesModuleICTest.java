@@ -1,12 +1,15 @@
 package org.incha.core.jswingripples.rules;
 
+import org.apache.commons.logging.Log;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.incha.TestUtils;
 import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.ui.jripples.EIGStatusMarks;
+import org.mockito.Matchers;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,6 +21,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 public abstract class JRipplesModuleICTest {
     protected AtomicInteger counter;
@@ -32,6 +36,47 @@ public abstract class JRipplesModuleICTest {
     protected Verification assignMarkAndNodeToNodeAndParentsVerification;
     protected Verification nothingIsCalledVerification;
     protected Verification applyRuleToNodeVerification;
+
+    protected void testApplyRuleAtNode() {
+        /* given */
+
+        PowerMockito.mockStatic(CommonEIGRules.class);
+
+        /* when */
+        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, 0);
+
+        /* then*/
+        PowerMockito.verifyStatic(CommonEIGRules.class);
+        CommonEIGRules.applyRuleToNode(eig, node, EIGStatusMarks.IMPACTED, 0);
+
+    }
+
+    protected void testApplyRuleAtNodeWithExceptionThrown() throws Exception {
+        /* given */
+        Exception toBeThrown = new RuntimeException();
+        Log log = mock(Log.class);
+
+        JRipplesModuleICImpactAnalysis cp
+                = new JRipplesModuleICImpactAnalysis(eig);
+        TestUtils.setFinalFieldOfParent(cp, log);
+
+
+        PowerMockito.mockStatic(CommonEIGRules.class);
+        PowerMockito.doThrow(toBeThrown)
+                .when(CommonEIGRules.class);
+        CommonEIGRules.applyRuleToNode(
+                Matchers.<JSwingRipplesEIG>any(),
+                Matchers.<JSwingRipplesEIGNode>any(),
+                Matchers.<String>any(),
+                Matchers.anyInt()
+        );
+
+        /* when */
+        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, 0);
+
+        /* then*/
+        verify(log).error(toBeThrown);
+    }
 
     public static abstract class Verification {
         public abstract void verify(String rule);
