@@ -192,29 +192,29 @@ public class JRipplesModuleICChangePropagationTest extends JRipplesModuleICTest 
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithVisitedContinueRule() {
-        testApplyRuleAtNodeWith4Params(EIGStatusMarks.VISITED_CONTINUE,
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED_CONTINUE,
                 assignMarkAndAnnotationToNodeAndNeighborVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithVisitedRule() {
-        testApplyRuleAtNodeWith4Params(EIGStatusMarks.VISITED, applyRuleToNodeAndAnnotationToNodeAndNeighbourVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED, applyRuleToNodeAndAnnotationToNodeAndNeighbourVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithLocatedRule() {
-        testApplyRuleAtNodeWith4Params(EIGStatusMarks.LOCATED,
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.LOCATED,
                 nothingIsCalledVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithImpactedRuleShouldDoNothing() {
-        testApplyRuleAtNodeWith4Params(EIGStatusMarks.IMPACTED,
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.IMPACTED,
                 nothingIsCalledVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithChangedRule() {
-        testApplyRuleAtNodeWith4Params(EIGStatusMarks.CHANGED, assignMarkAndAnnotationToNodeAndNeighborVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.CHANGED, assignMarkAndAnnotationToNodeAndNeighborVerification);
     }
 }

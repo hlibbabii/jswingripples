@@ -78,32 +78,32 @@ public class JRipplesModuleICDefaultConceptLocationTest extends JRipplesModuleIC
 
     @Test
     public void testApplyRuleAtNodeWithLocatedRule() {
-        testApplyRuleAtNodeWith4Params(EIGStatusMarks.LOCATED, assignMarkAndNodeToNodeAndParentsVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.LOCATED, assignMarkAndNodeToNodeAndParentsVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithImpactedRuleShouldDoNothing() {
-        testApplyRuleAtNodeWith4Params(EIGStatusMarks.IMPACTED, nothingIsCalledVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.IMPACTED, nothingIsCalledVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithVisitedContinueRule() {
-        testApplyRuleAtNodeWith4Params(EIGStatusMarks.VISITED_CONTINUE, assignMarkToNodeAndNeighborAndNeverAnnotationVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED_CONTINUE, assignMarkToNodeAndNeighborAndNeverAnnotationVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithVisitedRule() {
-        testApplyRuleAtNodeWith4Params(EIGStatusMarks.VISITED, applyRuleToNodeVArification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED, applyRuleToNodeVArification);
     }
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithLocatedRule() {
-        testApplyRuleAtNodeWith4Params(EIGStatusMarks.LOCATED, assignMarkAndNodeToNodeAndParentsVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.LOCATED, assignMarkAndNodeToNodeAndParentsVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithImpactedRuleShouldDoNothing() {
-        testApplyRuleAtNodeWith4Params(EIGStatusMarks.IMPACTED, nothingIsCalledVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.IMPACTED, nothingIsCalledVerification);
     }
 
 }

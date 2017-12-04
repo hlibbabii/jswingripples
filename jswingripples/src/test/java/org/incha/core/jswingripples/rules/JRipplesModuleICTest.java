@@ -141,7 +141,7 @@ public abstract class JRipplesModuleICTest {
         }
     }
 
-    protected void testApplyRuleAtNodeWith4Params(String rule, Verification verification) {
+    protected void testApplyRuleAtNodeWithTwoNodes(String rule, Verification verification) {
         /* given */
         PowerMockito.mockStatic(CommonEIGRules.class);
 
