@@ -1,5 +1,6 @@
 package org.incha.core.jswingripples.rules;
 
+import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.ui.jripples.EIGStatusMarks;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,21 +13,19 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CommonEIGRules.class)
 public class JRipplesModuleICDefaultConceptLocationTest extends JRipplesModuleICTest {
 
-    private JRipplesModuleICDefaultConceptLocation cp;
+    @Override
+    protected JRipplesICModule getModuleUnderTest() {
+        return new JRipplesModuleICDefaultConceptLocation(eig);
+    }
 
     @Before
     public void setup() {
         super.setup();
-
-        cp = new JRipplesModuleICDefaultConceptLocation(eig);
     }
 
     @Test
@@ -79,85 +78,32 @@ public class JRipplesModuleICDefaultConceptLocationTest extends JRipplesModuleIC
 
     @Test
     public void testApplyRuleAtNodeWithLocatedRule() {
-        /* given */
-        PowerMockito.mockStatic(CommonEIGRules.class);
-
-        /* when */
-        cp.applyRuleAtNode(EIGStatusMarks.LOCATED, node, 1);
-
-        /* then*/
-        PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.assignMarkToNodeAndParents(eig, node, EIGStatusMarks.LOCATED);
-
-        PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.assignAnnotationToNodeAndParents(eq(eig), eq(node), anyString());
+        testApplyRuleAtNodeWith4Params(EIGStatusMarks.LOCATED, assignMarkAndNodeToNodeAndParentsVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithImpactedRuleShouldDoNothing() {
-        /* given */
-        PowerMockito.mockStatic(CommonEIGRules.class);
-
-        /* when */
-        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, 1);
-
-        /* then*/
-        PowerMockito.verifyStatic(CommonEIGRules.class, never());
+        testApplyRuleAtNodeWith4Params(EIGStatusMarks.IMPACTED, nothingIsCalledVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithVisitedContinueRule() {
-        /* given */
-        PowerMockito.mockStatic(CommonEIGRules.class);
-
-        /* when */
-        cp.applyRuleAtNode(EIGStatusMarks.VISITED_CONTINUE, node, node2);
-
-        /* then*/
-        PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.NEXT_VISIT);
-
+        testApplyRuleAtNodeWith4Params(EIGStatusMarks.VISITED_CONTINUE, assignMarkToNodeAndNeighborAndNeverAnnotationVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithVisitedRule() {
-        /* given */
-        PowerMockito.mockStatic(CommonEIGRules.class);
-
-        /* when */
-        cp.applyRuleAtNode(EIGStatusMarks.VISITED, node, node2);
-
-        /* then*/
-        PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.applyRuleToNode(eig, node, EIGStatusMarks.VISITED, 0);
+        testApplyRuleAtNodeWith4Params(EIGStatusMarks.VISITED, applyRuleToNodeVArification);
     }
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithLocatedRule() {
-        /* given */
-        PowerMockito.mockStatic(CommonEIGRules.class);
-
-        /* when */
-        cp.applyRuleAtNode(EIGStatusMarks.LOCATED, node, node2);
-
-        /* then*/
-        PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.assignMarkToNodeAndParents(eig, node, EIGStatusMarks.LOCATED);
-
-        PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.assignAnnotationToNodeAndParents(eq(eig), eq(node), anyString());
+        testApplyRuleAtNodeWith4Params(EIGStatusMarks.LOCATED, assignMarkAndNodeToNodeAndParentsVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithImpactedRuleShouldDoNothing() {
-        /* given */
-        PowerMockito.mockStatic(CommonEIGRules.class);
-
-        /* when */
-        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, node2);
-
-        /* then*/
-        PowerMockito.verifyStatic(CommonEIGRules.class, never());
+        testApplyRuleAtNodeWith4Params(EIGStatusMarks.IMPACTED, nothingIsCalledVerification);
     }
 
 }
