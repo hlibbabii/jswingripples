@@ -110,6 +110,7 @@ public abstract class JRipplesModuleICTest {
         applyRuleToNodeVArification = new Verification() {
             @Override
             public void verify(String rule) {
+                PowerMockito.verifyStatic(CommonEIGRules.class);
                 CommonEIGRules.applyRuleToNode(eig, node, rule, 0);
             }
         };
