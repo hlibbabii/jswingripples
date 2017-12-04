@@ -80,6 +80,7 @@ public abstract class JRipplesModuleICTest {
 
     public static abstract class Verification {
         public abstract void verify(String rule);
+
         public Verification withGranularity(int granularity) {
             throw new UnsupportedOperationException();
         }

@@ -158,21 +158,25 @@ public class JRipplesModuleICImpactAnalysisTest extends JRipplesModuleICTest {
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodesWithVisitedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED, applyRuleToNodeVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED,
+                applyRuleToNodeVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodesWithLocatedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.LOCATED, nothingIsCalledVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.LOCATED,
+                nothingIsCalledVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodesWithImpactedRuleShouldDoNothing() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.IMPACTED, assignMarkToNodeAndNeighborAndNeverAnnotationVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.IMPACTED,
+                assignMarkToNodeAndNeighborAndNeverAnnotationVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodesWithChangedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.CHANGED, nothingIsCalledVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.CHANGED,
+                nothingIsCalledVerification);
     }
 }

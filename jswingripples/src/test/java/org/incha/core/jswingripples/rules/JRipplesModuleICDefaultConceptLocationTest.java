@@ -62,32 +62,38 @@ public class JRipplesModuleICDefaultConceptLocationTest extends JRipplesModuleIC
 
     @Test
     public void testApplyRuleAtNodeWithLocatedRule() {
-        testApplyRuleAtNodeWithGranularity(EIGStatusMarks.LOCATED, assignMarkAndNodeToNodeAndParentsVerification);
+        testApplyRuleAtNodeWithGranularity(EIGStatusMarks.LOCATED,
+                assignMarkAndNodeToNodeAndParentsVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithImpactedRuleShouldDoNothing() {
-        testApplyRuleAtNodeWithGranularity(EIGStatusMarks.IMPACTED, nothingIsCalledVerification);
+        testApplyRuleAtNodeWithGranularity(EIGStatusMarks.IMPACTED,
+                nothingIsCalledVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithVisitedContinueRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED_CONTINUE, assignMarkToNodeAndNeighborAndNeverAnnotationVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED_CONTINUE,
+                assignMarkToNodeAndNeighborAndNeverAnnotationVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithVisitedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED, applyRuleToNodeVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED,
+                applyRuleToNodeVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithLocatedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.LOCATED, assignMarkAndNodeToNodeAndParentsVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.LOCATED,
+                assignMarkAndNodeToNodeAndParentsVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithImpactedRule_ShouldDoNothing() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.IMPACTED, nothingIsCalledVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.IMPACTED,
+                nothingIsCalledVerification);
     }
 
 }
