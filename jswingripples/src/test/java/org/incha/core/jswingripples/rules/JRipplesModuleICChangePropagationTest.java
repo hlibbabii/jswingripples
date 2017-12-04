@@ -198,7 +198,8 @@ public class JRipplesModuleICChangePropagationTest extends JRipplesModuleICTest 
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithVisitedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED, applyRuleToNodeAndAnnotationToNodeAndNeighbourVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED,
+                applyRuleToNodeAndAnnotationToNodeAndNeighbourVerification);
     }
 
     @Test
@@ -215,6 +216,7 @@ public class JRipplesModuleICChangePropagationTest extends JRipplesModuleICTest 
 
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithChangedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.CHANGED, assignMarkAndAnnotationToNodeAndNeighborVerification);
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.CHANGED,
+                assignMarkAndAnnotationToNodeAndNeighborVerification);
     }
 }

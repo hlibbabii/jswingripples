@@ -5,7 +5,6 @@ import org.incha.ui.jripples.EIGStatusMarks;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -51,39 +50,24 @@ public class JRipplesModuleICDefaultConceptLocationTest extends JRipplesModuleIC
 
     @Test
     public void testApplyRuleAtNodeWithVisitedContinueRule() {
-        /* given */
-        PowerMockito.mockStatic(CommonEIGRules.class);
-
-        /* when */
-        cp.applyRuleAtNode(EIGStatusMarks.VISITED_CONTINUE, node, 1);
-
-        /* then*/
-        PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.applyRuleToNode(eig, node, EIGStatusMarks.VISITED_CONTINUE, 1);
-
+        testApplyRuleAtNodeWithGranularity(EIGStatusMarks.VISITED_CONTINUE,
+                applyRuleToNodeVArification.withGranularity(1));
     }
 
     @Test
     public void testApplyRuleAtNodeWithVisitedRule() {
-        /* given */
-        PowerMockito.mockStatic(CommonEIGRules.class);
-
-        /* when */
-        cp.applyRuleAtNode(EIGStatusMarks.VISITED, node, 1);
-
-        /* then*/
-        PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.applyRuleToNode(eig, node, EIGStatusMarks.VISITED, 0);
+        testApplyRuleAtNodeWithGranularity(EIGStatusMarks.VISITED,
+                applyRuleToNodeVArification.withGranularity(0));
     }
 
     @Test
     public void testApplyRuleAtNodeWithLocatedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.LOCATED, assignMarkAndNodeToNodeAndParentsVerification);
+        testApplyRuleAtNodeWithGranularity(EIGStatusMarks.LOCATED, assignMarkAndNodeToNodeAndParentsVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithImpactedRuleShouldDoNothing() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.IMPACTED, nothingIsCalledVerification);
+        testApplyRuleAtNodeWithGranularity(EIGStatusMarks.IMPACTED, nothingIsCalledVerification);
     }
 
     @Test

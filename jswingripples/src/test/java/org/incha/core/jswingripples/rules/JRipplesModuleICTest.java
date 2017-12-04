@@ -35,6 +35,9 @@ public abstract class JRipplesModuleICTest {
 
     public static abstract class Verification {
         public abstract void verify(String rule);
+        public Verification withGranularity(int granularity) {
+            throw new UnsupportedOperationException();
+        }
     }
 
     protected abstract JRipplesICModule getModuleUnderTest();
@@ -108,10 +111,18 @@ public abstract class JRipplesModuleICTest {
         };
 
         applyRuleToNodeVArification = new Verification() {
+            private int granularity = 0;
+
             @Override
             public void verify(String rule) {
                 PowerMockito.verifyStatic(CommonEIGRules.class);
-                CommonEIGRules.applyRuleToNode(eig, node, rule, 0);
+                CommonEIGRules.applyRuleToNode(eig, node, rule, granularity);
+            }
+
+            @Override
+            public Verification withGranularity(int granularity) {
+                this.granularity = granularity;
+                return this;
             }
         };
     }
@@ -148,6 +159,17 @@ public abstract class JRipplesModuleICTest {
 
         /* when */
         cp.applyRuleAtNode(rule, node, node2);
+
+        /* then*/
+        verification.verify(rule);
+    }
+
+    protected void testApplyRuleAtNodeWithGranularity(String rule, Verification verification) {
+        /* given */
+        PowerMockito.mockStatic(CommonEIGRules.class);
+
+        /* when */
+        cp.applyRuleAtNode(rule, node, 1);
 
         /* then*/
         verification.verify(rule);
