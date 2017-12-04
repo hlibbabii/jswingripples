@@ -193,28 +193,28 @@ public class JRipplesModuleICImpactAnalysisTest extends JRipplesModuleICTest {
     }
 
     @Test
-    public void testApplyRuleAtNodeWith4ParamsWithVisitedContinueRule() {
+    public void testApplyRuleAtNodeWithTwoNodesWithVisitedContinueRule() {
         testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED_CONTINUE,
                 assignMarkToNodeAndNeighborAndNeverAnnotationVerification);
     }
 
     @Test
-    public void testApplyRuleAtNodeWith4ParamsWithVisitedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED, applyRuleToNodeVArification);
+    public void testApplyRuleAtNodeWithTwoNodesWithVisitedRule() {
+        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED, applyRuleToNodeVerification);
     }
 
     @Test
-    public void testApplyRuleAtNodeWith4ParamsWithLocatedRule() {
+    public void testApplyRuleAtNodeWithTwoNodesWithLocatedRule() {
         testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.LOCATED, nothingIsCalledVerification);
     }
 
     @Test
-    public void testApplyRuleAtNodeWith4ParamsWithImpactedRuleShouldDoNothing() {
+    public void testApplyRuleAtNodeWithTwoNodesWithImpactedRuleShouldDoNothing() {
         testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.IMPACTED, assignMarkToNodeAndNeighborAndNeverAnnotationVerification);
     }
 
     @Test
-    public void testApplyRuleAtNodeWith4ParamsWithChangedRule() {
+    public void testApplyRuleAtNodeWithTwoNodesWithChangedRule() {
         testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.CHANGED, nothingIsCalledVerification);
     }
 }

@@ -31,7 +31,7 @@ public abstract class JRipplesModuleICTest {
     protected Verification applyRuleToNodeAndAnnotationToNodeAndNeighbourVerification;
     protected Verification assignMarkAndNodeToNodeAndParentsVerification;
     protected Verification nothingIsCalledVerification;
-    protected Verification applyRuleToNodeVArification;
+    protected Verification applyRuleToNodeVerification;
 
     public static abstract class Verification {
         public abstract void verify(String rule);
@@ -110,7 +110,7 @@ public abstract class JRipplesModuleICTest {
             }
         };
 
-        applyRuleToNodeVArification = new Verification() {
+        applyRuleToNodeVerification = new Verification() {
             private int granularity = 0;
 
             @Override
