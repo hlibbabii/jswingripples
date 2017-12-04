@@ -1,8 +1,7 @@
 package org.incha.core.jswingripples.rules;
 
-import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
-import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.ui.jripples.EIGStatusMarks;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -15,17 +14,23 @@ import java.util.LinkedHashSet;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CommonEIGRules.class)
-public class JRipplesModuleICDefaultConceptLocationTest {
+public class JRipplesModuleICDefaultConceptLocationTest extends JRipplesModuleICTest {
+
+    private JRipplesModuleICDefaultConceptLocation cp;
+
+    @Before
+    public void setup() {
+        super.setup();
+
+        cp = new JRipplesModuleICDefaultConceptLocation(eig);
+    }
+
     @Test
     public void getAvailableRulesForMark() throws Exception {
-        JRipplesModuleICDefaultConceptLocation cp
-                = new JRipplesModuleICDefaultConceptLocation(null);
-
         assertEquals(null, cp.getAvailableRulesForMark(null));
         assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.BLANK));
         assertEquals(new LinkedHashSet<>(Arrays.asList(
@@ -48,12 +53,6 @@ public class JRipplesModuleICDefaultConceptLocationTest {
     @Test
     public void testApplyRuleAtNodeWithVisitedContinueRule() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICDefaultConceptLocation cp
-                = new JRipplesModuleICDefaultConceptLocation(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
@@ -68,12 +67,6 @@ public class JRipplesModuleICDefaultConceptLocationTest {
     @Test
     public void testApplyRuleAtNodeWithVisitedRule() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICDefaultConceptLocation cp
-                = new JRipplesModuleICDefaultConceptLocation(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
@@ -87,12 +80,6 @@ public class JRipplesModuleICDefaultConceptLocationTest {
     @Test
     public void testApplyRuleAtNodeWithLocatedRule() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICDefaultConceptLocation cp
-                = new JRipplesModuleICDefaultConceptLocation(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
@@ -109,12 +96,6 @@ public class JRipplesModuleICDefaultConceptLocationTest {
     @Test
     public void testApplyRuleAtNodeWithImpactedRuleShouldDoNothing() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICDefaultConceptLocation cp
-                = new JRipplesModuleICDefaultConceptLocation(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
@@ -127,13 +108,6 @@ public class JRipplesModuleICDefaultConceptLocationTest {
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithVisitedContinueRule() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICDefaultConceptLocation cp
-                = new JRipplesModuleICDefaultConceptLocation(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
@@ -148,13 +122,6 @@ public class JRipplesModuleICDefaultConceptLocationTest {
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithVisitedRule() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICDefaultConceptLocation cp
-                = new JRipplesModuleICDefaultConceptLocation(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
@@ -168,13 +135,6 @@ public class JRipplesModuleICDefaultConceptLocationTest {
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithLocatedRule() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICDefaultConceptLocation cp
-                = new JRipplesModuleICDefaultConceptLocation(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
@@ -191,13 +151,6 @@ public class JRipplesModuleICDefaultConceptLocationTest {
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithImpactedRuleShouldDoNothing() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICDefaultConceptLocation cp
-                = new JRipplesModuleICDefaultConceptLocation(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */

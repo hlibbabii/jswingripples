@@ -19,7 +19,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
@@ -35,15 +34,18 @@ import static org.mockito.Mockito.when;
 @PrepareForTest(CommonEIGRules.class)
 public class JRipplesModuleICImpactAnalysisTest extends JRipplesModuleICTest {
 
+    private JRipplesModuleICImpactAnalysis cp
+            = new JRipplesModuleICImpactAnalysis(eig);
+
     @Before
     public void setup() {
-        counter = new AtomicInteger(0);
+        super.setup();
+
+        cp = new JRipplesModuleICImpactAnalysis(eig);
     }
 
     @Test
     public void getAvailableRulesForMark() throws Exception {
-        JRipplesModuleICImpactAnalysis cp
-                = new JRipplesModuleICImpactAnalysis(null);
 
         assertEquals(null, cp.getAvailableRulesForMark(null));
         assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.BLANK));
@@ -68,11 +70,6 @@ public class JRipplesModuleICImpactAnalysisTest extends JRipplesModuleICTest {
     @Test
     public void testApplyRuleAtNode() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICImpactAnalysis cp
-                = new JRipplesModuleICImpactAnalysis(eig);
 
         PowerMockito.mockStatic(CommonEIGRules.class);
         PowerMockito.doNothing().when(CommonEIGRules.class);
@@ -95,8 +92,6 @@ public class JRipplesModuleICImpactAnalysisTest extends JRipplesModuleICTest {
     @Test
     public void testApplyRuleAtNodeWithExceptionThrown() throws Exception {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
         Exception toBeThrown = new RuntimeException();
         Log log = mock(Log.class);
 
@@ -198,23 +193,9 @@ public class JRipplesModuleICImpactAnalysisTest extends JRipplesModuleICTest {
         verify(mockedHistory).clear();
     }
 
-    private void assertNodesEquals(String[] marks, JSwingRipplesEIGNode[] nodes) {
-        assertEquals(marks.length, nodes.length);
-        for (int i = 0; i < marks.length; i++) {
-            assertEquals(marks[i], nodes[i].getMark());
-        }
-    }
-
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithVisitedContinueRule() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICImpactAnalysis cp
-                = new JRipplesModuleICImpactAnalysis(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
@@ -234,13 +215,6 @@ public class JRipplesModuleICImpactAnalysisTest extends JRipplesModuleICTest {
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithVisitedRule() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICImpactAnalysis cp
-                = new JRipplesModuleICImpactAnalysis(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
@@ -254,13 +228,6 @@ public class JRipplesModuleICImpactAnalysisTest extends JRipplesModuleICTest {
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithLocatedRule() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICImpactAnalysis cp
-                = new JRipplesModuleICImpactAnalysis(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
@@ -273,13 +240,6 @@ public class JRipplesModuleICImpactAnalysisTest extends JRipplesModuleICTest {
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithImpactedRuleShouldDoNothing() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICImpactAnalysis cp
-                = new JRipplesModuleICImpactAnalysis(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
@@ -297,13 +257,6 @@ public class JRipplesModuleICImpactAnalysisTest extends JRipplesModuleICTest {
     @Test
     public void testApplyRuleAtNodeWith4ParamsWithChangedRule() {
         /* given */
-        JSwingRipplesEIG eig = mock(JSwingRipplesEIG.class);
-        JSwingRipplesEIGNode node = mock(JSwingRipplesEIGNode.class);
-        JSwingRipplesEIGNode node2 = mock(JSwingRipplesEIGNode.class);
-
-        JRipplesModuleICImpactAnalysis cp
-                = new JRipplesModuleICImpactAnalysis(eig);
-
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
