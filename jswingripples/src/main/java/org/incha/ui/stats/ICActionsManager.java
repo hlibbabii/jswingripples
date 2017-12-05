@@ -35,7 +35,7 @@ public final class ICActionsManager {
         final String oldMark=node.getMark();
         final JRipplesICModule incremantealChangeModule
             = ModuleConfiguration.createIncrementalChangeModule(cfg.getIncrementalChange(), node.getEig());
-        final Set<String> newPossibleMarks=incremantealChangeModule.GetAvailableRulesForMark(oldMark);
+        final Set<String> newPossibleMarks=incremantealChangeModule.getAvailableRulesForMark(oldMark);
 
         if (newPossibleMarks !=null) {
 

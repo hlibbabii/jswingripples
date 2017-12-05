@@ -2,6 +2,8 @@ package org.incha;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLDecoder;
 
@@ -57,5 +59,14 @@ public final class TestUtils {
             }
         }
         return null;
+    }
+
+    public static void setFinalFieldOfParent(Object where, Object what) throws Exception {
+        Field logField = where.getClass().getSuperclass().getDeclaredField("log");
+        logField.setAccessible(true);
+        Field modifiersField = Field.class.getDeclaredField("modifiers");
+        modifiersField.setAccessible(true);
+        modifiersField.setInt(logField, logField.getModifiers() & ~Modifier.FINAL);
+        logField.set(where, what);
     }
 }

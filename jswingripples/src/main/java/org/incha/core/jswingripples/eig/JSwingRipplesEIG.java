@@ -91,7 +91,7 @@ import org.incha.core.jswingripples.eig.history.History;
  * @see JSwingRipplesEIGEdge
  *
  */
-public final class JSwingRipplesEIG implements Cloneable{
+public class JSwingRipplesEIG implements Cloneable{
 	private Map<IMember, JSwingRipplesEIGNode> nodes;
 	private Set<JSwingRipplesEIGNode> topNodes;
 	private Map<JSwingRipplesEIGNode, HashSet<JSwingRipplesEIGNode>> members; //Node -> Set of members
