@@ -10,6 +10,7 @@ import org.incha.ui.jripples.JRipplesDefaultModulesConstants;
 import org.incha.ui.stages.AnalysisStage;
 import org.incha.ui.stages.ChangePropagationStage;
 import org.incha.ui.stages.ConceptLocationStage;
+import org.incha.ui.stages.DependencyBuilderStage;
 import org.incha.ui.stages.ImpactAnalysisStage;
 import org.slf4j.LoggerFactory;
 
@@ -79,6 +80,7 @@ public class StartAnalysisDialog extends JDialog {
         getContentPane().add(center, BorderLayout.CENTER);
 
         setupAnalysisStagesOrder(
+                DependencyBuilderStage.class,
                 ConceptLocationStage.class,
                 ImpactAnalysisStage.class,
                 ChangePropagationStage.class

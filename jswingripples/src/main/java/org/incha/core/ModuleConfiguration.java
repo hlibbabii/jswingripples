@@ -12,6 +12,7 @@ import org.incha.core.jswingripples.rules.JRipplesModuleICConceptLocationRelaxed
 import org.incha.core.jswingripples.rules.JRipplesModuleICDefaultConceptLocation;
 import org.incha.core.jswingripples.rules.JRipplesModuleICImpactAnalysis;
 import org.incha.core.jswingripples.rules.JRipplesModuleICImpactAnalysisRelaxed;
+import org.incha.ui.stats.AnalysisData;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,7 +29,9 @@ public class ModuleConfiguration {
         MODULE_CHANGE_PROPAGATION_RELAXED,
         MODULE_CHANGE_PROPAGATION,
         MODULE_CONCEPT_LOCATION,
-        MODULE_CONCEPT_LOCATION_RELAXED
+        MODULE_CONCEPT_LOCATION_RELAXED,
+
+        MODULE_DEPENDENCY_BUILDER
     }
 
     public static final int MODULE_DEPENDENCY_BUILDER = 0;
@@ -60,16 +63,18 @@ public class ModuleConfiguration {
         return incrementalChange;
     }
 
-    public List<JRipplesModule> buildModules(final JSwingRipplesEIG eig) {
+    public List<JRipplesModule> buildModules(final AnalysisData eig) {
         final List<JRipplesModule> modules = new LinkedList<>();
+        if (eig.analysisModule == AnalysisModule.MODULE_DEPENDENCY_BUILDER) {
+            modules.add(createDependencyBuilderModule(eig.analysisEIG).withPriority(JRipplesModule.Priority.HIGH));
+        } else {
+            modules.add(createIncrementalChangeModule(eig.analysisEIG).withPriority(JRipplesModule.Priority.LOW));
 
-        modules.add(createDependencyBuilderModule(eig).withPriority(JRipplesModule.Priority.HIGH));
-        modules.add(createIncrementalChangeModule(eig).withPriority(JRipplesModule.Priority.LOW));
-
-        //analysis
-        if (isAnalysisDefaultImpactSetConnections()) {
-            modules.add(new JRipplesModuleAnalysisDefaultImpactSetConnections(eig)
-                            .withPriority(JRipplesModule.Priority.LOW));
+            //analysis
+            if (isAnalysisDefaultImpactSetConnections()) {
+                modules.add(new JRipplesModuleAnalysisDefaultImpactSetConnections(eig.analysisEIG)
+                        .withPriority(JRipplesModule.Priority.LOW));
+            }
         }
 
 

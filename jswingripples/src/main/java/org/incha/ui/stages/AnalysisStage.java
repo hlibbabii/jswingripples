@@ -46,14 +46,18 @@ public abstract class AnalysisStage {
                     }
                 }
                 application.enableProceedButton(true);
-                AnalysisData previousAnalysisData = startAnalysisDialog
-                        .createAnalysisData(getAnalysisModule(), eig);
-                startAnalysisCallback.startAnalysis(
-                        previousAnalysisData,
-                        getStageCallback()
-                );
+                startStage();
             }
         };
+    }
+
+    protected void startStage() {
+        AnalysisData previousAnalysisData = startAnalysisDialog
+                .createAnalysisData(getAnalysisModule(), eig);
+        startAnalysisCallback.startAnalysis(
+                previousAnalysisData,
+                getStageCallback()
+        );
     }
 
     protected abstract String getButtonText();
