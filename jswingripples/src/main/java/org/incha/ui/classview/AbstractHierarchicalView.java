@@ -1,7 +1,12 @@
 package org.incha.ui.classview;
 
-import java.awt.Point;
-import java.awt.Rectangle;
+import org.incha.core.JavaProject;
+import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
@@ -9,14 +14,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
-import org.incha.core.JavaProject;
-import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 
 public abstract class AbstractHierarchicalView extends JTable {
     private static final long serialVersionUID = -725916023414871313L;
@@ -62,7 +59,7 @@ public abstract class AbstractHierarchicalView extends JTable {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 if (!SwingUtilities.isRightMouseButton(e)) {
-                    expandOrCollapse(e.getX(), e.getY());
+                    expandOrCollapse(e.getPoint());
                 }
             }
         });
@@ -102,20 +99,17 @@ public abstract class AbstractHierarchicalView extends JTable {
     public ClassTreeDataModel getClassHierarchyModel() {
         return (ClassTreeDataModel) getModel();
     }
-    /**
-     * @param x mouse x coordinate.
-     * @param y mouse y coordinate.
-     */
-    protected void expandOrCollapse(final int x, final int y) {
+
+    protected void expandOrCollapse(Point point) {
         final ClassTreeDataModel model = getClassHierarchyModel();
-        final JSwingRipplesEIGNode m = getSelectedItem(x, y);
+        final JSwingRipplesEIGNode m = getSelectedItem(point);
 
         if(m != null && hasChildren(m)) {
-            int row = rowAtPoint(new Point(x, y));
+            int row = rowAtPoint(point);
             final Rectangle rect = getCellRect(row, 0, true);
-            if (!rect.contains(x, y)
-                    || x < getHierarchyOffset(m)
-                    || x > getHierarchyOffset(m) + 16) {
+            if (!rect.contains(point.x, point.y)
+                    || point.x < getHierarchyOffset(m)
+                    || point.x > getHierarchyOffset(m) + 16) {
                 return;
             }
 
@@ -124,7 +118,7 @@ public abstract class AbstractHierarchicalView extends JTable {
                 final int depth = getHierarchyDepth(m);
                 //collapse node
                 row++;
-                while (row < getRowCount() && depth < getHierarchyDepth(model.getValueAt(row, 0))) {
+                while (row < getRowCount() && depth < getHierarchyDepth(model.getValueAt(row))) {
                     model.removeRow(row);
                 }
             } else {
@@ -138,18 +132,20 @@ public abstract class AbstractHierarchicalView extends JTable {
             repaint();
         }
     }
-    /**
-     * @param x
-     * @param y
-     * @return
-     */
-    protected JSwingRipplesEIGNode getSelectedItem(final int x, final int y) {
-        final int row = rowAtPoint(new Point(x, y));
+
+    protected JSwingRipplesEIGNode getSelectedItem(Point point) {
+        final int row = rowAtPoint(point);
         if (row < 0) {
             return null;
         }
         final ClassTreeDataModel model = getClassHierarchyModel();
-        return model.getValueAt(row, 0);
+        return model.getValueAt(row);
+    }
+
+    protected boolean isCommentColumn(Point point) {
+        final int columnIndex = columnAtPoint(point);
+        ClassTreeDataModel model = (ClassTreeDataModel) getModel();
+        return model.isCommentColumn(columnIndex);
     }
     /**
      * @param member

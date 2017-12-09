@@ -26,7 +26,7 @@ public class ClassTreeRenderer extends AbstractMemberRenderer {
     protected void renderOtherColumn(final JLabel label, final JSwingRipplesEIGNode node,
             final int column) {
         final String mark = node.getMark();
-        final String anottation=node.getAnnottation();
+
         switch (column) {
             case 0:
             break;
@@ -56,11 +56,6 @@ public class ClassTreeRenderer extends AbstractMemberRenderer {
                     label.setText("");
                 }
             break;
-            /*This column is for the comments*/
-            case 5:
-            	if(anottation!=null){
-            		label.setText(anottation);
-            	}
         }
     }
 

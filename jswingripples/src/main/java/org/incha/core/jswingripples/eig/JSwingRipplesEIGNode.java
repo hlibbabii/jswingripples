@@ -195,12 +195,27 @@ public  class JSwingRipplesEIGNode {
     	if(annotation==null)this.annotation="";
     	return annotation;
     }
+
     /**
-     * set the annotation.
+     * Sets the annotation if there is no annotation yet or existing annotation is empty String.
+	 * This behaviour is implemented in order not to allow to set a standard annotation if
+	 * the custom one was already set by the user.
+	 * Use {@link org.incha.core.jswingripples.eig.JSwingRipplesEIGNode#setAnottationForce(String)}
+	 * to overwrite existing annotation
+	 *
+	 * @return {@code true}, if the annotation was set by this method, {@code false} otherwise
      */
-    public void setAnottation(String annotationSupport){
-    	this.annotation=annotationSupport;
+    public boolean setAnottation(String annotationSupport){
+    	if (annotation == null || annotation.isEmpty()) {
+			this.annotation = annotationSupport;
+			return true;
+		}
+		return false;
     }
+
+	public void setAnottationForce(String value) {
+		annotation = value;
+	}
 
     /**
 	 * associate probability value with the node. Typically, probabilities are
