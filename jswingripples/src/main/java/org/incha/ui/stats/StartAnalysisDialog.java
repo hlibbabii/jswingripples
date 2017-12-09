@@ -1,10 +1,18 @@
 package org.incha.ui.stats;
 
-import org.incha.core.*;
+import org.incha.core.JavaProject;
+import org.incha.core.JavaProjectsModel;
+import org.incha.core.ModuleConfiguration;
+import org.incha.core.Statistics;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.parser.InteractiveTask;
-import org.incha.ui.JSwingRipplesApplication;
 import org.incha.ui.jripples.JRipplesDefaultModulesConstants;
+import org.incha.ui.stages.AnalysisStage;
+import org.incha.ui.stages.ChangePropagationStage;
+import org.incha.ui.stages.ConceptLocationStage;
+import org.incha.ui.stages.DependencyBuilderStage;
+import org.incha.ui.stages.ImpactAnalysisStage;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -12,14 +20,12 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,9 +33,12 @@ import java.util.logging.Logger;
 
 public class StartAnalysisDialog extends JDialog {
     private static final long serialVersionUID = 6788138046337076311L;
+    private final org.slf4j.Logger log = LoggerFactory.getLogger(getClass());
+
     private final JTextField classNameTextField = new JTextField(30);
     private final JButton startConceptLocationButton = new JButton("Start Concept Location");
     private final StartAnalysisAction startAnalysisCallback;
+    private AnalysisStage firstAnalysisStage;
     private File mainClassFile;
     private JavaProject project;
     final Window ownerWindow;
@@ -70,22 +79,25 @@ public class StartAnalysisDialog extends JDialog {
 
         getContentPane().add(center, BorderLayout.CENTER);
 
+        setupAnalysisStagesOrder(
+                DependencyBuilderStage.class,
+                ConceptLocationStage.class,
+                ImpactAnalysisStage.class,
+                ChangePropagationStage.class
+        );
+        firstAnalysisStage.setEig(null);
         //south pane
         startConceptLocationButton.setEnabled(false);
+        startConceptLocationButton.addActionListener(firstAnalysisStage.getButtonListener());
+
         final JPanel south = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        startConceptLocationButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                doOk();
-            }
-        });
         south.add(startConceptLocationButton);
 
         final JButton cancel = new JButton("Cancel");
         cancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                doCancel();
+                dispose();
             }
         });
         south.add(cancel);
@@ -97,6 +109,29 @@ public class StartAnalysisDialog extends JDialog {
         }
         //set up default values
         projectChanged();
+    }
+
+    private void setupAnalysisStagesOrder(Class<? extends AnalysisStage>... analysisStagesClasses) {
+        if (analysisStagesClasses.length == 0) {
+            log.warn("No analysis stages specified");
+        }
+        try {
+            AnalysisStage nextStage = null;
+            for (int i = analysisStagesClasses.length -1; i >= 0; i--) {
+                nextStage = analysisStagesClasses[i]
+                        .getConstructor(StartAnalysisDialog.class, AnalysisStage.class)
+                        .newInstance(this, nextStage);
+            }
+            firstAnalysisStage = nextStage;
+            if (firstAnalysisStage != null) {
+                firstAnalysisStage.setFirstStage();
+            }
+        } catch (InstantiationException |
+                NoSuchMethodException |
+                InvocationTargetException |
+                IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected void projectChanged() {
@@ -150,53 +185,6 @@ public class StartAnalysisDialog extends JDialog {
         return panel;
     }
 
-    protected void doCancel() {
-        dispose();
-    }
-
-    protected void doOk() {
-        if(JSwingRipplesApplication.getInstance().isAnotherProjectOpen()){
-            String[] options = new String[]{"Yes","Cancel"};
-            int result = JOptionPane.showOptionDialog(this,
-                    new String[]{"There is another analysis in progress.\n " +
-                            "Are you sure you want to begin a start a new one? " +
-                            "All progress from the last analysis will be lost."},
-                    "Another analysis in progress",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE,
-                    null,
-                    options,
-                    options[0]);
-            if(result == JOptionPane.YES_OPTION){
-                beginConceptLocation();
-            }
-        } else {
-            beginConceptLocation();
-        }
-
-    }
-
-    private void beginConceptLocation(){
-        dispose();
-        JSwingRipplesApplication.getInstance().enableProceedButton(true);
-        JSwingRipplesApplication.getInstance().setProceedButtonText("Proceed to Impact Analysis");
-        startAnalysisCallback.startAnalysis(
-            createConceptLocationData(), new StartAnalysisAction.SuccessfulAnalysisAction() {
-                @Override
-                public void execute(ModuleConfiguration config, final JSwingRipplesEIG eig) {
-                JSwingRipplesApplication.getInstance().showProceedButton();
-                StatisticsManager.getInstance().addStatistics(config, eig);
-                JSwingRipplesApplication.getInstance().setProceedButtonListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                    JSwingRipplesApplication.getInstance().enableProceedButton(false);
-                    startAnalysisCallback.startAnalysis(createImpactAnalysisData(eig), createImpactAnalysisCallback());
-                    }
-                });
-                }
-            });
-    }
-    
     protected void setClassName(final String classNameParam, String fileName){
         mainClassFile = new File(fileName);
         classNameTextField.setText(classNameParam);
@@ -294,61 +282,22 @@ public class StartAnalysisDialog extends JDialog {
         });
         return browseButton;
     }
-    private AnalysisData createConceptLocationData() {
+
+    public AnalysisData createAnalysisData(ModuleConfiguration.AnalysisModule analysisModule,
+                                            JSwingRipplesEIG previousStageEIG) {
+        JSwingRipplesEIG eig = previousStageEIG != null ?
+                previousStageEIG :
+                new JSwingRipplesEIG(JavaProjectsModel.getInstance().getProject((String) projects.getSelectedItem()));
+
         return new AnalysisData(
                 (String) projects.getSelectedItem(),
                 mainClassFile,
                 (String) dependencyGraph.getSelectedItem(),
-                ModuleConfiguration.AnalysisModule.MODULE_CONCEPT_LOCATION,
-                new JSwingRipplesEIG(JavaProjectsModel.getInstance().getProject((String) projects.getSelectedItem())));
+                analysisModule,
+                eig);
     }
 
-    private AnalysisData createImpactAnalysisData(JSwingRipplesEIG postConceptLocationEIG) {
-        return new AnalysisData(
-                (String) projects.getSelectedItem(),
-                mainClassFile,
-                (String) dependencyGraph.getSelectedItem(),
-                ModuleConfiguration.AnalysisModule.MODULE_IMPACT_ANALYSIS,
-                postConceptLocationEIG);
-    }
-
-    private AnalysisData createChangePropagationData(JSwingRipplesEIG postImpactAnalysisEIG) {
-        return new AnalysisData(
-                (String) projects.getSelectedItem(),
-                mainClassFile,
-                (String) dependencyGraph.getSelectedItem(),
-                ModuleConfiguration.AnalysisModule.MODULE_CHANGE_PROPAGATION,
-                postImpactAnalysisEIG);
-    }
-
-    private StartAnalysisAction.SuccessfulAnalysisAction createChangePropagationCallback(){
-        return new StartAnalysisAction.SuccessfulAnalysisAction() {
-            @Override
-            public void execute(ModuleConfiguration config, JSwingRipplesEIG eig) {
-                JSwingRipplesApplication.getInstance().enableProceedButton(true);
-                JSwingRipplesApplication.getInstance().hideProceedButton();
-                JSwingRipplesApplication.getInstance().resetProceedButton();
-                JSwingRipplesApplication.getInstance().refreshViewArea();
-            }
-        };
-    }
-
-    private StartAnalysisAction.SuccessfulAnalysisAction createImpactAnalysisCallback(){
-        return new StartAnalysisAction.SuccessfulAnalysisAction() {
-            @Override
-            public void execute(ModuleConfiguration config,final JSwingRipplesEIG eig) {
-                JSwingRipplesApplication.getInstance().enableProceedButton(true);
-                JSwingRipplesApplication.getInstance().refreshViewArea();
-                JSwingRipplesApplication.getInstance().setProceedButtonText("Proceed To Change Propagation");
-                JSwingRipplesApplication.getInstance().setProceedButtonListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        JSwingRipplesApplication.getInstance().enableProceedButton(false);
-                        startAnalysisCallback.startAnalysis(
-                                createChangePropagationData(eig), createChangePropagationCallback());
-                    }
-                });
-            }
-        };
+    public StartAnalysisAction getStartAnalysisCallback() {
+        return startAnalysisCallback;
     }
 }

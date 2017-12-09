@@ -6,7 +6,6 @@ import org.incha.compiler.dom.JavaDomBuilder;
 import org.incha.core.JavaProject;
 import org.incha.core.JavaProjectsModel;
 import org.incha.core.ModuleConfiguration;
-import org.incha.core.StatisticsManager;
 import org.incha.core.jswingripples.JRipplesModuleRunner;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.search.Indexer;
@@ -74,7 +73,6 @@ public class StartAnalysisAction implements ActionListener {
         }
 
         config.setIncrementalChange(data.analysisModule);
-        config.setAnalysis(ModuleConfiguration.AnalysisModule.MODULE_IMPACT_ANALYSIS);
 
         project.setModuleConfiguration(config);
 
@@ -96,7 +94,7 @@ public class StartAnalysisAction implements ActionListener {
             @Override
             public void runFailure() {
             }
-        }).runModulesWithPriority(config.buildModules(data.analysisEIG));
+        }).runModulesWithPriority(config.buildModules(data));
     }
 
     

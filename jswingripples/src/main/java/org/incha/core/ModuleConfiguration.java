@@ -1,8 +1,5 @@
 package org.incha.core;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.JRipplesModule;
 import org.incha.core.jswingripples.analysis.JRipplesModuleAnalysisDefaultImpactSetConnections;
@@ -15,6 +12,10 @@ import org.incha.core.jswingripples.rules.JRipplesModuleICConceptLocationRelaxed
 import org.incha.core.jswingripples.rules.JRipplesModuleICDefaultConceptLocation;
 import org.incha.core.jswingripples.rules.JRipplesModuleICImpactAnalysis;
 import org.incha.core.jswingripples.rules.JRipplesModuleICImpactAnalysisRelaxed;
+import org.incha.ui.stats.AnalysisData;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 
@@ -23,12 +24,24 @@ import org.incha.core.jswingripples.rules.JRipplesModuleICImpactAnalysisRelaxed;
  */
 public class ModuleConfiguration {
     public enum AnalysisModule{
-        MODULE_IMPACT_ANALYSIS,
-        MODULE_IMPACT_ANALYSIS_RELAXED,
-        MODULE_CHANGE_PROPAGATION_RELAXED,
-        MODULE_CHANGE_PROPAGATION,
-        MODULE_CONCEPT_LOCATION,
-        MODULE_CONCEPT_LOCATION_RELAXED
+        MODULE_IMPACT_ANALYSIS("Impact Analysis"),
+        MODULE_IMPACT_ANALYSIS_RELAXED("Impact Analysis"),
+        MODULE_CHANGE_PROPAGATION_RELAXED("Change Propagation"),
+        MODULE_CHANGE_PROPAGATION("Change Propagation"),
+        MODULE_CONCEPT_LOCATION("Concept Location"),
+        MODULE_CONCEPT_LOCATION_RELAXED("Concept Location"),
+
+        MODULE_DEPENDENCY_BUILDER("Dependency Building");
+
+        AnalysisModule(String formattedName) {
+            this.formattedName = formattedName;
+        }
+
+        private String formattedName;
+
+        public String getFormattedName() {
+            return formattedName;
+        }
     }
 
     public static final int MODULE_DEPENDENCY_BUILDER = 0;
@@ -39,7 +52,6 @@ public class ModuleConfiguration {
 
     private int dependencyGraphModule;
     private AnalysisModule incrementalChange = AnalysisModule.MODULE_CONCEPT_LOCATION;
-    private AnalysisModule analysis;
 
     public ModuleConfiguration() {
         super();
@@ -61,26 +73,18 @@ public class ModuleConfiguration {
         return incrementalChange;
     }
 
-    public void setAnalysis(final AnalysisModule type) {
-        this.analysis = type;
-    }
-    /**
-     * @return the analysis
-     */
-    public AnalysisModule getAnalysis() {
-        return analysis;
-    }
-
-    public List<JRipplesModule> buildModules(final JSwingRipplesEIG eig) {
+    public List<JRipplesModule> buildModules(final AnalysisData eig) {
         final List<JRipplesModule> modules = new LinkedList<>();
+        if (eig.analysisModule == AnalysisModule.MODULE_DEPENDENCY_BUILDER) {
+            modules.add(createDependencyBuilderModule(eig.analysisEIG).withPriority(JRipplesModule.Priority.HIGH));
+        } else {
+            modules.add(createIncrementalChangeModule(eig.analysisEIG).withPriority(JRipplesModule.Priority.LOW));
 
-        modules.add(createDependencyBuilderModule(eig).withPriority(JRipplesModule.Priority.HIGH));
-        modules.add(createIncrementalChangeModule(eig).withPriority(JRipplesModule.Priority.LOW));
-
-        //analysis
-        if (isAnalysisDefaultImpactSetConnections()) {
-            modules.add(new JRipplesModuleAnalysisDefaultImpactSetConnections(eig)
-                            .withPriority(JRipplesModule.Priority.LOW));
+            //analysis
+            if (isAnalysisDefaultImpactSetConnections()) {
+                modules.add(new JRipplesModuleAnalysisDefaultImpactSetConnections(eig.analysisEIG)
+                        .withPriority(JRipplesModule.Priority.LOW));
+            }
         }
 
 
