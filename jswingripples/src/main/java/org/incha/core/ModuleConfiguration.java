@@ -1,8 +1,5 @@
 package org.incha.core;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.JRipplesModule;
 import org.incha.core.jswingripples.analysis.JRipplesModuleAnalysisDefaultImpactSetConnections;
@@ -15,6 +12,9 @@ import org.incha.core.jswingripples.rules.JRipplesModuleICConceptLocationRelaxed
 import org.incha.core.jswingripples.rules.JRipplesModuleICDefaultConceptLocation;
 import org.incha.core.jswingripples.rules.JRipplesModuleICImpactAnalysis;
 import org.incha.core.jswingripples.rules.JRipplesModuleICImpactAnalysisRelaxed;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 
@@ -39,7 +39,6 @@ public class ModuleConfiguration {
 
     private int dependencyGraphModule;
     private AnalysisModule incrementalChange = AnalysisModule.MODULE_CONCEPT_LOCATION;
-    private AnalysisModule analysis;
 
     public ModuleConfiguration() {
         super();
@@ -59,16 +58,6 @@ public class ModuleConfiguration {
 
     public AnalysisModule getIncrementalChange() {
         return incrementalChange;
-    }
-
-    public void setAnalysis(final AnalysisModule type) {
-        this.analysis = type;
-    }
-    /**
-     * @return the analysis
-     */
-    public AnalysisModule getAnalysis() {
-        return analysis;
     }
 
     public List<JRipplesModule> buildModules(final JSwingRipplesEIG eig) {
