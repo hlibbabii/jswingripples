@@ -14,11 +14,6 @@ public class ImpactAnalysisStage extends AnalysisStage {
     }
 
     @Override
-    public String getButtonText() {
-        return "Proceed to Impact Analysis";
-    }
-
-    @Override
     protected StartAnalysisAction.SuccessfulAnalysisAction getStageCallback() {
         return new StartAnalysisAction.SuccessfulAnalysisAction() {
             @Override
@@ -26,7 +21,7 @@ public class ImpactAnalysisStage extends AnalysisStage {
                 nextStage.setEig(eig);
                 application.enableProceedButton(true);
                 application.refreshViewArea();
-                application.setProceedButtonText(nextStage.getButtonText());
+                application.setProceedButtonText("Proceed to " + nextStage.getAnalysisModule().getFormattedName());
                 application.setProceedButtonListener(nextStage.getButtonListener());
             }
         };

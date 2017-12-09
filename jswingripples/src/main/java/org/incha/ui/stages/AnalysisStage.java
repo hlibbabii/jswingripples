@@ -60,7 +60,6 @@ public abstract class AnalysisStage {
         );
     }
 
-    protected abstract String getButtonText();
     protected abstract StartAnalysisAction.SuccessfulAnalysisAction getStageCallback();
     protected abstract ModuleConfiguration.AnalysisModule getAnalysisModule();
 

@@ -14,11 +14,6 @@ public class ChangePropagationStage extends AnalysisStage {
     }
 
     @Override
-    public String getButtonText() {
-        return "Proceed To Change Propagation";
-    }
-
-    @Override
     protected StartAnalysisAction.SuccessfulAnalysisAction getStageCallback() {
         return new StartAnalysisAction.SuccessfulAnalysisAction() {
             @Override

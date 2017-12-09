@@ -15,17 +15,12 @@ public class ConceptLocationStage extends AnalysisStage {
     }
 
     @Override
-    public String getButtonText() {
-        return "Start Concept Location";
-    }
-
-    @Override
     protected StartAnalysisAction.SuccessfulAnalysisAction getStageCallback() {
         return new StartAnalysisAction.SuccessfulAnalysisAction() {
             @Override
             public void execute(ModuleConfiguration config, final JSwingRipplesEIG eig) {
                 nextStage.setEig(eig);
-                application.setProceedButtonText(nextStage.getButtonText());
+                application.setProceedButtonText("Proceed to " + nextStage.getAnalysisModule().getFormattedName());
                 application.showProceedButton();
                 StatisticsManager.getInstance().addStatistics(config, eig);
                 application.setProceedButtonListener(nextStage.getButtonListener());

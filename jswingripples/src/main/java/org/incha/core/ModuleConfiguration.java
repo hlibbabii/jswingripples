@@ -24,14 +24,24 @@ import java.util.List;
  */
 public class ModuleConfiguration {
     public enum AnalysisModule{
-        MODULE_IMPACT_ANALYSIS,
-        MODULE_IMPACT_ANALYSIS_RELAXED,
-        MODULE_CHANGE_PROPAGATION_RELAXED,
-        MODULE_CHANGE_PROPAGATION,
-        MODULE_CONCEPT_LOCATION,
-        MODULE_CONCEPT_LOCATION_RELAXED,
+        MODULE_IMPACT_ANALYSIS("Impact Analysis"),
+        MODULE_IMPACT_ANALYSIS_RELAXED("Impact Analysis"),
+        MODULE_CHANGE_PROPAGATION_RELAXED("Change Propagation"),
+        MODULE_CHANGE_PROPAGATION("Change Propagation"),
+        MODULE_CONCEPT_LOCATION("Concept Location"),
+        MODULE_CONCEPT_LOCATION_RELAXED("Concept Location"),
 
-        MODULE_DEPENDENCY_BUILDER
+        MODULE_DEPENDENCY_BUILDER("Dependency Building");
+
+        AnalysisModule(String formattedName) {
+            this.formattedName = formattedName;
+        }
+
+        private String formattedName;
+
+        public String getFormattedName() {
+            return formattedName;
+        }
     }
 
     public static final int MODULE_DEPENDENCY_BUILDER = 0;

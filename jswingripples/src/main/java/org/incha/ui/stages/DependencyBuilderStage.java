@@ -13,11 +13,6 @@ public class DependencyBuilderStage extends AnalysisStage {
     }
 
     @Override
-    protected String getButtonText() {
-        return "Start Dependency Building";
-    }
-
-    @Override
     protected StartAnalysisAction.SuccessfulAnalysisAction getStageCallback() {
         return new StartAnalysisAction.SuccessfulAnalysisAction() {
             @Override
