@@ -4,9 +4,9 @@ import org.incha.core.ModuleConfiguration;
 import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+import org.incha.core.jswingripples.eig.Mark;
 import org.incha.ui.dependency.OpenWithIDEAction;
 import org.incha.ui.dependency.ShowDependencyAction;
-import org.incha.ui.jripples.EIGStatusMarks;
 import org.incha.ui.jripples.JRipplesViewsConstants;
 
 import javax.swing.*;
@@ -25,15 +25,15 @@ public final class ICActionsManager {
 	    final JPopupMenu popup = new JPopupMenu();
 	    final ModuleConfiguration cfg = node.getEig().getJavaProject().getModuleConfiguration();
 
-        final EIGStatusMarks.Mark oldMark=node.getMark();
+        final Mark oldMark=node.getMark();
         final JRipplesICModule incremantealChangeModule
             = ModuleConfiguration.createIncrementalChangeModule(cfg.getIncrementalChange(), node.getEig());
-        final Set<EIGStatusMarks.Mark> newPossibleMarks=incremantealChangeModule.getAvailableRulesForMark(oldMark);
+        final Set<Mark> newPossibleMarks=incremantealChangeModule.getAvailableRulesForMark(oldMark);
 
         if (newPossibleMarks !=null) {
 
             //2. Create out menu items for changing marks at the current granularity
-            for (final EIGStatusMarks.Mark newMark:newPossibleMarks) {
+            for (final Mark newMark:newPossibleMarks) {
                 final JMenuItem item = new JMenuItem(new ICAction(node, newMark, 0, true, context));
                 popup.add(item);
             }
@@ -52,13 +52,13 @@ public final class ICActionsManager {
 
             for (int i=nodeNesting;i>0;i--) {
                 final JMenu granularitiesManagerTmp = new JMenu("Parent "+" (granularity-"+i+")");
-                for (final EIGStatusMarks.Mark newMark:newPossibleMarks)
+                for (final Mark newMark:newPossibleMarks)
                     granularitiesManagerTmp.add(new ICAction(node, newMark,0-i,true, context));
                 granulrity.add(granularitiesManagerTmp);
             }
             for (int i=0;i<deepestMember;i++) {
                 final JMenu granularitiesManagerTmp = new JMenu("Members"+" (granularity+"+(i+1)+")");
-                for (final EIGStatusMarks.Mark newMark:newPossibleMarks)
+                for (final Mark newMark:newPossibleMarks)
                     granularitiesManagerTmp.add(new ICAction(node, newMark,i+1,true, context));
                 granulrity.add(granularitiesManagerTmp);
             }
@@ -120,13 +120,13 @@ public final class ICActionsManager {
 	}
 
 	public void fillICActionsMenuEdgeLevel(final JPopupMenu manager, final JSwingRipplesEIGNode node,
-                                           final Set<EIGStatusMarks.Mark> newPossibleMarks, final Container context) {
+                                           final Set<Mark> newPossibleMarks, final Container context) {
         final JSwingRipplesEIGNode[] relatedNodes = node.getEig()
                 .getAllAnyNodeNeighbors(node);
         if (relatedNodes != null && relatedNodes.length > 0) {
             manager.add(new JSeparator(JSeparator.HORIZONTAL));
 
-            for (final EIGStatusMarks.Mark rule : newPossibleMarks) {
+            for (final Mark rule : newPossibleMarks) {
                 final JMenu edgesManager = new JMenu(JRipplesViewsConstants.GRANULARITY_EDGE_PREFIX + rule);
                 for (int i = 0; i < relatedNodes.length; i++) {
                     final ICAction action = new ICAction(node, relatedNodes[i], rule, false, context);

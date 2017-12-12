@@ -10,15 +10,15 @@ import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.JRipplesModuleRunner;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
-import org.incha.ui.jripples.EIGStatusMarks;
+import org.incha.core.jswingripples.eig.Mark;
 
 import java.util.Set;
 
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.BLANK;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.LOCATED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.NEXT_VISIT;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED_CONTINUE;
+import static org.incha.core.jswingripples.eig.Mark.BLANK;
+import static org.incha.core.jswingripples.eig.Mark.LOCATED;
+import static org.incha.core.jswingripples.eig.Mark.NEXT_VISIT;
+import static org.incha.core.jswingripples.eig.Mark.VISITED;
+import static org.incha.core.jswingripples.eig.Mark.VISITED_CONTINUE;
 
 /**
  * @author Maksym Petrenko
@@ -31,12 +31,12 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
     }
 
     @Override
-    protected Set<EIGStatusMarks.Mark> getRulesForNullOrBlankMark() {
+    protected Set<Mark> getRulesForNullOrBlankMark() {
         return getStrictRulesForNullOrBlank();
     }
 
     @Override
-    protected EIGStatusMarks.Mark getSpecificMark() {
+    protected Mark getSpecificMark() {
         return LOCATED;
     }
 
@@ -67,7 +67,7 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
      *      java.lang.String)
      */
 	@Override
-    public void applyRuleAtNode(final EIGStatusMarks.Mark rule, final JSwingRipplesEIGNode node, final int granularity) {
+    public void applyRuleAtNode(final Mark rule, final JSwingRipplesEIGNode node, final int granularity) {
         if (VISITED_CONTINUE == rule) {
             CommonEIGRules.applyRuleToNode(eig, node, rule, granularity);
         } else {
@@ -76,7 +76,7 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
 	}
 
     @Override
-    public void applyRuleAtNode(final EIGStatusMarks.Mark rule, final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
+    public void applyRuleAtNode(final Mark rule, final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
         if (VISITED_CONTINUE == rule) {
             CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo, rule, NEXT_VISIT);
         } else {
@@ -84,7 +84,7 @@ public class JRipplesModuleICDefaultConceptLocation extends JRipplesICModule {
         }
     }
 
-    private void apply(EIGStatusMarks.Mark rule, JSwingRipplesEIGNode node) {
+    private void apply(Mark rule, JSwingRipplesEIGNode node) {
         if (LOCATED == rule) {
             CommonEIGRules.assignMarkToNodeAndParents(eig, node, rule);
             CommonEIGRules.assignAnnotationToNodeAndParents(eig,node,"hay que cambiar esta clase, este método por que el concepto fue localizado");

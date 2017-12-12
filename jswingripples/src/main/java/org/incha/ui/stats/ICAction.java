@@ -5,34 +5,34 @@ import org.incha.compiler.dom.JavaDomUtils;
 import org.incha.core.ModuleConfiguration;
 import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+import org.incha.core.jswingripples.eig.Mark;
 import org.incha.core.jswingripples.eig.history.CompoundUndoAction;
 import org.incha.core.jswingripples.eig.history.UndoAction;
-import org.incha.ui.jripples.EIGStatusMarks;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.BLANK;
+import static org.incha.core.jswingripples.eig.Mark.BLANK;
 
 class ICAction extends AbstractAction {
     private static final long serialVersionUID = -300064190936944986L;
 
-    private EIGStatusMarks.Mark rule;
+    private Mark rule;
     private boolean displayAsRule;
     private final JSwingRipplesEIGNode fromNode;
     private final JSwingRipplesEIGNode toNode;
     private int granularity = 0;
     private final Container context;
 
-    public ICAction(final JSwingRipplesEIGNode fromNode, final EIGStatusMarks.Mark rule,
+    public ICAction(final JSwingRipplesEIGNode fromNode, final Mark rule,
             final int granularity, final boolean displayAsRule, final Container context) {
         this(fromNode, null, rule, displayAsRule, context);
         this.granularity = granularity;
     }
     public ICAction(final JSwingRipplesEIGNode fromNode, final JSwingRipplesEIGNode toNode,
-                    final EIGStatusMarks.Mark rule, final boolean displayAsRule, final Container context) {
+                    final Mark rule, final boolean displayAsRule, final Container context) {
         this.rule = rule;
         this.displayAsRule=displayAsRule;
         this.fromNode=fromNode;

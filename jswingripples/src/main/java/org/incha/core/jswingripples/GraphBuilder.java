@@ -13,7 +13,7 @@ import org.incha.core.jswingripples.eig.JSwingRipplesEIGEvent;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGListener;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNodeEvent;
-import org.incha.ui.jripples.EIGStatusMarks;
+import org.incha.core.jswingripples.eig.Mark;
 import org.incha.ui.stats.DependencyGraphViewerListener;
 import org.incha.ui.stats.ImpactGraphViewerListener;
 
@@ -186,7 +186,7 @@ public class GraphBuilder implements JSwingRipplesEIGListener{
                     break;
                 }
                 case JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED: {
-                    final EIGStatusMarks.Mark mark=changedNode.getMark();
+                    final Mark mark=changedNode.getMark();
                     if (mark!=null)
                     {
                         switch (mark)

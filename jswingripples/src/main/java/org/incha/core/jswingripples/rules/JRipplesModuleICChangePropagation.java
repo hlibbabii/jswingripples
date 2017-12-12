@@ -7,11 +7,11 @@ package org.incha.core.jswingripples.rules;
 import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
-import org.incha.ui.jripples.EIGStatusMarks;
+import org.incha.core.jswingripples.eig.Mark;
 
 import java.util.Set;
 
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.CHANGED;
+import static org.incha.core.jswingripples.eig.Mark.CHANGED;
 
 /**
  * @author Maksym Petrenko
@@ -28,12 +28,12 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
     }
 
     @Override
-    protected Set<EIGStatusMarks.Mark> getRulesForNullOrBlankMark() {
+    protected Set<Mark> getRulesForNullOrBlankMark() {
         return getStrictRulesForNullOrBlank();
     }
 
     @Override
-    protected EIGStatusMarks.Mark getSpecificMark() {
+    protected Mark getSpecificMark() {
         return CHANGED;
     }
 
@@ -49,7 +49,7 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
 
 	@Override
     protected void assignAnnotations(JSwingRipplesEIGNode nodeFrom, JSwingRipplesEIGNode nodeTo,
-                                     EIGStatusMarks.Mark rule) {
+                                     Mark rule) {
         CommonEIGRules.assignAnnotationToNodeAndNeighbor(eig, nodeFrom, nodeTo, CHANGE_PROPAGATION_ANNOTATION + rule);
     }
 

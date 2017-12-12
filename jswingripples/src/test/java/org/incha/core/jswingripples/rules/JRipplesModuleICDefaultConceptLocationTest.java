@@ -10,13 +10,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.BLANK;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.CHANGED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.IMPACTED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.LOCATED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.NEXT_VISIT;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED_CONTINUE;
+import static org.incha.core.jswingripples.eig.Mark.BLANK;
+import static org.incha.core.jswingripples.eig.Mark.CHANGED;
+import static org.incha.core.jswingripples.eig.Mark.IMPACTED;
+import static org.incha.core.jswingripples.eig.Mark.LOCATED;
+import static org.incha.core.jswingripples.eig.Mark.NEXT_VISIT;
+import static org.incha.core.jswingripples.eig.Mark.VISITED;
+import static org.incha.core.jswingripples.eig.Mark.VISITED_CONTINUE;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)

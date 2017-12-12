@@ -5,7 +5,7 @@
 package org.incha.core.jswingripples.rules;
 
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
-import org.incha.ui.jripples.EIGStatusMarks;
+import org.incha.core.jswingripples.eig.Mark;
 
 import java.util.Set;
 
@@ -20,7 +20,7 @@ public class JRipplesModuleICImpactAnalysisRelaxed extends JRipplesModuleICImpac
     }
 
 	@Override
-	protected Set<EIGStatusMarks.Mark> getRulesForNullOrBlankMark() {
+	protected Set<Mark> getRulesForNullOrBlankMark() {
 		return getRelaxedRulesForNullOrBlankMark();
 	}
 }

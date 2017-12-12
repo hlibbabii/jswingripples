@@ -1,20 +1,20 @@
 package org.incha.core.jswingripples.eig.history;
 
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
-import org.incha.ui.jripples.EIGStatusMarks;
+import org.incha.core.jswingripples.eig.Mark;
 
 public class MarkSetAction implements UndoAction {
     private final JSwingRipplesEIGNode node;
-    private final EIGStatusMarks.Mark oldMark;
-    private final EIGStatusMarks.Mark newMark;
+    private final Mark oldMark;
+    private final Mark newMark;
 
     /**
      * @param node
      * @param oldMark
      * @param newMark
      */
-    public MarkSetAction(final JSwingRipplesEIGNode node, final EIGStatusMarks.Mark oldMark,
-            final EIGStatusMarks.Mark newMark) {
+    public MarkSetAction(final JSwingRipplesEIGNode node, final Mark oldMark,
+            final Mark newMark) {
         super();
         this.node = node;
         this.oldMark = oldMark;

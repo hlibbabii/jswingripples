@@ -2,28 +2,28 @@ package org.incha.core.jswingripples.rules;
 
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
-import org.incha.ui.jripples.EIGStatusMarks;
+import org.incha.core.jswingripples.eig.Mark;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.NEXT_VISIT;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED;
+import static org.incha.core.jswingripples.eig.Mark.NEXT_VISIT;
+import static org.incha.core.jswingripples.eig.Mark.VISITED;
 
 public class CommonEIGRules {
 
 	//---------------Edge Level-------------------------------------------------
 	public static void assignMarkToNodeAndNeighbor(final JSwingRipplesEIG eig,
-												   final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo, final EIGStatusMarks.Mark markForNode, final EIGStatusMarks.Mark markForNeighbors) {
+                                                   final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo, final Mark markForNode, final Mark markForNeighbors) {
 		assignMarkToNodeAndParents(eig, nodeFrom,markForNode);
 		assignMarkToNodeAndParents(eig, nodeTo, markForNeighbors);
 	}
 
 	//=============================================Rules as of ICPC 08=================================
 	public static void applyRuleToNode(final JSwingRipplesEIG eig,
-									   final JSwingRipplesEIGNode node,
-									   final EIGStatusMarks.Mark newMark, final int granularity) {
+                                       final JSwingRipplesEIGNode node,
+                                       final Mark newMark, final int granularity) {
 		//algorithm
 		//1. Identify all members or parents at specified granularity
 		//2. find all neighbors of these members
@@ -68,7 +68,7 @@ public class CommonEIGRules {
 	}
 
 	public static void assignMarkToNodeAndParents(final JSwingRipplesEIG eig, JSwingRipplesEIGNode node,
-												  final EIGStatusMarks.Mark mark) {
+												  final Mark mark) {
 
 		while (node!=null) {
 			if (mark.getImportance() > node.getMark().getImportance()) {

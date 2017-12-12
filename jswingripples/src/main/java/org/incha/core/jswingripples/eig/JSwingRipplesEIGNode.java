@@ -6,9 +6,8 @@ package org.incha.core.jswingripples.eig;
 
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
-import org.incha.ui.jripples.EIGStatusMarks;
 
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.BLANK;
+import static org.incha.core.jswingripples.eig.Mark.BLANK;
 
 /**
  * JRipplesEIGNode class represents a node of the EIG (Evolving Interoperation
@@ -22,7 +21,7 @@ import static org.incha.ui.jripples.EIGStatusMarks.Mark.BLANK;
 public  class JSwingRipplesEIGNode {
 	// public static JRipplesEIGNode[] NONE = new JRipplesEIGNode[] {};
 
-	private EIGStatusMarks.Mark mark = BLANK;
+	private Mark mark = BLANK;
 	private String probability;
 	public String annotation;
 
@@ -111,7 +110,7 @@ public  class JSwingRipplesEIGNode {
 	 * @see #setMark(String)
 	 */
 
-	public EIGStatusMarks.Mark getMark() {
+	public Mark getMark() {
 		if (this.mark==null) this.mark= BLANK;
 		return mark;
 	}
@@ -173,12 +172,12 @@ public  class JSwingRipplesEIGNode {
 	 *            EIG mark to be associated with this node
 	 * @see #getMark()
 	 */
-	public void setMark(final EIGStatusMarks.Mark mark) {
+	public void setMark(final Mark mark) {
 		if (this.mark == mark) {
 		    return;
 		}
 
-		final EIGStatusMarks.Mark oldMark = this.mark;
+		final Mark oldMark = this.mark;
 		this.mark = mark;
 		eig.fireJRipplesEIGChanged(node, JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED, oldMark.getValue(), mark.getValue());
 	}

@@ -8,11 +8,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
-import org.incha.ui.jripples.EIGStatusMarks;
+import org.incha.core.jswingripples.eig.Mark;
 
 import java.util.Set;
 
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.IMPACTED;
+import static org.incha.core.jswingripples.eig.Mark.IMPACTED;
 
 /**
  * @author Maksym Petrenko
@@ -26,12 +26,12 @@ public class JRipplesModuleICImpactAnalysis extends JRipplesICModule {
     }
 
 	@Override
-	protected Set<EIGStatusMarks.Mark> getRulesForNullOrBlankMark() {
+	protected Set<Mark> getRulesForNullOrBlankMark() {
 		return getStrictRulesForNullOrBlank();
 	}
 
 	@Override
-	protected EIGStatusMarks.Mark getSpecificMark() {
+	protected Mark getSpecificMark() {
 		return IMPACTED;
 	}
 }

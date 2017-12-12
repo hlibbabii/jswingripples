@@ -2,9 +2,9 @@ package org.incha.ui.classview;
 
 import org.eclipse.jdt.core.IType;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+import org.incha.core.jswingripples.eig.Mark;
 import org.incha.core.search.Highlight;
 import org.incha.core.search.Searcher;
-import org.incha.ui.jripples.EIGStatusMarks;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,13 +25,13 @@ public class ClassTreeRenderer extends AbstractMemberRenderer {
     @Override
     protected void renderOtherColumn(final JLabel label, final JSwingRipplesEIGNode node,
             final int column) {
-        final EIGStatusMarks.Mark mark = node.getMark();
+        final Mark mark = node.getMark();
 
         switch (column) {
             case 0:
             break;
             case 1:
-                if (mark != null && mark != EIGStatusMarks.Mark.BLANK) {
+                if (mark != null && mark != Mark.BLANK) {
                     final Color color = mark.getColorForMark();
                     label.setBackground(color);
                     label.setText(mark.getValue());

@@ -9,13 +9,13 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.core.jswingripples.eig.JSwingRipplesIMemberServices;
-import org.incha.ui.jripples.EIGStatusMarks;
+import org.incha.core.jswingripples.eig.Mark;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.BLANK;
+import static org.incha.core.jswingripples.eig.Mark.BLANK;
 
 public abstract class AbstractMemberRenderer extends DefaultTableCellRenderer {
     private static final long serialVersionUID = 5646472411943179112L;
@@ -84,7 +84,7 @@ public abstract class AbstractMemberRenderer extends DefaultTableCellRenderer {
                         rootTypeIcon.setType(RootTypeIcon.CLASS);
                     }
 
-                    final EIGStatusMarks.Mark mark = node.getMark() != null ?
+                    final Mark mark = node.getMark() != null ?
                             node.getMark() : BLANK;
                     rootTypeIcon.setMarkImage(mark.getImageDescriptorForMark());
                 }

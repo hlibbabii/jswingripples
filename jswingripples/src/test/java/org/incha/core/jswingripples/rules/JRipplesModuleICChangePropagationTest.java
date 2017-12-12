@@ -4,8 +4,8 @@ import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.JRipplesModuleRunner;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+import org.incha.core.jswingripples.eig.Mark;
 import org.incha.core.jswingripples.eig.history.History;
-import org.incha.ui.jripples.EIGStatusMarks;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,13 +18,13 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.BLANK;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.CHANGED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.IMPACTED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.LOCATED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.NEXT_VISIT;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED_CONTINUE;
+import static org.incha.core.jswingripples.eig.Mark.BLANK;
+import static org.incha.core.jswingripples.eig.Mark.CHANGED;
+import static org.incha.core.jswingripples.eig.Mark.IMPACTED;
+import static org.incha.core.jswingripples.eig.Mark.LOCATED;
+import static org.incha.core.jswingripples.eig.Mark.NEXT_VISIT;
+import static org.incha.core.jswingripples.eig.Mark.VISITED;
+import static org.incha.core.jswingripples.eig.Mark.VISITED_CONTINUE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
@@ -113,7 +113,7 @@ public class JRipplesModuleICChangePropagationTest extends JRipplesModuleICTest 
 
         /* then */
 
-        assertNodesEquals(new EIGStatusMarks.Mark[]{
+        assertNodesEquals(new Mark[]{
                 BLANK,  // 0
                 BLANK,  // 1
                 BLANK,  // 2

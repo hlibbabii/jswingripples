@@ -13,7 +13,7 @@ import org.incha.core.jswingripples.eig.JSwingRipplesEIGEvent;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGListener;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNodeEvent;
-import org.incha.ui.jripples.EIGStatusMarks;
+import org.incha.core.jswingripples.eig.Mark;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,10 +21,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.CHANGED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.IMPACTED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.NEXT_VISIT;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED_CONTINUE;
+import static org.incha.core.jswingripples.eig.Mark.CHANGED;
+import static org.incha.core.jswingripples.eig.Mark.IMPACTED;
+import static org.incha.core.jswingripples.eig.Mark.NEXT_VISIT;
+import static org.incha.core.jswingripples.eig.Mark.VISITED_CONTINUE;
 
 /**
  * @author Maksym Petrenko
@@ -59,7 +59,7 @@ public class JRipplesModuleAnalysisDefaultImpactSetConnections extends JRipplesA
 
 		for (int i=0;i<nodes.length;i++) {
 			final JSwingRipplesEIGNode node = nodes[i];
-			final EIGStatusMarks.Mark mark=node.getMark();
+			final Mark mark=node.getMark();
 			if (mark == CHANGED || mark == IMPACTED) {
 				if (impact_set.add(node))  dirty=true;
 				if (impact_set.addAll(Arrays.asList(eig.getNodeMembers(node))))  dirty=true;
@@ -105,7 +105,7 @@ public class JRipplesModuleAnalysisDefaultImpactSetConnections extends JRipplesA
 					break;
 				}
 				case JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED: {
-					final EIGStatusMarks.Mark mark=changedNode.getMark();
+					final Mark mark=changedNode.getMark();
 					if (mark == CHANGED || mark == IMPACTED) {
 							if (impact_set.add(changedNode))  dirty=true;
 							if (impact_set.addAll(Arrays.asList(eig.getNodeMembers(changedNode))))  dirty=true;
