@@ -4,22 +4,24 @@ import java.awt.*;
 
 public class EIGStatusMarks {
 	public enum Mark {
-		BLANK("", "icons/icicons/blank1.gif"),
-		VISITED("Unchanged", "icons/icicons/visited1.gif"),
-		VISITED_CONTINUE("Propagating", "icons/icicons/through1.gif"),
-		CHANGED("Changed", "icons/icicons/changed1.gif"),
-		NEXT_VISIT("Next", "icons/icicons/nextvisit1.gif"),
-		IMPACTED("Impacted", "icons/icicons/changed1.gif"), // to continue from from
-		LOCATED("Located", "icons/icicons/changed1.gif");
+		BLANK("", "icons/icicons/blank1.gif", null),
+		VISITED("Unchanged", "icons/icicons/visited1.gif", new Color(192,192,192)),
+		VISITED_CONTINUE("Propagating", "icons/icicons/through1.gif", new Color(255,140,0)),
+		CHANGED("Changed", "icons/icicons/changed1.gif", new Color(255,128,128)),
+		NEXT_VISIT("Next", "icons/icicons/nextvisit1.gif", new Color(0,170,85)),
+		IMPACTED("Impacted", "icons/icicons/changed1.gif", new Color(255,128,128)), // to continue from from
+		LOCATED("Located", "icons/icicons/changed1.gif", new Color(255,128,128));
 
 		private static final String PATH_TO_DEFAULT_IMAGE = "icons/Class.gif";
 
 		private final String value;
 		private final String pathToImage;
+        private Color color;
 
-		Mark(String value, String pathToImage) {
+        Mark(String value, String pathToImage, Color color) {
 			this.value = value;
 			this.pathToImage = pathToImage;
+			this.color = color;
 		}
 
 		public String getValue() {
@@ -38,29 +40,9 @@ public class EIGStatusMarks {
 		public Image getImageDescriptorForMark() {
 			return JRipplesResources.getImage(pathToImage);
 		}
-	}
 
-
-	public static Color getColorForMark(final String mark) {
-		if (mark==null)
-			return null;
-
-		if (mark.equals(Mark.BLANK.getValue())) {
-			return null;
-		} else if (mark.equals(Mark.NEXT_VISIT.getValue())) {
-			return  new Color(0,170,85);
-
-		} else if (mark.equals(Mark.VISITED.getValue())) {
-			return  new Color(192,192,192);
-
-		} else if (mark.equals(Mark.VISITED_CONTINUE.getValue())) {
-			return  new Color(255,140,0);
-
-		} else if ((mark.equals(Mark.LOCATED.getValue()))
-		        || (mark.equals(Mark.IMPACTED.getValue()))
-		        || (mark.equals(Mark.CHANGED.getValue()))) {
-			return  new Color(255,128,128);
-		}
-		return null;
-	}
+        public Color getColorForMark() {
+            return this.color;
+        }
+    }
 }

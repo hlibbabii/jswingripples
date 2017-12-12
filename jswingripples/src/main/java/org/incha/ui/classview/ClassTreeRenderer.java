@@ -32,7 +32,7 @@ public class ClassTreeRenderer extends AbstractMemberRenderer {
             break;
             case 1:
                 if (mark != null && mark != EIGStatusMarks.Mark.BLANK) {
-                    final Color color = EIGStatusMarks.getColorForMark(mark.getValue());
+                    final Color color = mark.getColorForMark();
                     label.setBackground(color);
                     label.setText(mark.getValue());
                 } else {
