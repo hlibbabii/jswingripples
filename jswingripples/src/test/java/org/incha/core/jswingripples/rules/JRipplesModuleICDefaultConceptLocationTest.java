@@ -1,7 +1,6 @@
 package org.incha.core.jswingripples.rules;
 
 import org.incha.core.jswingripples.JRipplesICModule;
-import org.incha.ui.jripples.EIGStatusMarks;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +10,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.BLANK;
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.CHANGED;
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.IMPACTED;
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.LOCATED;
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.NEXT_VISIT;
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED;
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED_CONTINUE;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
@@ -30,69 +36,67 @@ public class JRipplesModuleICDefaultConceptLocationTest extends JRipplesModuleIC
     @Test
     public void getAvailableRulesForMark() throws Exception {
         assertEquals(null, cp.getAvailableRulesForMark(null));
-        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.BLANK));
+        assertEquals(null, cp.getAvailableRulesForMark(BLANK));
         assertEquals(new LinkedHashSet<>(Arrays.asList(
-                EIGStatusMarks.LOCATED, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.VISITED
-        )), cp.getAvailableRulesForMark(EIGStatusMarks.NEXT_VISIT));
+                LOCATED, VISITED_CONTINUE, VISITED
+        )), cp.getAvailableRulesForMark(NEXT_VISIT));
 
         assertEquals(new LinkedHashSet<>(Arrays.asList(
-                EIGStatusMarks.LOCATED
-        )), cp.getAvailableRulesForMark(EIGStatusMarks.LOCATED));
-        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.IMPACTED));
-        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.CHANGED));
+                LOCATED
+        )), cp.getAvailableRulesForMark(LOCATED));
+        assertEquals(null, cp.getAvailableRulesForMark(IMPACTED));
+        assertEquals(null, cp.getAvailableRulesForMark(CHANGED));
 
         assertEquals(new LinkedHashSet<>(Arrays.asList(
-                EIGStatusMarks.LOCATED, EIGStatusMarks.VISITED_CONTINUE
-        )), cp.getAvailableRulesForMark(EIGStatusMarks.VISITED_CONTINUE));
-
-        assertEquals(null, cp.getAvailableRulesForMark("unknown_mark"));
+                LOCATED, VISITED_CONTINUE
+        )), cp.getAvailableRulesForMark(VISITED_CONTINUE));
     }
 
     @Test
     public void testApplyRuleAtNodeWithVisitedContinueRule() {
-        testApplyRuleAtNodeWithGranularity(EIGStatusMarks.VISITED_CONTINUE,
+        testApplyRuleAtNodeWithGranularity(VISITED_CONTINUE,
                 applyRuleToNodeVerification.withGranularity(1));
     }
 
     @Test
     public void testApplyRuleAtNodeWithVisitedRule() {
-        testApplyRuleAtNodeWithGranularity(EIGStatusMarks.VISITED,
+        testApplyRuleAtNodeWithGranularity(VISITED,
                 applyRuleToNodeVerification.withGranularity(0));
     }
 
     @Test
     public void testApplyRuleAtNodeWithLocatedRule() {
-        testApplyRuleAtNodeWithGranularity(EIGStatusMarks.LOCATED,
+        testApplyRuleAtNodeWithGranularity(LOCATED,
                 assignMarkAndNodeToNodeAndParentsVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithImpactedRuleShouldDoNothing() {
-        testApplyRuleAtNodeWithGranularity(EIGStatusMarks.IMPACTED,
+        testApplyRuleAtNodeWithGranularity(IMPACTED,
                 nothingIsCalledVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithVisitedContinueRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED_CONTINUE,
+        testApplyRuleAtNodeWithTwoNodes(VISITED_CONTINUE,
                 assignMarkToNodeAndNeighborAndNeverAnnotationVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithVisitedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED,
+        testApplyRuleAtNodeWithTwoNodes(VISITED,
                 applyRuleToNodeVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithLocatedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.LOCATED,
+        testApplyRuleAtNodeWithTwoNodes(LOCATED,
                 assignMarkAndNodeToNodeAndParentsVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithImpactedRule_ShouldDoNothing() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.IMPACTED,
+        testApplyRuleAtNodeWithTwoNodes(IMPACTED,
                 nothingIsCalledVerification);
     }
 

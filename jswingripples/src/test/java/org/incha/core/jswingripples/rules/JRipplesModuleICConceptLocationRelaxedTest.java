@@ -6,6 +6,13 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.BLANK;
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.CHANGED;
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.IMPACTED;
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.LOCATED;
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.NEXT_VISIT;
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED;
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED_CONTINUE;
 import static org.junit.Assert.assertEquals;
 
 public class JRipplesModuleICConceptLocationRelaxedTest {
@@ -13,25 +20,23 @@ public class JRipplesModuleICConceptLocationRelaxedTest {
     public void getAvailableRulesForMark() throws Exception {
         JRipplesModuleICConceptLocationRelaxed cp
                 = new JRipplesModuleICConceptLocationRelaxed(null);
-        LinkedHashSet<String> setOf3 = new LinkedHashSet<>(Arrays.asList(
-                EIGStatusMarks.LOCATED, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.VISITED
+        LinkedHashSet<EIGStatusMarks.Mark> setOf3 = new LinkedHashSet<>(Arrays.asList(
+                LOCATED, VISITED_CONTINUE, VISITED
         ));
 
         assertEquals(setOf3, cp.getAvailableRulesForMark(null));
-        assertEquals(setOf3, cp.getAvailableRulesForMark(EIGStatusMarks.BLANK));
-        assertEquals(setOf3, cp.getAvailableRulesForMark(EIGStatusMarks.NEXT_VISIT));
+        assertEquals(setOf3, cp.getAvailableRulesForMark(BLANK));
+        assertEquals(setOf3, cp.getAvailableRulesForMark(NEXT_VISIT));
 
         assertEquals(new LinkedHashSet<>(Arrays.asList(
-                EIGStatusMarks.LOCATED
-        )), cp.getAvailableRulesForMark(EIGStatusMarks.LOCATED));
-        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.IMPACTED));
-        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.CHANGED));
+                LOCATED
+        )), cp.getAvailableRulesForMark(LOCATED));
+        assertEquals(null, cp.getAvailableRulesForMark(IMPACTED));
+        assertEquals(null, cp.getAvailableRulesForMark(CHANGED));
 
         assertEquals(new LinkedHashSet<>(Arrays.asList(
-                EIGStatusMarks.LOCATED, EIGStatusMarks.VISITED_CONTINUE
-        )), cp.getAvailableRulesForMark(EIGStatusMarks.VISITED_CONTINUE));
-
-        assertEquals(null, cp.getAvailableRulesForMark("unknown_mark"));
+                LOCATED, VISITED_CONTINUE
+        )), cp.getAvailableRulesForMark(VISITED_CONTINUE));
     }
 
 }

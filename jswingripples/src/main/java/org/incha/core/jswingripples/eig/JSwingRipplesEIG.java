@@ -4,6 +4,13 @@
  */
 package org.incha.core.jswingripples.eig;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IMember;
+import org.eclipse.jdt.core.IType;
+import org.incha.core.JavaProject;
+import org.incha.core.jswingripples.eig.history.History;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,13 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IMember;
-import org.eclipse.jdt.core.IType;
-import org.incha.core.JavaProject;
-import org.incha.core.jswingripples.eig.history.History;
 
 /**
  * <p>A software system can be viewed as a set of components and their interoperations and

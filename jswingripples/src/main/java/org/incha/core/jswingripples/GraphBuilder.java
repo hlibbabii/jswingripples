@@ -2,15 +2,17 @@ package org.incha.core.jswingripples;
 
 import org.apache.commons.logging.LogFactory;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.IdAlreadyInUseException;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.DefaultGraph;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerPipe;
-import org.incha.core.jswingripples.eig.*;
-import org.incha.ui.JSwingRipplesApplication;
-import org.incha.ui.TaskProgressMonitor;
+import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
+import org.incha.core.jswingripples.eig.JSwingRipplesEIGEdge;
+import org.incha.core.jswingripples.eig.JSwingRipplesEIGEvent;
+import org.incha.core.jswingripples.eig.JSwingRipplesEIGListener;
+import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+import org.incha.core.jswingripples.eig.JSwingRipplesEIGNodeEvent;
 import org.incha.ui.jripples.EIGStatusMarks;
 import org.incha.ui.stats.DependencyGraphViewerListener;
 import org.incha.ui.stats.ImpactGraphViewerListener;
@@ -184,12 +186,12 @@ public class GraphBuilder implements JSwingRipplesEIGListener{
                     break;
                 }
                 case JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED: {
-                    final String mark=changedNode.getMark();
+                    final EIGStatusMarks.Mark mark=changedNode.getMark();
                     if (mark!=null)
                     {
                         switch (mark)
                         {
-                            case EIGStatusMarks.CHANGED:
+                            case CHANGED:
                                 graphn.setAttribute("ui.class", "changed");
 
                                 if ( impactn == null ) {
@@ -200,7 +202,7 @@ public class GraphBuilder implements JSwingRipplesEIGListener{
                                 else
                                     impactn.setAttribute("ui.class", "changed");
                                 break;
-                            case EIGStatusMarks.IMPACTED:
+                            case IMPACTED:
                                 graphn.setAttribute("ui.class", "impacted");
 
                                 if ( impactn == null ) {
@@ -212,7 +214,7 @@ public class GraphBuilder implements JSwingRipplesEIGListener{
                                     impactn.setAttribute("ui.class", "impacted");
 
                                 break;
-                            case EIGStatusMarks.NEXT_VISIT:
+                            case NEXT_VISIT:
                                 graphn.setAttribute("ui.class", "next");
 
                                 if ( impactn == null ) {
@@ -224,7 +226,7 @@ public class GraphBuilder implements JSwingRipplesEIGListener{
                                     impactn.setAttribute("ui.class", "next");
 
                                 break;
-                            case EIGStatusMarks.VISITED_CONTINUE:
+                            case VISITED_CONTINUE:
                                 graphn.setAttribute("ui.class", "propagating");
 
                                 if ( impactn == null ) {

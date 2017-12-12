@@ -1,8 +1,5 @@
 package org.incha.ui.stats;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGEdgeEvent;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGEvent;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGListener;
@@ -15,6 +12,10 @@ import org.incha.core.jswingripples.eig.history.NodeAddedAction;
 import org.incha.core.jswingripples.eig.history.NodeRemovedAction;
 import org.incha.core.jswingripples.eig.history.ProbabilitySetAction;
 import org.incha.core.jswingripples.eig.history.UndoAction;
+import org.incha.ui.jripples.EIGStatusMarks;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class UndoActionsBuilder implements JSwingRipplesEIGListener {
     private final List<UndoAction> actions = new LinkedList<UndoAction>();
@@ -46,7 +47,8 @@ public class UndoActionsBuilder implements JSwingRipplesEIGListener {
                         break;
                     case JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED:
                         this.actions.add(new MarkSetAction(e.getSource(),
-                                e.getOldValue(), e.getNewValue()));
+                                EIGStatusMarks.Mark.of(e.getOldValue()),
+                                EIGStatusMarks.Mark.of(e.getNewValue())));
                         break;
                     case JSwingRipplesEIGNodeEvent.NODE_PROBABILITY_CHANGED:
                         this.actions.add(new ProbabilitySetAction(e.getSource(),

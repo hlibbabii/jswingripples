@@ -82,9 +82,9 @@ public abstract class AbstractMemberRenderer extends DefaultTableCellRenderer {
                         rootTypeIcon.setType(RootTypeIcon.CLASS);
                     }
 
-                    final String mark = node.getMark();
+                    final EIGStatusMarks.Mark mark = node.getMark();
                     rootTypeIcon.setMarkImage(
-                            EIGStatusMarks.getImageDescriptorForMark(mark == null ? "" : mark));
+                            EIGStatusMarks.getImageDescriptorForMark(mark == null ? "" : mark.getValue()));
                 }
 
                 if (node.getNodeIMember() instanceof IInitializer) {

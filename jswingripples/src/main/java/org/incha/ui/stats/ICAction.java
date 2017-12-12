@@ -14,23 +14,25 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.BLANK;
+
 class ICAction extends AbstractAction {
     private static final long serialVersionUID = -300064190936944986L;
 
-    private String rule;
+    private EIGStatusMarks.Mark rule;
     private boolean displayAsRule;
     private final JSwingRipplesEIGNode fromNode;
     private final JSwingRipplesEIGNode toNode;
     private int granularity = 0;
     private final Container context;
 
-    public ICAction(final JSwingRipplesEIGNode fromNode, final String rule,
+    public ICAction(final JSwingRipplesEIGNode fromNode, final EIGStatusMarks.Mark rule,
             final int granularity, final boolean displayAsRule, final Container context) {
         this(fromNode, null, rule, displayAsRule, context);
         this.granularity = granularity;
     }
     public ICAction(final JSwingRipplesEIGNode fromNode, final JSwingRipplesEIGNode toNode,
-            final String rule, final boolean displayAsRule, final Container context) {
+                    final EIGStatusMarks.Mark rule, final boolean displayAsRule, final Container context) {
         this.rule = rule;
         this.displayAsRule=displayAsRule;
         this.fromNode=fromNode;
@@ -40,9 +42,9 @@ class ICAction extends AbstractAction {
     }
 
     private void setText() {
-        String ruleToDisplay = EIGStatusMarks.BLANK;
+        String ruleToDisplay = BLANK.getValue();
         if (displayAsRule) {
-            ruleToDisplay = rule;
+            ruleToDisplay = rule.getValue();
         } else {
             if ((fromNode != null) && (toNode == null)) {
                 if (fromNode.getNodeIMember() instanceof IJavaElement) {
@@ -53,7 +55,7 @@ class ICAction extends AbstractAction {
                 ruleToDisplay = JavaDomUtils.getTopDeclaringType(this.toNode.getNodeIMember())
                         .getElementName() + "." + this.toNode.getNodeIMember().getElementName();
             } else {
-                ruleToDisplay = rule;
+                ruleToDisplay = rule.getValue();
             }
         }
         this.setText(ruleToDisplay);

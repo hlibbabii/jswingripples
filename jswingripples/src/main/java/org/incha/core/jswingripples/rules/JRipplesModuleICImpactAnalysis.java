@@ -11,6 +11,9 @@ import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.ui.jripples.EIGStatusMarks;
 
 import java.util.Set;
+
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.IMPACTED;
+
 /**
  * @author Maksym Petrenko
  *
@@ -23,12 +26,12 @@ public class JRipplesModuleICImpactAnalysis extends JRipplesICModule {
     }
 
 	@Override
-	protected Set<String> getRulesForNullOrBlankMark() {
+	protected Set<EIGStatusMarks.Mark> getRulesForNullOrBlankMark() {
 		return getStrictRulesForNullOrBlank();
 	}
 
 	@Override
-	protected String getSpecificMark() {
-		return EIGStatusMarks.IMPACTED;
+	protected EIGStatusMarks.Mark getSpecificMark() {
+		return IMPACTED;
 	}
 }

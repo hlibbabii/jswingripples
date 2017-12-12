@@ -11,6 +11,8 @@ import org.incha.ui.jripples.EIGStatusMarks;
 
 import java.util.Set;
 
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.CHANGED;
+
 /**
  * @author Maksym Petrenko
  *
@@ -26,13 +28,13 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
     }
 
     @Override
-    protected Set<String> getRulesForNullOrBlankMark() {
+    protected Set<EIGStatusMarks.Mark> getRulesForNullOrBlankMark() {
         return getStrictRulesForNullOrBlank();
     }
 
     @Override
-    protected String getSpecificMark() {
-        return EIGStatusMarks.CHANGED;
+    protected EIGStatusMarks.Mark getSpecificMark() {
+        return CHANGED;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
 
 	@Override
     protected void assignAnnotations(JSwingRipplesEIGNode nodeFrom, JSwingRipplesEIGNode nodeTo,
-                                     String rule) {
+                                     EIGStatusMarks.Mark rule) {
         CommonEIGRules.assignAnnotationToNodeAndNeighbor(eig, nodeFrom, nodeTo, CHANGE_PROPAGATION_ANNOTATION + rule);
     }
 

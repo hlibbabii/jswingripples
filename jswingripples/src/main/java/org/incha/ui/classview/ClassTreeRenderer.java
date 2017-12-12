@@ -25,16 +25,16 @@ public class ClassTreeRenderer extends AbstractMemberRenderer {
     @Override
     protected void renderOtherColumn(final JLabel label, final JSwingRipplesEIGNode node,
             final int column) {
-        final String mark = node.getMark();
+        final EIGStatusMarks.Mark mark = node.getMark();
 
         switch (column) {
             case 0:
             break;
             case 1:
-                if (mark != null && !mark.isEmpty()) {
-                    final Color color = EIGStatusMarks.getColorForMark(mark);
+                if (mark != null && mark != EIGStatusMarks.Mark.BLANK) {
+                    final Color color = EIGStatusMarks.getColorForMark(mark.getValue());
                     label.setBackground(color);
-                    label.setText(mark);
+                    label.setText(mark.getValue());
                 } else {
                     label.setText("");
                 }
