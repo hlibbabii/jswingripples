@@ -4,18 +4,22 @@ import java.awt.*;
 
 public class EIGStatusMarks {
 	public enum Mark {
-		BLANK(""),
-		VISITED("Unchanged"),
-		VISITED_CONTINUE("Propagating"),
-		CHANGED("Changed"),
-		NEXT_VISIT("Next"),
-		IMPACTED("Impacted"), // to continue from from
-		LOCATED("Located");
+		BLANK("", "icons/icicons/blank1.gif"),
+		VISITED("Unchanged", "icons/icicons/visited1.gif"),
+		VISITED_CONTINUE("Propagating", "icons/icicons/through1.gif"),
+		CHANGED("Changed", "icons/icicons/changed1.gif"),
+		NEXT_VISIT("Next", "icons/icicons/nextvisit1.gif"),
+		IMPACTED("Impacted", "icons/icicons/changed1.gif"), // to continue from from
+		LOCATED("Located", "icons/icicons/changed1.gif");
+
+		private static final String PATH_TO_DEFAULT_IMAGE = "icons/Class.gif";
 
 		private final String value;
+		private final String pathToImage;
 
-		Mark(String value) {
+		Mark(String value, String pathToImage) {
 			this.value = value;
+			this.pathToImage = pathToImage;
 		}
 
 		public String getValue() {
@@ -30,31 +34,10 @@ public class EIGStatusMarks {
 			}
 			return null;
 		}
-	}
 
-	public static Image getImageDescriptorForMark(final String mark) {
-
-		if (mark == null)
-			return JRipplesResources.getImage("icons/Class.gif");
-
-		if (mark.equals(Mark.BLANK.getValue())) {
-			return JRipplesResources.getImage("icons/icicons/blank1.gif");
-		} else if (mark.equals(Mark.NEXT_VISIT.getValue())) {
-			return JRipplesResources.getImage("icons/icicons/nextvisit1.gif");
-
-		} else if (mark.equals(Mark.VISITED.getValue())) {
-			return JRipplesResources.getImage("icons/icicons/visited1.gif");
-
-		} else if (mark.equals(Mark.VISITED_CONTINUE.getValue())) {
-			return JRipplesResources.getImage("icons/icicons/through1.gif");
-
-		} else if ((mark.equals(Mark.LOCATED.getValue()))
-				|| (mark.equals(Mark.IMPACTED.getValue()))
-				|| (mark.equals(Mark.CHANGED.getValue()))) {
-			return JRipplesResources.getImage("icons/icicons/changed1.gif");
-
+		public Image getImageDescriptorForMark() {
+			return JRipplesResources.getImage(pathToImage);
 		}
-		return null;
 	}
 
 

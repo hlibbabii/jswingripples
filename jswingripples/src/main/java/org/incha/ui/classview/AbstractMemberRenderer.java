@@ -15,6 +15,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
+import static org.incha.ui.jripples.EIGStatusMarks.Mark.BLANK;
+
 public abstract class AbstractMemberRenderer extends DefaultTableCellRenderer {
     private static final long serialVersionUID = 5646472411943179112L;
 
@@ -82,9 +84,9 @@ public abstract class AbstractMemberRenderer extends DefaultTableCellRenderer {
                         rootTypeIcon.setType(RootTypeIcon.CLASS);
                     }
 
-                    final EIGStatusMarks.Mark mark = node.getMark();
-                    rootTypeIcon.setMarkImage(
-                            EIGStatusMarks.getImageDescriptorForMark(mark == null ? "" : mark.getValue()));
+                    final EIGStatusMarks.Mark mark = node.getMark() != null ?
+                            node.getMark() : BLANK;
+                    rootTypeIcon.setMarkImage(mark.getImageDescriptorForMark());
                 }
 
                 if (node.getNodeIMember() instanceof IInitializer) {
