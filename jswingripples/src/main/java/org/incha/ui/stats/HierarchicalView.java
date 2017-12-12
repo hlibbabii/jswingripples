@@ -10,6 +10,7 @@ import org.incha.ui.classview.ClassTreeView;
 import org.incha.ui.texteditor.TextEditor;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -31,26 +32,29 @@ public class HierarchicalView extends ClassTreeView {
              */
             @Override
             public void mouseClicked(final MouseEvent e) {
+                Point point = e.getPoint();
                 if (SwingUtilities.isRightMouseButton(e)) {
-                    showPopupMenu(e.getX(), e.getY());
+                    showPopupMenu(point);
                 } else if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
-                    JSwingRipplesEIGNode selectedItem = getSelectedItem(e.getX(), e.getY());
-                    IMember selectedNodeIMember = selectedItem.getNodeIMember();
-                    ISourceRange selectedNodeSourceRange;
-                    try {
-                        selectedNodeSourceRange = selectedNodeIMember.getSourceRange();
-                    } catch (JavaModelException e1) {
-                        throw new RuntimeException(e1);
+                    JSwingRipplesEIGNode selectedItem = getSelectedItem(point);
+                    if (!isCommentColumn(point)) {
+                        IMember selectedNodeIMember = selectedItem.getNodeIMember();
+                        ISourceRange selectedNodeSourceRange;
+                        try {
+                            selectedNodeSourceRange = selectedNodeIMember.getSourceRange();
+                        } catch (JavaModelException e1) {
+                            throw new RuntimeException(e1);
+                        }
+                        final ICompilationUnit unit = selectedNodeIMember.getCompilationUnit();
+                        String fileToOpen = unit.getPath().toString();
+                        try {
+                            TextEditor textEditor = TextEditor.getInstance();
+                            textEditor.bringToFront();
+                            textEditor.openFile(fileToOpen, selectedNodeSourceRange);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
                     }
-                    final ICompilationUnit unit = selectedNodeIMember.getCompilationUnit();
-                	String fileToOpen = unit.getPath().toString();
-                	try {
-						TextEditor textEditor = TextEditor.getInstance();
-						textEditor.bringToFront();
-                        textEditor.openFile(fileToOpen, selectedNodeSourceRange);
-                    } catch (Exception e1) {
-						e1.printStackTrace();
-					}
                 }
                 
             }
@@ -58,14 +62,10 @@ public class HierarchicalView extends ClassTreeView {
         });
     }
 
-    /**
-     * @param x x mouse coordinate.
-     * @param y y mouse coordinate.
-     */
-    protected void showPopupMenu(final int x, final int y) {
-        final JSwingRipplesEIGNode node = getSelectedItem(x, y);
+    protected void showPopupMenu(Point point) {
+        final JSwingRipplesEIGNode node = getSelectedItem(point);
         if (node != null) {
-            ICActionsManager.getInstance().showMenuForNode(node, x, y, this);
+            ICActionsManager.getInstance().showMenuForNode(node, point.x, point.y, this);
         }
     }
 }

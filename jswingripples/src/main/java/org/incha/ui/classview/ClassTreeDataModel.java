@@ -1,15 +1,15 @@
 package org.incha.ui.classview;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import org.eclipse.jdt.core.IMember;
+import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+import org.incha.ui.jripples.JRipplesViewsConstants;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-
-import org.eclipse.jdt.core.IMember;
-import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ClassTreeDataModel implements TableModel {
 	/**
@@ -24,9 +24,6 @@ public class ClassTreeDataModel implements TableModel {
 
     private final String[] columns;
 
-    /**
-     * @param eig the EIG.
-     */
     public ClassTreeDataModel(final String... columns) {
         super();
         this.columns = columns;
@@ -57,29 +54,40 @@ public class ClassTreeDataModel implements TableModel {
      */
     @Override
     public Class<?> getColumnClass(final int columnIndex) {
-        return IMember.class;
+        return isCommentColumn(columnIndex)?
+            String.class : IMember.class;
     }
     /* (non-Javadoc)
      * @see javax.swing.table.TableModel#isCellEditable(int, int)
      */
     @Override
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-        return false;
+        return isCommentColumn(columnIndex);
+    }
+
+    public boolean isCommentColumn(int columnIndex) {
+        return (getColumnName(columnIndex).equals(JRipplesViewsConstants.ANNOTATION_TITLE));
     }
     /* (non-Javadoc)
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
     @Override
-    public JSwingRipplesEIGNode getValueAt(final int rowIndex, final int columnIndex) {
+    public Object getValueAt(final int rowIndex, final int columnIndex) {
         checkBounds(rowIndex, columnIndex);
-        return items.get(rowIndex);
+        JSwingRipplesEIGNode jSwingRipplesEIGNode = items.get(rowIndex);
+        if (isCommentColumn(columnIndex)) {
+            String annotation = jSwingRipplesEIGNode.getAnnottation();
+            return annotation != null ? annotation : "";
+        } else {
+            return jSwingRipplesEIGNode;
+        }
     }
     /**
      * @param row the row index.
      * @return
      */
     public JSwingRipplesEIGNode getValueAt(final int row) {
-        return getValueAt(row, 0);
+        return (JSwingRipplesEIGNode) getValueAt(row, 0);
     }
     /**
      * @param rowIndex
@@ -96,7 +104,11 @@ public class ClassTreeDataModel implements TableModel {
      */
     @Override
     public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
-        throw new IllegalAccessError("Unimplemented. Use add instead");
+        if (isCommentColumn(columnIndex)) {
+            items.get(rowIndex).setAnottationForce((String)value);
+        } else {
+            throw new UnsupportedOperationException("Only comment can be set.");
+        }
     }
     /**
      * @param rember the value to add.
@@ -208,9 +220,7 @@ public class ClassTreeDataModel implements TableModel {
 
         return -1;
     }
-    /**
-     * @param index
-     */
+
     public void clear() {
         final int size = items.size();
         if (size > 0) {

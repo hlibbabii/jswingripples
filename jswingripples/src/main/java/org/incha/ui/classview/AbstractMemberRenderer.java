@@ -1,11 +1,5 @@
 package org.incha.ui.classview;
 
-import java.awt.Component;
-
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IInitializer;
@@ -16,6 +10,10 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.core.jswingripples.eig.JSwingRipplesIMemberServices;
 import org.incha.ui.jripples.EIGStatusMarks;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 
 public abstract class AbstractMemberRenderer extends DefaultTableCellRenderer {
     private static final long serialVersionUID = 5646472411943179112L;
@@ -43,7 +41,17 @@ public abstract class AbstractMemberRenderer extends DefaultTableCellRenderer {
         label.setHorizontalTextPosition(RIGHT);
         final AbstractHierarchicalView view = (AbstractHierarchicalView) t;
 
-        final JSwingRipplesEIGNode node = (JSwingRipplesEIGNode) value;
+        //HACK
+        //TODO refactor this by implementing getValueAt method of table model properly
+        if (column == 5) {
+            if(value!=null){
+                label.setText(value.toString());
+            }
+            return label;
+        }
+
+        JSwingRipplesEIGNode node = (JSwingRipplesEIGNode) value;
+
         if (node == null) {
             return this;
         }
