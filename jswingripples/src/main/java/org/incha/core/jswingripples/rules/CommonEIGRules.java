@@ -8,13 +8,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.BLANK;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.CHANGED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.IMPACTED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.LOCATED;
 import static org.incha.ui.jripples.EIGStatusMarks.Mark.NEXT_VISIT;
 import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED;
-import static org.incha.ui.jripples.EIGStatusMarks.Mark.VISITED_CONTINUE;
 
 public class CommonEIGRules {
 
@@ -76,7 +71,7 @@ public class CommonEIGRules {
 												  final EIGStatusMarks.Mark mark) {
 
 		while (node!=null) {
-			if (getImportance(mark)>getImportance(node.getMark())) {
+			if (mark.getImportance() > node.getMark().getImportance()) {
 				node.setMark(mark);
 			}
 			if (node.isTop()) {
@@ -88,23 +83,6 @@ public class CommonEIGRules {
 				return;
 			}
 		}
-	}
-
-
-
-	private static int getImportance(final EIGStatusMarks.Mark mark) {
-			if (mark==null) return 0;
-			if (mark == BLANK) return 1;
-			if (mark == VISITED) return 3;
-			if (mark == NEXT_VISIT) return 2;
-			if (mark == VISITED_CONTINUE) return 4;
-			if (mark == LOCATED) return 5;
-			if (mark == IMPACTED) return 6;
-			if (mark == CHANGED) return 7;
-
-
-			return 0;
-
 	}
 
 	private static void filterNeighbors(final JSwingRipplesEIG eig,
