@@ -1,13 +1,11 @@
 package org.incha.ui.stats;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGEdgeEvent;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGEvent;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGListener;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNodeEvent;
 import org.incha.core.jswingripples.eig.JSwingRipplesEvent;
+import org.incha.core.jswingripples.eig.Mark;
 import org.incha.core.jswingripples.eig.history.EdgeAddedAction;
 import org.incha.core.jswingripples.eig.history.EdgeRemovedAction;
 import org.incha.core.jswingripples.eig.history.MarkSetAction;
@@ -15,6 +13,9 @@ import org.incha.core.jswingripples.eig.history.NodeAddedAction;
 import org.incha.core.jswingripples.eig.history.NodeRemovedAction;
 import org.incha.core.jswingripples.eig.history.ProbabilitySetAction;
 import org.incha.core.jswingripples.eig.history.UndoAction;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class UndoActionsBuilder implements JSwingRipplesEIGListener {
     private final List<UndoAction> actions = new LinkedList<UndoAction>();
@@ -46,7 +47,8 @@ public class UndoActionsBuilder implements JSwingRipplesEIGListener {
                         break;
                     case JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED:
                         this.actions.add(new MarkSetAction(e.getSource(),
-                                e.getOldValue(), e.getNewValue()));
+                                Mark.of(e.getOldValue()),
+                                Mark.of(e.getNewValue())));
                         break;
                     case JSwingRipplesEIGNodeEvent.NODE_PROBABILITY_CHANGED:
                         this.actions.add(new ProbabilitySetAction(e.getSource(),

@@ -8,12 +8,14 @@ import org.incha.TestUtils;
 import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
-import org.incha.ui.jripples.EIGStatusMarks;
+import org.incha.core.jswingripples.eig.Mark;
 import org.mockito.Matchers;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.incha.core.jswingripples.eig.Mark.IMPACTED;
+import static org.incha.core.jswingripples.eig.Mark.NEXT_VISIT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -43,11 +45,11 @@ public abstract class JRipplesModuleICTest {
         PowerMockito.mockStatic(CommonEIGRules.class);
 
         /* when */
-        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, 0);
+        cp.applyRuleAtNode(IMPACTED, node, 0);
 
         /* then*/
         PowerMockito.verifyStatic(CommonEIGRules.class);
-        CommonEIGRules.applyRuleToNode(eig, node, EIGStatusMarks.IMPACTED, 0);
+        CommonEIGRules.applyRuleToNode(eig, node, IMPACTED, 0);
 
     }
 
@@ -67,19 +69,19 @@ public abstract class JRipplesModuleICTest {
         CommonEIGRules.applyRuleToNode(
                 Matchers.<JSwingRipplesEIG>any(),
                 Matchers.<JSwingRipplesEIGNode>any(),
-                Matchers.<String>any(),
+                Matchers.<Mark>any(),
                 Matchers.anyInt()
         );
 
         /* when */
-        cp.applyRuleAtNode(EIGStatusMarks.IMPACTED, node, 0);
+        cp.applyRuleAtNode(IMPACTED, node, 0);
 
         /* then*/
         verify(log).error(toBeThrown);
     }
 
     public static abstract class Verification {
-        public abstract void verify(String rule);
+        public abstract void verify(Mark rule);
 
         public Verification withGranularity(int granularity) {
             throw new UnsupportedOperationException();
@@ -102,10 +104,10 @@ public abstract class JRipplesModuleICTest {
     private void initVerifications() {
         assignMarkAndAnnotationToNodeAndNeighborVerification = new Verification() {
             @Override
-            public void verify(String rule) {
+            public void verify(Mark rule) {
                 PowerMockito.verifyStatic(CommonEIGRules.class);
                 CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2,
-                        rule, EIGStatusMarks.NEXT_VISIT);
+                        rule, NEXT_VISIT);
                 PowerMockito.verifyStatic(CommonEIGRules.class);
                 CommonEIGRules.assignAnnotationToNodeAndNeighbor(
                         eq(eig), eq(node), eq(node2),
@@ -115,10 +117,10 @@ public abstract class JRipplesModuleICTest {
 
         assignMarkToNodeAndNeighborAndNeverAnnotationVerification = new Verification() {
             @Override
-            public void verify(String rule) {
+            public void verify(Mark rule) {
                 PowerMockito.verifyStatic(CommonEIGRules.class);
                 CommonEIGRules.assignMarkToNodeAndNeighbor(eig, node, node2,
-                        rule, EIGStatusMarks.NEXT_VISIT);
+                        rule, NEXT_VISIT);
                 PowerMockito.verifyStatic(CommonEIGRules.class, never());
                 CommonEIGRules.assignAnnotationToNodeAndNeighbor(
                         eq(eig), eq(node), eq(node2),
@@ -128,7 +130,7 @@ public abstract class JRipplesModuleICTest {
 
         applyRuleToNodeAndAnnotationToNodeAndNeighbourVerification = new Verification() {
             @Override
-            public void verify(String rule) {
+            public void verify(Mark rule) {
                 PowerMockito.verifyStatic(CommonEIGRules.class);
                 CommonEIGRules.applyRuleToNode(eig, node, rule, 0);
                 PowerMockito.verifyStatic(CommonEIGRules.class, never());
@@ -140,7 +142,7 @@ public abstract class JRipplesModuleICTest {
 
         assignMarkAndNodeToNodeAndParentsVerification = new Verification() {
             @Override
-            public void verify(String rule) {
+            public void verify(Mark rule) {
                 PowerMockito.verifyStatic(CommonEIGRules.class);
                 CommonEIGRules.assignMarkToNodeAndParents(eig, node, rule);
 
@@ -151,7 +153,7 @@ public abstract class JRipplesModuleICTest {
 
         nothingIsCalledVerification = new Verification() {
             @Override
-            public void verify(String rule) {
+            public void verify(Mark rule) {
                 PowerMockito.verifyStatic(CommonEIGRules.class, never());
             }
         };
@@ -160,7 +162,7 @@ public abstract class JRipplesModuleICTest {
             private int granularity = 0;
 
             @Override
-            public void verify(String rule) {
+            public void verify(Mark rule) {
                 PowerMockito.verifyStatic(CommonEIGRules.class);
                 CommonEIGRules.applyRuleToNode(eig, node, rule, granularity);
             }
@@ -174,15 +176,15 @@ public abstract class JRipplesModuleICTest {
     }
 
 
-    protected JSwingRipplesEIGNode createEIGClassNodeMock(String mark, JSwingRipplesEIG eig) {
+    protected JSwingRipplesEIGNode createEIGClassNodeMock(Mark mark, JSwingRipplesEIG eig) {
         return createEIGNodeMock(mark, eig, mock(IType.class));
     }
 
-    protected JSwingRipplesEIGNode createEIGMethodNodeMock(String mark, JSwingRipplesEIG eig) {
+    protected JSwingRipplesEIGNode createEIGMethodNodeMock(Mark mark, JSwingRipplesEIG eig) {
         return createEIGNodeMock(mark, eig, mock(IMethod.class));
     }
 
-    private JSwingRipplesEIGNode createEIGNodeMock(String mark,
+    private JSwingRipplesEIGNode createEIGNodeMock(Mark mark,
                                                    JSwingRipplesEIG eig, IMember iMember) {
 
         JSwingRipplesEIGNode jSwingRipplesEIGNode = spy(new JSwingRipplesEIGNode(eig, iMember));
@@ -192,14 +194,14 @@ public abstract class JRipplesModuleICTest {
         return jSwingRipplesEIGNode;
     }
 
-    protected void assertNodesEquals(String[] marks, JSwingRipplesEIGNode[] nodes) {
+    protected void assertNodesEquals(Mark[] marks, JSwingRipplesEIGNode[] nodes) {
         assertEquals(marks.length, nodes.length);
         for (int i = 0; i < marks.length; i++) {
             assertEquals(marks[i], nodes[i].getMark());
         }
     }
 
-    protected void testApplyRuleAtNodeWithTwoNodes(String rule, Verification verification) {
+    protected void testApplyRuleAtNodeWithTwoNodes(Mark rule, Verification verification) {
         /* given */
         PowerMockito.mockStatic(CommonEIGRules.class);
 
@@ -210,7 +212,7 @@ public abstract class JRipplesModuleICTest {
         verification.verify(rule);
     }
 
-    protected void testApplyRuleAtNodeWithGranularity(String rule, Verification verification) {
+    protected void testApplyRuleAtNodeWithGranularity(Mark rule, Verification verification) {
         /* given */
         PowerMockito.mockStatic(CommonEIGRules.class);
 

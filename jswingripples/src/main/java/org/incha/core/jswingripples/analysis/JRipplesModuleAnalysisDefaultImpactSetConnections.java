@@ -4,12 +4,6 @@
  */
 package org.incha.core.jswingripples.analysis;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import org.incha.core.ModuleConfiguration;
 import org.incha.core.jswingripples.JRipplesAnalysisModule;
 import org.incha.core.jswingripples.JRipplesModuleRunner;
@@ -19,7 +13,19 @@ import org.incha.core.jswingripples.eig.JSwingRipplesEIGEvent;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGListener;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNodeEvent;
-import org.incha.ui.jripples.EIGStatusMarks;
+import org.incha.core.jswingripples.eig.Mark;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import static org.incha.core.jswingripples.eig.Mark.CHANGED;
+import static org.incha.core.jswingripples.eig.Mark.IMPACTED;
+import static org.incha.core.jswingripples.eig.Mark.NEXT_VISIT;
+import static org.incha.core.jswingripples.eig.Mark.VISITED_CONTINUE;
+
 /**
  * @author Maksym Petrenko
  *
@@ -53,8 +59,8 @@ public class JRipplesModuleAnalysisDefaultImpactSetConnections extends JRipplesA
 
 		for (int i=0;i<nodes.length;i++) {
 			final JSwingRipplesEIGNode node = nodes[i];
-			final String mark=node.getMark();
-			if ((mark.compareTo(EIGStatusMarks.CHANGED)==0) || (mark.compareTo(EIGStatusMarks.IMPACTED)==0)) {
+			final Mark mark=node.getMark();
+			if (mark == CHANGED || mark == IMPACTED) {
 				if (impact_set.add(node))  dirty=true;
 				if (impact_set.addAll(Arrays.asList(eig.getNodeMembers(node))))  dirty=true;
 			}
@@ -99,14 +105,14 @@ public class JRipplesModuleAnalysisDefaultImpactSetConnections extends JRipplesA
 					break;
 				}
 				case JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED: {
-					final String mark=changedNode.getMark();
-					if ((mark!=null) && ((mark.compareTo(EIGStatusMarks.CHANGED)==0) || (mark.compareTo(EIGStatusMarks.IMPACTED)==0))) {
+					final Mark mark=changedNode.getMark();
+					if (mark == CHANGED || mark == IMPACTED) {
 							if (impact_set.add(changedNode))  dirty=true;
 							if (impact_set.addAll(Arrays.asList(eig.getNodeMembers(changedNode))))  dirty=true;
 					} else {
 						if (impact_set.remove(changedNode))  dirty=true;
 						if (impact_set.removeAll(Arrays.asList(eig.getNodeMembers(changedNode))))  dirty=true;
-						if ((mark!=null) && (mark.compareTo(EIGStatusMarks.VISITED_CONTINUE)==0) || (mark.compareTo(EIGStatusMarks.NEXT_VISIT)==0))
+						if (mark == NEXT_VISIT || mark == VISITED_CONTINUE)
 							dirty=true;
 					}
 					break;
@@ -164,7 +170,8 @@ public class JRipplesModuleAnalysisDefaultImpactSetConnections extends JRipplesA
 
 		if (node.getMark()==null) {
 			newProbability="";
-		} else if (!((node.getMark().compareTo(EIGStatusMarks.NEXT_VISIT)==0) || (node.getMark().compareTo(EIGStatusMarks.VISITED_CONTINUE)==0) )) {
+		} else if (!(node.getMark() == NEXT_VISIT
+				|| node.getMark() == VISITED_CONTINUE)) {
 			newProbability="";
 		}
 

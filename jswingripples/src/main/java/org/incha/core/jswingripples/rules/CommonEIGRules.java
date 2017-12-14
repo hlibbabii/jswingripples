@@ -2,24 +2,28 @@ package org.incha.core.jswingripples.rules;
 
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
-import org.incha.ui.jripples.EIGStatusMarks;
+import org.incha.core.jswingripples.eig.Mark;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.incha.core.jswingripples.eig.Mark.NEXT_VISIT;
+import static org.incha.core.jswingripples.eig.Mark.VISITED;
+
 public class CommonEIGRules {
 
 	//---------------Edge Level-------------------------------------------------
 	public static void assignMarkToNodeAndNeighbor(final JSwingRipplesEIG eig,
-	        final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo, final String markForNode, final String markForNeighbors) {
+                                                   final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo, final Mark markForNode, final Mark markForNeighbors) {
 		assignMarkToNodeAndParents(eig, nodeFrom,markForNode);
 		assignMarkToNodeAndParents(eig, nodeTo, markForNeighbors);
 	}
 
 	//=============================================Rules as of ICPC 08=================================
 	public static void applyRuleToNode(final JSwingRipplesEIG eig,
-	        final JSwingRipplesEIGNode node,final String newMark, final int granularity) {
+                                       final JSwingRipplesEIGNode node,
+                                       final Mark newMark, final int granularity) {
 		//algorithm
 		//1. Identify all members or parents at specified granularity
 		//2. find all neighbors of these members
@@ -39,7 +43,7 @@ public class CommonEIGRules {
 			assignMarkToNodeAndParents(eig, n,newMark);
 
 		}
-		if (EIGStatusMarks.VISITED.equals(newMark)) {
+		if (VISITED == newMark) {
 			return;
 		}
 
@@ -59,14 +63,15 @@ public class CommonEIGRules {
 		        JSwingRipplesEIG.NESTING_CONSIDERED_BOTH_TOP_AND_MEMBER_NODES);
 		filterNeighbors(eig, targets.iterator().next(), neighbors);
 		for (final JSwingRipplesEIGNode n:neighbors) {
-			assignMarkToNodeAndParents(eig, n,EIGStatusMarks.NEXT_VISIT);
+			assignMarkToNodeAndParents(eig, n, NEXT_VISIT);
 		}
 	}
 
-	public static void assignMarkToNodeAndParents(final JSwingRipplesEIG eig, JSwingRipplesEIGNode node, final String mark) {
+	public static void assignMarkToNodeAndParents(final JSwingRipplesEIG eig, JSwingRipplesEIGNode node,
+												  final Mark mark) {
 
 		while (node!=null) {
-			if (getImportance(mark)>getImportance(node.getMark())) {
+			if (mark.getImportance() > node.getMark().getImportance()) {
 				node.setMark(mark);
 			}
 			if (node.isTop()) {
@@ -78,23 +83,6 @@ public class CommonEIGRules {
 				return;
 			}
 		}
-	}
-
-
-
-	private static int getImportance(final String mark) {
-			if (mark==null) return 0;
-			if (mark.compareTo(EIGStatusMarks.BLANK)==0) return 1;
-			if (mark.compareTo(EIGStatusMarks.VISITED)==0) return 3;
-			if (mark.compareTo(EIGStatusMarks.NEXT_VISIT)==0) return 2;
-			if (mark.compareTo(EIGStatusMarks.VISITED_CONTINUE)==0) return 4;
-			if (mark.compareTo(EIGStatusMarks.LOCATED)==0) return 5;
-			if (mark.compareTo(EIGStatusMarks.IMPACTED)==0) return 6;
-			if (mark.compareTo(EIGStatusMarks.CHANGED)==0) return 7;
-
-
-			return 0;
-
 	}
 
 	private static void filterNeighbors(final JSwingRipplesEIG eig,

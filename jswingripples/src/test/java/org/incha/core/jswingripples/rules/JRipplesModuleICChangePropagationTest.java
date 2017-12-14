@@ -4,13 +4,12 @@ import org.incha.core.jswingripples.JRipplesICModule;
 import org.incha.core.jswingripples.JRipplesModuleRunner;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+import org.incha.core.jswingripples.eig.Mark;
 import org.incha.core.jswingripples.eig.history.History;
-import org.incha.ui.jripples.EIGStatusMarks;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -19,6 +18,13 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import static org.incha.core.jswingripples.eig.Mark.BLANK;
+import static org.incha.core.jswingripples.eig.Mark.CHANGED;
+import static org.incha.core.jswingripples.eig.Mark.IMPACTED;
+import static org.incha.core.jswingripples.eig.Mark.LOCATED;
+import static org.incha.core.jswingripples.eig.Mark.NEXT_VISIT;
+import static org.incha.core.jswingripples.eig.Mark.VISITED;
+import static org.incha.core.jswingripples.eig.Mark.VISITED_CONTINUE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
@@ -44,23 +50,21 @@ public class JRipplesModuleICChangePropagationTest extends JRipplesModuleICTest 
     @Test
     public void testGetAvailableRulesForMark() throws Exception {
         assertEquals(null, cp.getAvailableRulesForMark(null));
-        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.BLANK));
+        assertEquals(null, cp.getAvailableRulesForMark(BLANK));
 
         assertEquals(new LinkedHashSet<>(Arrays.asList(
-                EIGStatusMarks.CHANGED, EIGStatusMarks.VISITED_CONTINUE, EIGStatusMarks.VISITED
-        )), cp.getAvailableRulesForMark(EIGStatusMarks.NEXT_VISIT));
+                CHANGED, VISITED_CONTINUE, VISITED
+        )), cp.getAvailableRulesForMark(NEXT_VISIT));
 
-        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.LOCATED));
-        assertEquals(null, cp.getAvailableRulesForMark(EIGStatusMarks.IMPACTED));
+        assertEquals(null, cp.getAvailableRulesForMark(LOCATED));
+        assertEquals(null, cp.getAvailableRulesForMark(IMPACTED));
         assertEquals(new LinkedHashSet<>(Arrays.asList(
-                EIGStatusMarks.CHANGED
-        )), cp.getAvailableRulesForMark(EIGStatusMarks.CHANGED));
+                CHANGED
+        )), cp.getAvailableRulesForMark(CHANGED));
 
         assertEquals(new LinkedHashSet<>(Arrays.asList(
-                EIGStatusMarks.CHANGED, EIGStatusMarks.VISITED_CONTINUE
-        )), cp.getAvailableRulesForMark(EIGStatusMarks.VISITED_CONTINUE));
-
-        assertEquals(null, cp.getAvailableRulesForMark("unknown_mark"));
+                CHANGED, VISITED_CONTINUE
+        )), cp.getAvailableRulesForMark(VISITED_CONTINUE));
     }
 
     @Test
@@ -81,22 +85,20 @@ public class JRipplesModuleICChangePropagationTest extends JRipplesModuleICTest 
         JSwingRipplesEIG mockedEig = mock(JSwingRipplesEIG.class, RETURNS_DEEP_STUBS);
         when(mockedEig.getHistory()).thenReturn(mockedHistory);
         JSwingRipplesEIGNode[] nodes = {
-                createEIGClassNodeMock(EIGStatusMarks.BLANK, mockedEig),
-                createEIGClassNodeMock(EIGStatusMarks.VISITED, mockedEig),
-                createEIGClassNodeMock(EIGStatusMarks.VISITED_CONTINUE, mockedEig),
-                createEIGClassNodeMock(EIGStatusMarks.NEXT_VISIT, mockedEig),
-                createEIGClassNodeMock(EIGStatusMarks.LOCATED, mockedEig),
-                createEIGClassNodeMock(EIGStatusMarks.IMPACTED, mockedEig),
-                createEIGClassNodeMock(EIGStatusMarks.CHANGED, mockedEig),
-                createEIGClassNodeMock("wrong mark", mockedEig),
-                createEIGMethodNodeMock(EIGStatusMarks.BLANK, mockedEig),
-                createEIGMethodNodeMock(EIGStatusMarks.VISITED, mockedEig),
-                createEIGMethodNodeMock(EIGStatusMarks.VISITED_CONTINUE, mockedEig),
-                createEIGMethodNodeMock(EIGStatusMarks.NEXT_VISIT, mockedEig),
-                createEIGMethodNodeMock(EIGStatusMarks.LOCATED, mockedEig),
-                createEIGMethodNodeMock(EIGStatusMarks.IMPACTED, mockedEig),
-                createEIGMethodNodeMock(EIGStatusMarks.CHANGED, mockedEig),
-                createEIGMethodNodeMock("wrong mark", mockedEig),
+                createEIGClassNodeMock(BLANK, mockedEig),
+                createEIGClassNodeMock(VISITED, mockedEig),
+                createEIGClassNodeMock(VISITED_CONTINUE, mockedEig),
+                createEIGClassNodeMock(NEXT_VISIT, mockedEig),
+                createEIGClassNodeMock(LOCATED, mockedEig),
+                createEIGClassNodeMock(IMPACTED, mockedEig),
+                createEIGClassNodeMock(CHANGED, mockedEig),
+                createEIGMethodNodeMock(BLANK, mockedEig),
+                createEIGMethodNodeMock(VISITED, mockedEig),
+                createEIGMethodNodeMock(VISITED_CONTINUE, mockedEig),
+                createEIGMethodNodeMock(NEXT_VISIT, mockedEig),
+                createEIGMethodNodeMock(LOCATED, mockedEig),
+                createEIGMethodNodeMock(IMPACTED, mockedEig),
+                createEIGMethodNodeMock(CHANGED, mockedEig),
         };
         when(mockedEig.getAllNodes()).thenReturn(nodes);
         JRipplesModuleRunner mockedModuleRunner = mock(JRipplesModuleRunner.class);
@@ -111,23 +113,21 @@ public class JRipplesModuleICChangePropagationTest extends JRipplesModuleICTest 
 
         /* then */
 
-        assertNodesEquals(new String[]{
-                EIGStatusMarks.BLANK,  // 0
-                EIGStatusMarks.BLANK,  // 1
-                EIGStatusMarks.BLANK,  // 2
-                EIGStatusMarks.BLANK,  // 3
-                EIGStatusMarks.NEXT_VISIT,  // 4
-                EIGStatusMarks.NEXT_VISIT,  // 5
-                EIGStatusMarks.CHANGED,  // 6
-                EIGStatusMarks.BLANK,  // 7
-                EIGStatusMarks.BLANK,  // 8
-                EIGStatusMarks.BLANK,  // 9
-                EIGStatusMarks.BLANK,  // 10
-                EIGStatusMarks.BLANK,  // 11
-                EIGStatusMarks.NEXT_VISIT, // 12
-                EIGStatusMarks.NEXT_VISIT, // 13
-                EIGStatusMarks.NEXT_VISIT, // 14
-                EIGStatusMarks.BLANK, // 15
+        assertNodesEquals(new Mark[]{
+                BLANK,  // 0
+                BLANK,  // 1
+                BLANK,  // 2
+                BLANK,  // 3
+                NEXT_VISIT,  // 4
+                NEXT_VISIT,  // 5
+                CHANGED,  // 6
+                BLANK,  // 7
+                BLANK,  // 8
+                BLANK,  // 9
+                BLANK,  // 10
+                NEXT_VISIT, // 11
+                NEXT_VISIT, // 12
+                NEXT_VISIT, // 13
         }, nodes);
 
         PowerMockito.verifyStatic(CommonEIGRules.class, times(5));
@@ -135,13 +135,13 @@ public class JRipplesModuleICChangePropagationTest extends JRipplesModuleICTest 
         CommonEIGRules.applyRuleToNode(
                 eq(mockedEig),
                 nodeCaptor.capture(), //12-14, 4, 6
-                Matchers.matches("Changed"),
+                eq(CHANGED),
                 eq(0)
         );
         List<JSwingRipplesEIGNode> capturedNodes = nodeCaptor.getAllValues();
-        assertEquals("12", capturedNodes.get(0).getFullName());
-        assertEquals("13", capturedNodes.get(1).getFullName());
-        assertEquals("14", capturedNodes.get(2).getFullName());
+        assertEquals("11", capturedNodes.get(0).getFullName());
+        assertEquals("12", capturedNodes.get(1).getFullName());
+        assertEquals("13", capturedNodes.get(2).getFullName());
         assertEquals("4", capturedNodes.get(3).getFullName());
         assertEquals("5", capturedNodes.get(4).getFullName());
 
@@ -151,31 +151,31 @@ public class JRipplesModuleICChangePropagationTest extends JRipplesModuleICTest 
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithVisitedContinueRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED_CONTINUE,
+        testApplyRuleAtNodeWithTwoNodes(VISITED_CONTINUE,
                 assignMarkAndAnnotationToNodeAndNeighborVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithVisitedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.VISITED,
+        testApplyRuleAtNodeWithTwoNodes(VISITED,
                 applyRuleToNodeAndAnnotationToNodeAndNeighbourVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithLocatedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.LOCATED,
+        testApplyRuleAtNodeWithTwoNodes(LOCATED,
                 nothingIsCalledVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithImpactedRule_ShouldDoNothing() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.IMPACTED,
+        testApplyRuleAtNodeWithTwoNodes(IMPACTED,
                 nothingIsCalledVerification);
     }
 
     @Test
     public void testApplyRuleAtNodeWithTwoNodes_WithChangedRule() {
-        testApplyRuleAtNodeWithTwoNodes(EIGStatusMarks.CHANGED,
+        testApplyRuleAtNodeWithTwoNodes(CHANGED,
                 assignMarkAndAnnotationToNodeAndNeighborVerification);
     }
 }
