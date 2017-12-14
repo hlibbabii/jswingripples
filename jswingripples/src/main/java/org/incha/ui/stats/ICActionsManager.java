@@ -127,7 +127,7 @@ public final class ICActionsManager {
             manager.add(new JSeparator(JSeparator.HORIZONTAL));
 
             for (final Mark rule : newPossibleMarks) {
-                final JMenu edgesManager = new JMenu(JRipplesViewsConstants.GRANULARITY_EDGE_PREFIX + rule);
+                final JMenu edgesManager = new JMenu(JRipplesViewsConstants.GRANULARITY_EDGE_PREFIX + rule.getValue());
                 for (int i = 0; i < relatedNodes.length; i++) {
                     final ICAction action = new ICAction(node, relatedNodes[i], rule, false, context);
                     edgesManager.add(action);
