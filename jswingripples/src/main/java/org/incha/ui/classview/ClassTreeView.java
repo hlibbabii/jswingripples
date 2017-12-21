@@ -1,10 +1,15 @@
 package org.incha.ui.classview;
 
-import javax.swing.table.TableCellRenderer;
-
 import org.incha.core.JavaProject;
 import org.incha.core.search.Searcher;
-import org.incha.ui.jripples.JRipplesViewsConstants;
+import org.incha.ui.table.column.ClassFullNameColumn;
+import org.incha.ui.table.column.ClassShortNameColumn;
+import org.incha.ui.table.column.CommentColumn;
+import org.incha.ui.table.column.MarkColumn;
+import org.incha.ui.table.column.ProbabilityColumn;
+import org.incha.ui.table.column.SearchHitsColumn;
+
+import javax.swing.table.TableCellRenderer;
 
 public class ClassTreeView extends AbstractHierarchicalView {
     private static final long serialVersionUID = -725916023414871313L;
@@ -22,21 +27,15 @@ public class ClassTreeView extends AbstractHierarchicalView {
     @Override
     protected ClassTreeDataModel createModel() {
         return new ClassTreeDataModel(
-                JRipplesViewsConstants.SHORT_NAME_COLUMN_TITLE,
-                JRipplesViewsConstants.MARK_COLUMN_TITLE,
-                JRipplesViewsConstants.PROBABILITY_COLUMN_TITLE,
-                JRipplesViewsConstants.FULL_NAME_COLUMN_TITLE,
-                JRipplesViewsConstants.SEARCH_COLUMN_TITLE,
-                JRipplesViewsConstants.ANNOTATION_TITLE
+                new ClassShortNameColumn(this),
+                new MarkColumn(),
+                new ProbabilityColumn(),
+                new ClassFullNameColumn(),
+                new SearchHitsColumn(),
+                new CommentColumn()
                 );
     }
-    /**
-     * @return table cell renderer
-     */
-    @Override
-    protected ClassTreeRenderer createCellRenderer() {
-        return new ClassTreeRenderer();
-    }
+
     /* (non-Javadoc)
      * @see org.incha.ui.classview.AbstractHierarchicalView#createHeaderRenderer()
      */

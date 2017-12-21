@@ -22,7 +22,7 @@ public abstract class AbstractHierarchicalView extends JTable {
      */
     private MemberHierarchySupport support = new MemberHierarchySupport(
             new LinkedList<JSwingRipplesEIGNode>());
-    private Map<JSwingRipplesEIGNode, Boolean> expandedStates = new HashMap<JSwingRipplesEIGNode, Boolean>();
+    private Map<JSwingRipplesEIGNode, Boolean> expandedStates = new HashMap<>();
     private final JavaProject project;
 
     /**
@@ -70,6 +70,7 @@ public abstract class AbstractHierarchicalView extends JTable {
     protected TableCellRenderer createHeaderRenderer() {
         return new HeaderRenderer(this);
     }
+
     public void setData(final Collection<JSwingRipplesEIGNode> members) {
         getClassHierarchyModel().clear();
         support = new MemberHierarchySupport(members);
@@ -85,10 +86,13 @@ public abstract class AbstractHierarchicalView extends JTable {
      * @return
      */
     protected abstract ClassTreeDataModel createModel();
+
     /**
      * @return table cell renderer
      */
-    protected abstract AbstractMemberRenderer createCellRenderer();
+    private AbstractMemberRenderer createCellRenderer() {
+        return new AbstractMemberRenderer();
+    }
 
     public boolean isExpanded(final JSwingRipplesEIGNode member) {
         return Boolean.TRUE == expandedStates.get(member);
@@ -100,7 +104,7 @@ public abstract class AbstractHierarchicalView extends JTable {
         return (ClassTreeDataModel) getModel();
     }
 
-    protected void expandOrCollapse(Point point) {
+    private void expandOrCollapse(Point point) {
         final ClassTreeDataModel model = getClassHierarchyModel();
         final JSwingRipplesEIGNode m = getSelectedItem(point);
 
@@ -142,10 +146,10 @@ public abstract class AbstractHierarchicalView extends JTable {
         return model.getValueAt(row);
     }
 
-    protected boolean isCommentColumn(Point point) {
+    protected boolean isColumnEditable(Point point) {
         final int columnIndex = columnAtPoint(point);
         ClassTreeDataModel model = (ClassTreeDataModel) getModel();
-        return model.isCommentColumn(columnIndex);
+        return model.isCellEditable(0, columnIndex);
     }
     /**
      * @param member
@@ -158,7 +162,7 @@ public abstract class AbstractHierarchicalView extends JTable {
      * @param member
      * @return
      */
-    public int getHierarchyDepth(final JSwingRipplesEIGNode member) {
+    private int getHierarchyDepth(final JSwingRipplesEIGNode member) {
         return support.getHierarchyDepth(member);
     }
     /**

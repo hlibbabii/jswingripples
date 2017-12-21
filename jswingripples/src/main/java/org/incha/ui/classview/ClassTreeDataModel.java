@@ -1,12 +1,14 @@
 package org.incha.ui.classview;
 
-import org.eclipse.jdt.core.IMember;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
-import org.incha.ui.jripples.JRipplesViewsConstants;
+import org.incha.ui.table.column.Column;
+import org.incha.ui.table.column.renderer.ColumnRenderer;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,19 +17,27 @@ public class ClassTreeDataModel implements TableModel {
 	/**
      * The item list.
      */
-    private final List<JSwingRipplesEIGNode> items = new LinkedList<JSwingRipplesEIGNode>();
+    private final List<JSwingRipplesEIGNode> items = new LinkedList<>();
+    private JSwingRipplesEIGNode fixedValue;
+    private List<Integer> fixedColumns = new ArrayList<>();
 
     /**
      * The list of listeners.
      */
-    private final List<TableModelListener> listeners = new LinkedList<TableModelListener>();
+    private final List<TableModelListener> listeners = new LinkedList<>();
 
-    private final String[] columns;
+    private final Column[] columns;
 
-    public ClassTreeDataModel(final String... columns) {
+    public ClassTreeDataModel(final Column... columns) {
         super();
         this.columns = columns;
     }
+
+    public ClassTreeDataModel withFixedValueColumns(Integer... columnsNumber) {
+        fixedColumns.addAll(Arrays.asList(columnsNumber));
+        return this;
+    }
+
     /* (non-Javadoc)
      * @see javax.swing.table.TableModel#getRowCount()
      */
@@ -47,53 +57,56 @@ public class ClassTreeDataModel implements TableModel {
      */
     @Override
     public String getColumnName(final int columnIndex) {
-        return columns[columnIndex];
+        return columns[columnIndex].getName();
     }
     /* (non-Javadoc)
      * @see javax.swing.table.TableModel#getColumnClass(int)
      */
     @Override
     public Class<?> getColumnClass(final int columnIndex) {
-        return isCommentColumn(columnIndex)?
-            String.class : IMember.class;
+        return columns[columnIndex].getColumnClass();
     }
+
     /* (non-Javadoc)
      * @see javax.swing.table.TableModel#isCellEditable(int, int)
      */
     @Override
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-        return isCommentColumn(columnIndex);
+        return columns[columnIndex].isEditable();
     }
 
-    public boolean isCommentColumn(int columnIndex) {
-        return (getColumnName(columnIndex).equals(JRipplesViewsConstants.ANNOTATION_TITLE));
-    }
     /* (non-Javadoc)
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
     @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         checkBounds(rowIndex, columnIndex);
-        JSwingRipplesEIGNode jSwingRipplesEIGNode = items.get(rowIndex);
-        if (isCommentColumn(columnIndex)) {
-            String annotation = jSwingRipplesEIGNode.getAnnottation();
-            return annotation != null ? annotation : "";
+        JSwingRipplesEIGNode jSwingRipplesEIGNode;
+        if (fixedColumns.contains(columnIndex)) {
+            if (fixedValue == null) {
+                throw new RuntimeException(
+                        "There columns with fixed values in the table, but the fixed value hasn't been set"
+                );
+            }
+            jSwingRipplesEIGNode = fixedValue;
         } else {
-            return jSwingRipplesEIGNode;
+            jSwingRipplesEIGNode = items.get(rowIndex);
         }
+        return columns[columnIndex].getValue(jSwingRipplesEIGNode);
     }
     /**
      * @param row the row index.
      * @return
      */
     public JSwingRipplesEIGNode getValueAt(final int row) {
-        return (JSwingRipplesEIGNode) getValueAt(row, 0);
+        return items.get(row);
     }
+
     /**
      * @param rowIndex
      * @param columnIndex
      */
-    public void checkBounds(final int rowIndex, final int columnIndex) {
+    private void checkBounds(final int rowIndex, final int columnIndex) {
         if (rowIndex >= items.size() || columnIndex >= columns.length) {
             throw new RuntimeException("Out of data. Row: " + rowIndex
                     + ", column: " + columnIndex);
@@ -104,11 +117,8 @@ public class ClassTreeDataModel implements TableModel {
      */
     @Override
     public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
-        if (isCommentColumn(columnIndex)) {
-            items.get(rowIndex).setAnottationForce((String)value);
-        } else {
-            throw new UnsupportedOperationException("Only comment can be set.");
-        }
+        JSwingRipplesEIGNode jSwingRipplesEIGNode = items.get(rowIndex);
+        columns[columnIndex].setValue(jSwingRipplesEIGNode, value);
     }
     /**
      * @param rember the value to add.
@@ -228,5 +238,13 @@ public class ClassTreeDataModel implements TableModel {
             fireModelChanged(new TableModelEvent(this, 0, size,
                     TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE));
         }
+    }
+
+    public ColumnRenderer<?> getColumnRenderer(int column) {
+        return columns[column].getColumnRenderer();
+    }
+
+    public void setFixedValue(JSwingRipplesEIGNode fixedValue) {
+        this.fixedValue = fixedValue;
     }
 }
