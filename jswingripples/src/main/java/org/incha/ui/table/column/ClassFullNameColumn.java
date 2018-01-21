@@ -11,7 +11,7 @@ public class ClassFullNameColumn extends Column<String> {
     }
 
     @Override
-    public Class<?> getColumnClass() {
+    public Class<String> getColumnClass() {
         return String.class;
     }
 

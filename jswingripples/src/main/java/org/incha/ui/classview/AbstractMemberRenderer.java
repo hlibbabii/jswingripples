@@ -28,7 +28,7 @@ public class AbstractMemberRenderer extends DefaultTableCellRenderer {
         label.setIcon(null);
         label.setHorizontalTextPosition(RIGHT);
 
-        ColumnRenderer<?> columnRenderer =
+        ColumnRenderer columnRenderer =
                 ((ClassTreeDataModel) t.getModel()).getColumnRenderer(column);
         return columnRenderer.getComponent(label, value);
     }

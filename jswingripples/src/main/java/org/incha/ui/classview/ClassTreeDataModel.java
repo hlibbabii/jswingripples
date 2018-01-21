@@ -240,7 +240,7 @@ public class ClassTreeDataModel implements TableModel {
         }
     }
 
-    public ColumnRenderer<?> getColumnRenderer(int column) {
+    public ColumnRenderer getColumnRenderer(int column) {
         return columns[column].getColumnRenderer();
     }
 

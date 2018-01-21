@@ -21,7 +21,7 @@ import java.awt.*;
 
 import static org.incha.core.jswingripples.eig.Mark.BLANK;
 
-public class ShortNameColumnRenderer extends ColumnRenderer<JSwingRipplesEIGNode> {
+public class ShortNameColumnRenderer extends ColumnRenderer {
 
     private JTable table;
 

@@ -20,7 +20,7 @@ public class MarkColumn extends Column<Mark> {
     }
 
     @Override
-    public Class<?> getColumnClass() {
+    public Class<Mark> getColumnClass() {
         return Mark.class;
     }
 
@@ -30,7 +30,7 @@ public class MarkColumn extends Column<Mark> {
     }
 
     @Override
-    public ColumnRenderer<?> getColumnRenderer() {
+    public ColumnRenderer getColumnRenderer() {
         return new MarkColumnRenderer();
     }
 }

@@ -25,7 +25,7 @@ public class CommentColumn extends Column<String> {
     }
 
     @Override
-    public Class<?> getColumnClass() {
+    public Class<String> getColumnClass() {
         return String.class;
     }
 
@@ -35,7 +35,7 @@ public class CommentColumn extends Column<String> {
     }
 
     @Override
-    public ColumnRenderer<?> getColumnRenderer() {
+    public ColumnRenderer getColumnRenderer() {
         return new CommentColumnRenderer();
     }
 }

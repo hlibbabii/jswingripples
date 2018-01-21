@@ -6,7 +6,7 @@ import org.incha.core.search.Searcher;
 import javax.swing.*;
 import java.awt.*;
 
-public class SearchHitsColumnRenderer extends ColumnRenderer<String> {
+public class SearchHitsColumnRenderer extends ColumnRenderer {
 
     @Override
     public Component getComponent(JLabel label, Object value) {

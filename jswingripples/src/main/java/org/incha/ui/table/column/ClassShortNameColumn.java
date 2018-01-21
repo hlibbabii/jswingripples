@@ -22,7 +22,7 @@ public class ClassShortNameColumn extends Column<JSwingRipplesEIGNode> {
     }
 
     @Override
-    public Class<?> getColumnClass() {
+    public Class<JSwingRipplesEIGNode> getColumnClass() {
         return JSwingRipplesEIGNode.class;
     }
 
@@ -32,7 +32,7 @@ public class ClassShortNameColumn extends Column<JSwingRipplesEIGNode> {
     }
 
     @Override
-    public ColumnRenderer<?> getColumnRenderer() {
+    public ColumnRenderer getColumnRenderer() {
         return new ShortNameColumnRenderer(table);
     }
 }

@@ -8,7 +8,7 @@ import org.incha.ui.dependency.ClassDependencyView;
 import javax.swing.*;
 import java.awt.*;
 
-public class DependencyNoteColumnRenderer extends ColumnRenderer<JSwingRipplesEIGNode> {
+public class DependencyNoteColumnRenderer extends ColumnRenderer {
 
     private ClassDependencyView classDependencyView;
 

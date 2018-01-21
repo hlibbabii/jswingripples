@@ -5,7 +5,7 @@ import org.incha.core.jswingripples.eig.Mark;
 import javax.swing.*;
 import java.awt.*;
 
-public class MarkColumnRenderer extends ColumnRenderer<Mark> {
+public class MarkColumnRenderer extends ColumnRenderer {
 
     @Override
     public Component getComponent(JLabel label, Object value) {

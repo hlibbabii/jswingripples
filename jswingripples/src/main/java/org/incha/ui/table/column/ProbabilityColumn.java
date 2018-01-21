@@ -12,7 +12,7 @@ public class ProbabilityColumn extends Column<String> {
     }
 
     @Override
-    public Class<?> getColumnClass() {
+    public Class<String> getColumnClass() {
         return String.class;
     }
 

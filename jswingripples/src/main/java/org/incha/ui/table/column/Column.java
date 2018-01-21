@@ -19,8 +19,8 @@ public abstract class Column<T> {
     public abstract Class<?> getColumnClass();
     public abstract String getName();
 
-    public ColumnRenderer<?> getColumnRenderer() {
-        return new ColumnRenderer<Object>() {
+    public ColumnRenderer getColumnRenderer() {
+        return new ColumnRenderer() {
             @Override
             public Component getComponent(JLabel label, Object value) {
                 return label;

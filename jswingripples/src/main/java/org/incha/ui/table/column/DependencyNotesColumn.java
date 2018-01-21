@@ -30,7 +30,7 @@ public class DependencyNotesColumn extends Column<JSwingRipplesEIGNode> {
     }
 
     @Override
-    public ColumnRenderer<?> getColumnRenderer() {
+    public ColumnRenderer getColumnRenderer() {
         return new DependencyNoteColumnRenderer(classDependencyView);
     }
 }
