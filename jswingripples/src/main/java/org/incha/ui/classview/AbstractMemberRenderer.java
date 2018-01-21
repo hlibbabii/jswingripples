@@ -9,11 +9,10 @@ import java.awt.*;
 public class AbstractMemberRenderer extends DefaultTableCellRenderer {
     private static final long serialVersionUID = 5646472411943179112L;
 
-    /**
-     * Default constructor.
-     */
-    public AbstractMemberRenderer() {
-        super();
+    private ColumnRenderer columnRenderer;
+
+    public AbstractMemberRenderer(ColumnRenderer columnRenderer) {
+        this.columnRenderer = columnRenderer;
     }
 
     /* (non-Javadoc)
@@ -28,8 +27,6 @@ public class AbstractMemberRenderer extends DefaultTableCellRenderer {
         label.setIcon(null);
         label.setHorizontalTextPosition(RIGHT);
 
-        ColumnRenderer columnRenderer =
-                ((ClassTreeDataModel) t.getModel()).getColumnRenderer(column);
         return columnRenderer.getComponent(label, value);
     }
 }

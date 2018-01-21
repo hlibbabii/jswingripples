@@ -2,6 +2,7 @@ package org.incha.ui.classview;
 
 import org.incha.core.JavaProject;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+import org.incha.ui.table.column.renderer.ColumnRenderer;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -39,14 +40,13 @@ public abstract class AbstractHierarchicalView extends JTable {
         setDragEnabled(false);
         setRowHeight(20);
 
-        final TableCellRenderer cellRenderer = createCellRenderer();
         final TableCellRenderer headerRenderer = createHeaderRenderer();
 
         //set renderer to all columns
         final int count = getColumnCount();
         for (int i = 0; i < count; i++) {
             final TableColumn column = getColumnModel().getColumn(i);
-            column.setCellRenderer(cellRenderer);
+            column.setCellRenderer(createCellRenderer(i));
             if (headerRenderer != null) {
                 column.setHeaderRenderer(headerRenderer);
             }
@@ -89,9 +89,11 @@ public abstract class AbstractHierarchicalView extends JTable {
 
     /**
      * @return table cell renderer
+     * @param column
      */
-    private AbstractMemberRenderer createCellRenderer() {
-        return new AbstractMemberRenderer();
+    private AbstractMemberRenderer createCellRenderer(int column) {
+        ColumnRenderer columnRenderer = ((ClassTreeDataModel) getModel()).getColumnRenderer(column);
+        return new AbstractMemberRenderer(columnRenderer);
     }
 
     public boolean isExpanded(final JSwingRipplesEIGNode member) {
