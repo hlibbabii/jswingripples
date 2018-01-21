@@ -20,7 +20,7 @@ public class ImpactAnalysisStage extends AnalysisStage {
             public void execute(ModuleConfiguration config, final JSwingRipplesEIG eig) {
                 nextStage.setEig(eig);
                 application.enableProceedButton(true);
-                application.refreshViewArea();
+                application.refreshViewArea(eig);
                 application.setProceedButtonText("Proceed to " + nextStage.getAnalysisModule().getFormattedName());
                 application.setProceedButtonListener(nextStage.getButtonListener());
             }

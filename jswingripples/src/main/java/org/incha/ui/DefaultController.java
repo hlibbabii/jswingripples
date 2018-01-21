@@ -8,17 +8,22 @@ import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.core.jswingripples.eig.StatisticsChangeListener;
 import org.incha.ui.stats.HierarchicalView;
+import org.incha.ui.stats.HierarchicalViewWithCouplingColumn;
+import org.incha.ui.stats.HierarchicalViewWithProbabilityColumn;
 import org.incha.ui.util.ModalContext;
 import org.incha.ui.util.RunnableWithProgress;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 
 public class DefaultController implements StatisticsChangeListener {
     private static final Log log = LogFactory.getLog(DefaultController.class);
+
+    private JScrollPane comp;
     /**
      * Default constructor.
      */
@@ -34,7 +39,7 @@ public class DefaultController implements StatisticsChangeListener {
         openAnalysisView(stats);
     }
 
-    protected void openAnalysisView(final Statistics stats) {
+    private void openAnalysisView(final Statistics stats) {
         final JavaProject project = stats.getEIG().getJavaProject();
         if (project != null) {
             project.setCurrentStatistics(stats);
@@ -45,7 +50,7 @@ public class DefaultController implements StatisticsChangeListener {
     /**
      * @param stats statistics.
      */
-    protected void openClassViewer(final Statistics stats) {
+    private void openClassViewer(final Statistics stats) {
         try {
             ModalContext.run(new RunnableWithProgress() {
                 @Override
@@ -60,19 +65,26 @@ public class DefaultController implements StatisticsChangeListener {
         }
     }
 
-    protected void openView(final Statistics stats, final TaskProgressMonitor monitor) {
+    public void updateView(JSwingRipplesEIG eig) {
+        final JavaProject project = eig.getJavaProject();
+        final List<JSwingRipplesEIGNode> members = getMembers(eig);
+
+        comp.setViewportView(new HierarchicalViewWithCouplingColumn(project, members));
+    }
+
+    private void openView(final Statistics stats, final TaskProgressMonitor monitor) {
         final JavaProject project = stats.getEIG().getJavaProject();
         final List<JSwingRipplesEIGNode> members = getMembers(stats.getEIG());
 
         monitor.beginTask("Create statistics view", 1);
         final HierarchicalView view;
         try {
-            view = new HierarchicalView(project, members);
+            view = new HierarchicalViewWithProbabilityColumn(project, members);
         } finally {
             monitor.done();
         }
 
-        final JScrollPane comp = new JScrollPane(view);
+        comp = new JScrollPane(view);
         comp.getViewport().setBackground(Color.WHITE);
         if(JSwingRipplesApplication.getInstance().isAnotherProjectOpen()){
             JSwingRipplesApplication.getInstance().removeAllTabs();
@@ -85,10 +97,8 @@ public class DefaultController implements StatisticsChangeListener {
      * @return
      */
     private List<JSwingRipplesEIGNode> getMembers(final JSwingRipplesEIG eig) {
-        final List<JSwingRipplesEIGNode> list = new LinkedList<JSwingRipplesEIGNode>();
-        for (final JSwingRipplesEIGNode node : eig.getAllNodes()) {
-            list.add(node);
-        }
+        final List<JSwingRipplesEIGNode> list = new LinkedList<>();
+        Collections.addAll(list, eig.getAllNodes());
         return list;
     }
 

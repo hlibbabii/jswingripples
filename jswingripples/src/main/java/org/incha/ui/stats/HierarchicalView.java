@@ -15,7 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-public class HierarchicalView extends ClassTreeView {
+public abstract class HierarchicalView extends ClassTreeView {
     private static final long serialVersionUID = -725916023414871313L;
 
     /**

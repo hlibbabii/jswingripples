@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.incha.core.JavaProject;
 import org.incha.core.JavaProjectsModel;
 import org.incha.core.StatisticsManager;
+import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.ui.stats.StartAnalysisAction;
 
 import javax.swing.*;
@@ -28,6 +29,7 @@ public class JSwingRipplesApplication extends JFrame implements SourceLoadingLis
     private final MainMenuBar mainMenuBar;
     private static JSwingRipplesApplication instance;
     private TaskProgressMonitor progressMonitor;
+    private DefaultController defaultController = new DefaultController();
 
     private JSwingRipplesApplication(final JTabbedPane viewArea, TaskProgressMonitor progressMonitor) {
         super("JSwingRipples");
@@ -42,7 +44,7 @@ public class JSwingRipplesApplication extends JFrame implements SourceLoadingLis
         setJMenuBar(mainMenuBar.getJBar());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         addJTabbedPaneMouseListener(viewArea);
-        StatisticsManager.getInstance().addStatisticsChangeListener(new DefaultController());
+        StatisticsManager.getInstance().addStatisticsChangeListener(defaultController);
         new ModelSaver(JavaProjectsModel.getInstance(), JavaProjectsModel.getModelFile());
     }
 
@@ -267,7 +269,8 @@ public class JSwingRipplesApplication extends JFrame implements SourceLoadingLis
         proceedButton.setEnabled(enable);
     }
 
-    public void refreshViewArea() {
+    public void refreshViewArea(JSwingRipplesEIG eig) {
+        defaultController.updateView(eig);
         viewArea.repaint();
     }
 
