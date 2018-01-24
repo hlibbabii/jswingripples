@@ -105,7 +105,7 @@ public class ClassTreeDataModel implements TableModel {
     @Override
     public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
         if (isCommentColumn(columnIndex)) {
-            items.get(rowIndex).setAnottationForce((String)value);
+            items.get(rowIndex).onAnnotationEditedManually((String)value);
         } else {
             throw new UnsupportedOperationException("Only comment can be set.");
         }

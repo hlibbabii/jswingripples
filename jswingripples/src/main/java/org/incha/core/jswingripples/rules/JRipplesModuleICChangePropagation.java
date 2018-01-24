@@ -37,12 +37,12 @@ public class JRipplesModuleICChangePropagation extends JRipplesICModule {
 
     @Override
     protected void setClassElementAnnotation(JSwingRipplesEIGNode node) {
-        node.setAnottation(JRipplesModuleICChangePropagation.CLASS_ELEMENT_ANNOTATION);
+        node.setAnnotationIfNotEditedManually(JRipplesModuleICChangePropagation.CLASS_ELEMENT_ANNOTATION);
     }
 
     @Override
     protected void setClassAnnotation(JSwingRipplesEIGNode node) {
-        node.setAnottation(JRipplesModuleICChangePropagation.CLASS_ANNOTATION);
+        node.setAnnotationIfNotEditedManually(JRipplesModuleICChangePropagation.CLASS_ANNOTATION);
     }
 
 	@Override

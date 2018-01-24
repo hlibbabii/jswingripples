@@ -159,7 +159,7 @@ public class CommonEIGRules {
 	public static void assignAnnotationToNodeAndParents(final JSwingRipplesEIG eig, JSwingRipplesEIGNode node,
 														final String text) {
 		while (node!=null) {
-			node.setAnottation(text);
+			node.setAnnotationIfNotEditedManually(text);
 			if (node.isTop()) {
 				return;
 			}
