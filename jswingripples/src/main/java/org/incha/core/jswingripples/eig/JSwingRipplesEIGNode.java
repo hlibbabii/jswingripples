@@ -23,7 +23,8 @@ public  class JSwingRipplesEIGNode {
 
 	private Mark mark = BLANK;
 	private String probability;
-	public String annotation;
+	private String annotation;
+	private boolean annotationEditedManually = false;
 
 	private final IMember nodeMember; 
 
@@ -190,25 +191,21 @@ public  class JSwingRipplesEIGNode {
     	return annotation;
     }
 
-    /**
-     * Sets the annotation if there is no annotation yet or existing annotation is empty String.
-	 * This behaviour is implemented in order not to allow to set a standard annotation if
-	 * the custom one was already set by the user.
-	 * Use {@link org.incha.core.jswingripples.eig.JSwingRipplesEIGNode#setAnottationForce(String)}
-	 * to overwrite existing annotation
-	 *
-	 * @return {@code true}, if the annotation was set by this method, {@code false} otherwise
-     */
-    public boolean setAnottation(String annotationSupport){
-    	if (annotation == null || annotation.isEmpty()) {
-			this.annotation = annotationSupport;
+    public boolean setAnnotationIfNotEditedManually(String annotation){
+    	if (!annotationEditedManually) {
+			setAnnotation(annotation);
 			return true;
 		}
 		return false;
     }
 
-	public void setAnottationForce(String value) {
+	public void setAnnotation(String value) {
 		annotation = value;
+	}
+
+	public void onAnnotationEditedManually(String newValue) {
+    	annotationEditedManually = true;
+    	setAnnotation(newValue);
 	}
 
     /**

@@ -21,7 +21,7 @@ public class CommentColumn extends Column<String> {
 
     @Override
     public void setValue(JSwingRipplesEIGNode node, String value) {
-        node.setAnottationForce(value);
+        node.onAnnotationEditedManually(value);
     }
 
     @Override
