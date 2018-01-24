@@ -18,7 +18,7 @@ public class AnnotationSetAction implements UndoAction {
 
 	@Override
 	public AnnotationSetAction undo() {
-		node.setAnottation(oldAnnotation);
+		node.setAnnotation(oldAnnotation);
 		return new AnnotationSetAction(node,newAnnotation,oldAnnotation);
 	}
 
