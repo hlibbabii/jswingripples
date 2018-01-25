@@ -27,4 +27,8 @@ public abstract class Column<T> {
             }
         };
     }
+
+    public boolean isSortable() {
+        return false;
+    }
 }

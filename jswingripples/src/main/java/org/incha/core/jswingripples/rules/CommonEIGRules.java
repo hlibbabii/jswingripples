@@ -123,14 +123,20 @@ public class CommonEIGRules {
 		return -1;
 	}
 
-	private static JSwingRipplesEIGNode findParent(final JSwingRipplesEIG eig, final JSwingRipplesEIGNode n,final int neededLevel) {
+	private static JSwingRipplesEIGNode findParent(final JSwingRipplesEIG eig, final JSwingRipplesEIGNode node,final int neededLevel) {
 		int level=0;
-		JSwingRipplesEIGNode node=n;
-		while (level!=neededLevel) {
-			node=eig.findParentNodeForMemberNode(node);
+		JSwingRipplesEIGNode uppestNotNull = node;
+		JSwingRipplesEIGNode parent = eig.findParentNodeForMemberNode(uppestNotNull);
+		while (level != neededLevel && parent != null) {
+			uppestNotNull = parent;
+			parent = eig.findParentNodeForMemberNode(uppestNotNull);
 			level--;
 		}
-		return node;
+		return uppestNotNull;
+	}
+
+	public static JSwingRipplesEIGNode findUppestParent(final JSwingRipplesEIG eig, final JSwingRipplesEIGNode node) {
+		return findParent(eig, node, Integer.MIN_VALUE);
 	}
 
 

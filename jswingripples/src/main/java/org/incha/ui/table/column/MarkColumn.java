@@ -5,7 +5,7 @@ import org.incha.core.jswingripples.eig.Mark;
 import org.incha.ui.table.column.renderer.ColumnRenderer;
 import org.incha.ui.table.column.renderer.MarkColumnRenderer;
 
-public class MarkColumn extends Column<Mark> {
+public class MarkColumn extends Column<ParentAwareMark> {
 
     private final static String NAME = "Mark";
 
@@ -15,8 +15,8 @@ public class MarkColumn extends Column<Mark> {
     }
 
     @Override
-    public Mark getValue(JSwingRipplesEIGNode node) {
-        return node.getMark();
+    public ParentAwareMark getValue(JSwingRipplesEIGNode node) {
+        return ParentAwareMark.create(node);
     }
 
     @Override
@@ -32,5 +32,10 @@ public class MarkColumn extends Column<Mark> {
     @Override
     public ColumnRenderer getColumnRenderer() {
         return new MarkColumnRenderer();
+    }
+
+    @Override
+    public boolean isSortable() {
+        return true;
     }
 }

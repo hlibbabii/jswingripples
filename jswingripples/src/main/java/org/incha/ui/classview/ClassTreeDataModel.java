@@ -33,6 +33,10 @@ public class ClassTreeDataModel implements TableModel {
         this.columns = columns;
     }
 
+    public Column[] getColumns() {
+        return columns;
+    }
+
     public ClassTreeDataModel withFixedValueColumns(Integer... columnsNumber) {
         fixedColumns.addAll(Arrays.asList(columnsNumber));
         return this;

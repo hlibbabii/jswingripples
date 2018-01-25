@@ -2,11 +2,14 @@ package org.incha.ui.classview;
 
 import org.incha.core.JavaProject;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+import org.incha.ui.table.column.Column;
 import org.incha.ui.table.column.renderer.ColumnRenderer;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -32,7 +35,8 @@ public abstract class AbstractHierarchicalView extends JTable {
     public AbstractHierarchicalView(final JavaProject project) {
         super();
         this.project = project;
-        setModel(createModel());
+        ClassTreeDataModel tableModel = createModel();
+        setModel(tableModel);
 
         setAutoCreateColumnsFromModel(true);
         setColumnSelectionAllowed(false);
@@ -63,6 +67,14 @@ public abstract class AbstractHierarchicalView extends JTable {
                 }
             }
         });
+
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>((TableModel) tableModel);
+        Column[] columns = tableModel.getColumns();
+        for (int i = 0; i < columns.length; i++) {
+            sorter.setSortable(i, columns[i].isSortable());
+        }
+
+        setRowSorter(sorter);
     }
     /**
      * @return
@@ -107,7 +119,6 @@ public abstract class AbstractHierarchicalView extends JTable {
     }
 
     private void expandOrCollapse(Point point) {
-        final ClassTreeDataModel model = getClassHierarchyModel();
         final JSwingRipplesEIGNode m = getSelectedItem(point);
 
         if(m != null && hasChildren(m)) {
@@ -118,24 +129,39 @@ public abstract class AbstractHierarchicalView extends JTable {
                     || point.x > getHierarchyOffset(m) + 16) {
                 return;
             }
+            int modelIndex = convertRowIndexToModel(row);
 
             if (isExpanded(m)) {
-                expandedStates.put(m, Boolean.FALSE);
-                final int depth = getHierarchyDepth(m);
-                //collapse node
-                row++;
-                while (row < getRowCount() && depth < getHierarchyDepth(model.getValueAt(row))) {
-                    model.removeRow(row);
-                }
+                collapse(m, modelIndex);
             } else {
-                expandedStates.put(m, Boolean.TRUE);
-                //expand
-                final JSwingRipplesEIGNode[] members = support.getChildren(m);
-                Arrays.sort(members, new MemberComparator());
-                model.addAll(members, row + 1);
+                expand(m, modelIndex);
             }
 
             repaint();
+        }
+    }
+
+    private void expand(JSwingRipplesEIGNode m, int modelRowIndex) {
+        ClassTreeDataModel model = getClassHierarchyModel();
+        expandedStates.put(m, Boolean.TRUE);
+        //expand
+        final JSwingRipplesEIGNode[] members = support.getChildren(m);
+        Arrays.sort(members, new MemberComparator());
+        model.addAll(members, modelRowIndex + 1);
+    }
+
+    private void collapse(JSwingRipplesEIGNode m, int modelRowIndex) {
+        ClassTreeDataModel model = getClassHierarchyModel();
+        expandedStates.put(m, Boolean.FALSE);
+        final int depth = getHierarchyDepth(m);
+
+        modelRowIndex++;
+        while (modelRowIndex < model.getRowCount() && depth < getHierarchyDepth(model.getValueAt(modelRowIndex))) {
+            JSwingRipplesEIGNode node = model.getValueAt(modelRowIndex);
+            if (hasChildren(node)) {
+                expandedStates.put(node, Boolean.FALSE);
+            }
+            model.removeRow(modelRowIndex);
         }
     }
 
@@ -144,8 +170,9 @@ public abstract class AbstractHierarchicalView extends JTable {
         if (row < 0) {
             return null;
         }
+        int modelIndex = convertRowIndexToModel(row);
         final ClassTreeDataModel model = getClassHierarchyModel();
-        return model.getValueAt(row);
+        return model.getValueAt(modelIndex);
     }
 
     protected boolean isColumnEditable(Point point) {
