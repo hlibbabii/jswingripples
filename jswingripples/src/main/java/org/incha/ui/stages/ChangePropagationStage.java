@@ -21,7 +21,7 @@ public class ChangePropagationStage extends AnalysisStage {
                 application.enableProceedButton(true);
                 application.hideProceedButton();
                 application.resetProceedButton();
-                application.refreshViewArea();
+                application.refreshViewArea(eig);
             }
         };
     }

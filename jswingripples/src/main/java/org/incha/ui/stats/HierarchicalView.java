@@ -15,7 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-public class HierarchicalView extends ClassTreeView {
+public abstract class HierarchicalView extends ClassTreeView {
     private static final long serialVersionUID = -725916023414871313L;
 
     /**
@@ -37,7 +37,7 @@ public class HierarchicalView extends ClassTreeView {
                     showPopupMenu(point);
                 } else if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
                     JSwingRipplesEIGNode selectedItem = getSelectedItem(point);
-                    if (!isCommentColumn(point)) {
+                    if (!isColumnEditable(point)) {
                         IMember selectedNodeIMember = selectedItem.getNodeIMember();
                         ISourceRange selectedNodeSourceRange;
                         try {
@@ -62,7 +62,7 @@ public class HierarchicalView extends ClassTreeView {
         });
     }
 
-    protected void showPopupMenu(Point point) {
+    private void showPopupMenu(Point point) {
         final JSwingRipplesEIGNode node = getSelectedItem(point);
         if (node != null) {
             ICActionsManager.getInstance().showMenuForNode(node, point.x, point.y, this);

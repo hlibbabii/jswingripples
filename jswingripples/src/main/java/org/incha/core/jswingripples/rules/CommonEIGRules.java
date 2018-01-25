@@ -3,6 +3,7 @@ package org.incha.core.jswingripples.rules;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIG;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
 import org.incha.core.jswingripples.eig.Mark;
+import org.incha.core.jswingripples.eig.Status;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,9 +16,37 @@ public class CommonEIGRules {
 
 	//---------------Edge Level-------------------------------------------------
 	public static void assignMarkToNodeAndNeighbor(final JSwingRipplesEIG eig,
-                                                   final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo, final Mark markForNode, final Mark markForNeighbors) {
-		assignMarkToNodeAndParents(eig, nodeFrom,markForNode);
-		assignMarkToNodeAndParents(eig, nodeTo, markForNeighbors);
+                                                   final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo, final Mark markForNode) {
+		assignStateToNodeAndParents(eig, nodeFrom,markForNode, null, null);
+		assignStateToNodeAndParents(eig, nodeTo, NEXT_VISIT, nodeFrom, null);
+	}
+
+	public static void assignStateToNodeAndParents(JSwingRipplesEIG eig, JSwingRipplesEIGNode node,
+												   Mark mark, JSwingRipplesEIGNode propagationSource, String annotation) {
+		while (node!=null) {
+			JSwingRipplesEIGNode newPropagationSource = propagationSource != null ?
+					propagationSource :
+					node.getChangePropagationSource();
+
+			Mark newMark = (mark != null && mark.getImportance() > node.getMark().getImportance()) ?
+					mark :
+					node.getMark();
+
+			String newAnnotation = annotation != null ?
+					annotation :
+					node.getAnnottation();
+
+			node.changeStatus(Status.create(newMark, newPropagationSource, newAnnotation));
+
+			if (node.isTop()) {
+				return;
+			}
+			//comment below will lead JRipples halt, but why?
+			node=eig.findParentNodeForMemberNode(node);
+			if (node==null) {
+				return;
+			}
+		}
 	}
 
 	//=============================================Rules as of ICPC 08=================================
@@ -40,7 +69,7 @@ public class CommonEIGRules {
 		}
 
 		for (final JSwingRipplesEIGNode n:targets) {
-			assignMarkToNodeAndParents(eig, n,newMark);
+			assignStateToNodeAndParents(eig, n,newMark, null, null);
 
 		}
 		if (VISITED == newMark) {
@@ -63,25 +92,7 @@ public class CommonEIGRules {
 		        JSwingRipplesEIG.NESTING_CONSIDERED_BOTH_TOP_AND_MEMBER_NODES);
 		filterNeighbors(eig, targets.iterator().next(), neighbors);
 		for (final JSwingRipplesEIGNode n:neighbors) {
-			assignMarkToNodeAndParents(eig, n, NEXT_VISIT);
-		}
-	}
-
-	public static void assignMarkToNodeAndParents(final JSwingRipplesEIG eig, JSwingRipplesEIGNode node,
-												  final Mark mark) {
-
-		while (node!=null) {
-			if (mark.getImportance() > node.getMark().getImportance()) {
-				node.setMark(mark);
-			}
-			if (node.isTop()) {
-				return;
-			}
-			//comment below will lead JRipples halt, but why?
-			node=eig.findParentNodeForMemberNode(node);
-			if (node==null) {
-				return;
-			}
+			assignStateToNodeAndParents(eig, n, NEXT_VISIT, node, null);
 		}
 	}
 
@@ -135,28 +146,9 @@ public class CommonEIGRules {
 
 	}
 
-	public static void assignAnnotationToNodeAndNeighbor(final JSwingRipplesEIG eig, final JSwingRipplesEIGNode nodeFrom,
-														 final JSwingRipplesEIGNode nodeTo, String text) {
-		 {
-			assignAnnotationToNodeAndParents(eig, nodeFrom, text);
-			assignAnnotationToNodeAndParents(eig, nodeTo, text);
-		
-		 }
-	}
-
-	public static void assignAnnotationToNodeAndParents(final JSwingRipplesEIG eig, JSwingRipplesEIGNode node,
-														final String text) {
-		while (node!=null) {
-			node.setAnnotationIfNotEditedManually(text);
-			if (node.isTop()) {
-				return;
-			}
-			//comment below will lead JRipples halt, but why?
-			node=eig.findParentNodeForMemberNode(node);
-			if (node==null) {
-				return;
-			}
-		}
-		
-	}
+    public static void assignAnnotationToNodeAndNeighbor(final JSwingRipplesEIG eig, final JSwingRipplesEIGNode nodeFrom,
+                                                         final JSwingRipplesEIGNode nodeTo, String text) {
+            assignStateToNodeAndParents(eig, nodeFrom, null, null, text);
+            assignStateToNodeAndParents(eig, nodeTo, null, null, text);
+    }
 }	

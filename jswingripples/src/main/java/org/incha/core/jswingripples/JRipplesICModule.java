@@ -103,7 +103,7 @@ public abstract class JRipplesICModule extends JRipplesModule {
 			);
 			for (JSwingRipplesEIGNode node : nodes) {
 				if (!importantMarksList.contains(node.getMark()))
-					node.setMark(BLANK);
+					node.initMark(BLANK);
 				else if (!node.isTop()) {
 					impactedMemberNodes.add(node);
 					setClassAnnotation(node);
@@ -114,14 +114,14 @@ public abstract class JRipplesICModule extends JRipplesModule {
 			}
 			//          Process members first
 			for (final JSwingRipplesEIGNode impacted_node : impactedMemberNodes) {
-				impacted_node.setMark(NEXT_VISIT);
+				impacted_node.initMark(NEXT_VISIT);
 				CommonEIGRules.applyRuleToNode(eig, impacted_node, getSpecificMark(), 0);
 			}
 
 			//          Process top nodes if any
 			for (final JSwingRipplesEIGNode impacted_node : impactedTopNodes) {
 				if (!getSpecificMark().equals(impacted_node.getMark())) {
-					impacted_node.setMark(NEXT_VISIT);
+					impacted_node.initMark(NEXT_VISIT);
 					CommonEIGRules.applyRuleToNode(eig, impacted_node, getSpecificMark(), 0);
 				}
 			}
@@ -163,7 +163,7 @@ public abstract class JRipplesICModule extends JRipplesModule {
 	 */
 	public void applyRuleAtNode(final Mark rule, final JSwingRipplesEIGNode nodeFrom, final JSwingRipplesEIGNode nodeTo) {
 		if (getSpecificMark() == rule || VISITED_CONTINUE == rule) {
-			CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo,rule, NEXT_VISIT);
+			CommonEIGRules.assignMarkToNodeAndNeighbor(eig, nodeFrom, nodeTo,rule);
 			assignAnnotations(nodeFrom, nodeTo, rule);
 		} else if (VISITED == rule) {
 			CommonEIGRules.applyRuleToNode(eig, nodeFrom,rule,0);

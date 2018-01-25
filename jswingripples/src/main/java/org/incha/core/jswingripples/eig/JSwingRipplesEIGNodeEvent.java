@@ -17,7 +17,7 @@ public class JSwingRipplesEIGNodeEvent extends JSwingRipplesEvent {
     /**
 	 *  Event constant for {@link JSwingRipplesEIGNode} mark changes. Will occur if  {@link JSwingRipplesEIGNode#setMark(String)} was called.
 	 */
-	public static final int NODE_MARK_CHANGED = 1;
+	public static final int NODE_STATUS_CHANGED = 1;
 
 	/**
 	 * Event constant for {@link JSwingRipplesEIGNode} probability changes. Will occur if {@link JSwingRipplesEIGNode#setProbability(String)} was called.
@@ -35,9 +35,9 @@ public class JSwingRipplesEIGNodeEvent extends JSwingRipplesEvent {
 
 	private int type = 0;
 
-    private final String newValue;
+    private final NodeEventData newValue;
 
-    private final String oldValue;
+    private final NodeEventData oldValue;
 
 	/**
 	 * @param node
@@ -46,7 +46,9 @@ public class JSwingRipplesEIGNodeEvent extends JSwingRipplesEvent {
 	 * Type of the node event, where type is one of the constants defined in {@link JSwingRipplesEIGNodeEvent}
 	 */
 	public JSwingRipplesEIGNodeEvent(final JSwingRipplesEIGNode node,
-	        final int type, final String oldValue, final String newValue) {
+									 final int type,
+									 final NodeEventData oldValue,
+									 final NodeEventData newValue) {
 		super(node);
 		this.type = type;
 		this.newValue = newValue;
@@ -73,13 +75,13 @@ public class JSwingRipplesEIGNodeEvent extends JSwingRipplesEvent {
     /**
      * @return the value.
      */
-    public String getNewValue() {
+    public NodeEventData getNewValue() {
         return newValue;
     }
     /**
      * @return old value.
      */
-    public String getOldValue() {
+    public NodeEventData getOldValue() {
         return oldValue;
     }
 }

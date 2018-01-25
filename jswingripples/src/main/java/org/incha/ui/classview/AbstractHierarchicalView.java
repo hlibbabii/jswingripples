@@ -2,6 +2,7 @@ package org.incha.ui.classview;
 
 import org.incha.core.JavaProject;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNode;
+import org.incha.ui.table.column.renderer.ColumnRenderer;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -22,7 +23,7 @@ public abstract class AbstractHierarchicalView extends JTable {
      */
     private MemberHierarchySupport support = new MemberHierarchySupport(
             new LinkedList<JSwingRipplesEIGNode>());
-    private Map<JSwingRipplesEIGNode, Boolean> expandedStates = new HashMap<JSwingRipplesEIGNode, Boolean>();
+    private Map<JSwingRipplesEIGNode, Boolean> expandedStates = new HashMap<>();
     private final JavaProject project;
 
     /**
@@ -39,14 +40,13 @@ public abstract class AbstractHierarchicalView extends JTable {
         setDragEnabled(false);
         setRowHeight(20);
 
-        final TableCellRenderer cellRenderer = createCellRenderer();
         final TableCellRenderer headerRenderer = createHeaderRenderer();
 
         //set renderer to all columns
         final int count = getColumnCount();
         for (int i = 0; i < count; i++) {
             final TableColumn column = getColumnModel().getColumn(i);
-            column.setCellRenderer(cellRenderer);
+            column.setCellRenderer(createCellRenderer(i));
             if (headerRenderer != null) {
                 column.setHeaderRenderer(headerRenderer);
             }
@@ -70,6 +70,7 @@ public abstract class AbstractHierarchicalView extends JTable {
     protected TableCellRenderer createHeaderRenderer() {
         return new HeaderRenderer(this);
     }
+
     public void setData(final Collection<JSwingRipplesEIGNode> members) {
         getClassHierarchyModel().clear();
         support = new MemberHierarchySupport(members);
@@ -85,10 +86,15 @@ public abstract class AbstractHierarchicalView extends JTable {
      * @return
      */
     protected abstract ClassTreeDataModel createModel();
+
     /**
      * @return table cell renderer
+     * @param column
      */
-    protected abstract AbstractMemberRenderer createCellRenderer();
+    private AbstractMemberRenderer createCellRenderer(int column) {
+        ColumnRenderer columnRenderer = ((ClassTreeDataModel) getModel()).getColumnRenderer(column);
+        return new AbstractMemberRenderer(columnRenderer);
+    }
 
     public boolean isExpanded(final JSwingRipplesEIGNode member) {
         return Boolean.TRUE == expandedStates.get(member);
@@ -100,7 +106,7 @@ public abstract class AbstractHierarchicalView extends JTable {
         return (ClassTreeDataModel) getModel();
     }
 
-    protected void expandOrCollapse(Point point) {
+    private void expandOrCollapse(Point point) {
         final ClassTreeDataModel model = getClassHierarchyModel();
         final JSwingRipplesEIGNode m = getSelectedItem(point);
 
@@ -142,10 +148,10 @@ public abstract class AbstractHierarchicalView extends JTable {
         return model.getValueAt(row);
     }
 
-    protected boolean isCommentColumn(Point point) {
+    protected boolean isColumnEditable(Point point) {
         final int columnIndex = columnAtPoint(point);
         ClassTreeDataModel model = (ClassTreeDataModel) getModel();
-        return model.isCommentColumn(columnIndex);
+        return model.isCellEditable(0, columnIndex);
     }
     /**
      * @param member
@@ -158,7 +164,7 @@ public abstract class AbstractHierarchicalView extends JTable {
      * @param member
      * @return
      */
-    public int getHierarchyDepth(final JSwingRipplesEIGNode member) {
+    private int getHierarchyDepth(final JSwingRipplesEIGNode member) {
         return support.getHierarchyDepth(member);
     }
     /**

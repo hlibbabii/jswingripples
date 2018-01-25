@@ -25,6 +25,7 @@ public  class JSwingRipplesEIGNode {
 	private String probability;
 	private String annotation;
 	private boolean annotationEditedManually = false;
+	private JSwingRipplesEIGNode changePropagationSource;
 
 	private final IMember nodeMember; 
 
@@ -164,23 +165,16 @@ public  class JSwingRipplesEIGNode {
 		return false;
 	}
 
-	/**
-	 * associates EIG mark with the node. Typically, EIG marks are used to
-	 * denote the status of the node's underlying member during Incremental
-	 * Change process.
-	 *
-	 * @param mark
-	 *            EIG mark to be associated with this node
-	 * @see #getMark()
-	 */
-	public void setMark(final Mark mark) {
-		if (this.mark == mark) {
-		    return;
-		}
+	public void changeStatus(Status status) {
+		Status oldStatus = Status.create(mark, changePropagationSource, annotation);
+		mark = status.getMark();
+		changePropagationSource = status.getPropagationSource();
+		setAnnotationIfNotEditedManually(status.getAnnotation());
 
-		final Mark oldMark = this.mark;
-		this.mark = mark;
-		eig.fireJRipplesEIGChanged(node, JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED, oldMark.getValue(), mark.getValue());
+		eig.fireJRipplesEIGChanged(node, JSwingRipplesEIGNodeEvent.NODE_STATUS_CHANGED,
+				NodeEventData.create(oldStatus),
+				NodeEventData.create(status)
+		);
 	}
 
     /**
@@ -233,7 +227,7 @@ public  class JSwingRipplesEIGNode {
 		//will not be put into the EIG history
 
 		eig.fireJRipplesEIGChanged(node, JSwingRipplesEIGNodeEvent.NODE_PROBABILITY_CHANGED,
-		        oldProbability, probability);
+		        NodeEventData.create(oldProbability), NodeEventData.create(probability));
 	}
 
 	/**
@@ -270,12 +264,20 @@ public  class JSwingRipplesEIGNode {
     public JSwingRipplesEIG getEig() {
         return eig;
     }
-    
-    public String getAbsolutePath() {
+
+	public JSwingRipplesEIGNode getChangePropagationSource() {
+		return changePropagationSource;
+	}
+
+	public String getAbsolutePath() {
         String absPath = null;
         if(nodeMember == null) return "";
         if(nodeMember.getCompilationUnit() != null) absPath = nodeMember.getCompilationUnit().getPath().toString();
         if(absPath != null) return absPath;
         return "";
     }
+
+	public void initMark(Mark mark) {
+		this.mark = mark;
+	}
 }
