@@ -891,8 +891,8 @@ public class JSwingRipplesEIG implements Cloneable{
 	public void flattenEIG() {
 
 		final JSwingRipplesEIGEdge edges[]=getAllEdges();
-		final Set<JSwingRipplesEIGNode> nodesFrom=new HashSet<JSwingRipplesEIGNode>();
-		final Set<JSwingRipplesEIGNode> nodesTo=new HashSet<JSwingRipplesEIGNode>();
+		final Set<JSwingRipplesEIGNode> nodesFrom=new HashSet<>();
+		final Set<JSwingRipplesEIGNode> nodesTo=new HashSet<>();
 		for (int i=0;i<edges.length;i++) {
 			nodesFrom.clear();
 			nodesTo.clear();
@@ -1044,7 +1044,9 @@ public class JSwingRipplesEIG implements Cloneable{
 	}
 
     protected void fireJRipplesEIGChanged(final JSwingRipplesEIGNode item,
-            final int type, final String oldValue, final String newValue) {
+										  final int type,
+										  final NodeEventData oldValue,
+										  final NodeEventData newValue) {
         final JSwingRipplesEIGNodeEvent event = new JSwingRipplesEIGNodeEvent(item,
                 type, oldValue, newValue);
 

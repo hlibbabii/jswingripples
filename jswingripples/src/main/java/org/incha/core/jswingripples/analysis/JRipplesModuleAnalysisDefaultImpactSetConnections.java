@@ -88,7 +88,7 @@ public class JRipplesModuleAnalysisDefaultImpactSetConnections extends JRipplesA
 		boolean dirty=false;
 
 		final JSwingRipplesEIGNodeEvent[] nodeEvents=event.getNodeTypedEvents(
-				new int[] {JSwingRipplesEIGNodeEvent.NODE_ADDED,JSwingRipplesEIGNodeEvent.NODE_REMOVED,JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED});
+				new int[] {JSwingRipplesEIGNodeEvent.NODE_ADDED,JSwingRipplesEIGNodeEvent.NODE_REMOVED,JSwingRipplesEIGNodeEvent.NODE_STATUS_CHANGED});
 		if (nodeEvents.length==0) return;
 
         for (int i=0;i<nodeEvents.length;i++) {
@@ -104,7 +104,7 @@ public class JRipplesModuleAnalysisDefaultImpactSetConnections extends JRipplesA
 					if (impact_set.addAll(Arrays.asList(eig.getNodeMembers(changedNode))))  dirty=true;
 					break;
 				}
-				case JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED: {
+				case JSwingRipplesEIGNodeEvent.NODE_STATUS_CHANGED: {
 					final Mark mark=changedNode.getMark();
 					if (mark == CHANGED || mark == IMPACTED) {
 							if (impact_set.add(changedNode))  dirty=true;

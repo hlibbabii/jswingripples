@@ -5,10 +5,9 @@ import org.incha.core.jswingripples.eig.JSwingRipplesEIGEvent;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGListener;
 import org.incha.core.jswingripples.eig.JSwingRipplesEIGNodeEvent;
 import org.incha.core.jswingripples.eig.JSwingRipplesEvent;
-import org.incha.core.jswingripples.eig.Mark;
 import org.incha.core.jswingripples.eig.history.EdgeAddedAction;
 import org.incha.core.jswingripples.eig.history.EdgeRemovedAction;
-import org.incha.core.jswingripples.eig.history.MarkSetAction;
+import org.incha.core.jswingripples.eig.history.StatusSetAction;
 import org.incha.core.jswingripples.eig.history.NodeAddedAction;
 import org.incha.core.jswingripples.eig.history.NodeRemovedAction;
 import org.incha.core.jswingripples.eig.history.ProbabilitySetAction;
@@ -45,14 +44,18 @@ public class UndoActionsBuilder implements JSwingRipplesEIGListener {
                     case JSwingRipplesEIGNodeEvent.NODE_REMOVED:
                         this.actions.add(new NodeRemovedAction(e.getSource()));
                         break;
-                    case JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED:
-                        this.actions.add(new MarkSetAction(e.getSource(),
-                                Mark.of(e.getOldValue()),
-                                Mark.of(e.getNewValue())));
+                    case JSwingRipplesEIGNodeEvent.NODE_STATUS_CHANGED:
+                        this.actions.add(new StatusSetAction(e.getSource(),
+                                e.getOldValue(),
+                                e.getNewValue()
+                        ));
                         break;
                     case JSwingRipplesEIGNodeEvent.NODE_PROBABILITY_CHANGED:
-                        this.actions.add(new ProbabilitySetAction(e.getSource(),
-                                e.getOldValue(), e.getNewValue()));
+                        this.actions.add(new ProbabilitySetAction(
+                                e.getSource(),
+                                e.getOldValue().getProbability(),
+                                e.getNewValue().getProbability()
+                        ));
                         break;
                         default:
                             //impossible

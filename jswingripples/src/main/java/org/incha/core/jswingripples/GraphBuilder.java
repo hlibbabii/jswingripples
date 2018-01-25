@@ -168,7 +168,7 @@ public class GraphBuilder implements JSwingRipplesEIGListener{
         if (!event.hasNodeEvents()) return;
 
         final JSwingRipplesEIGNodeEvent[] nodeEvents=event.getNodeTypedEvents(
-                new int[] {JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED, JSwingRipplesEIGNodeEvent.NODE_REMOVED,
+                new int[] {JSwingRipplesEIGNodeEvent.NODE_STATUS_CHANGED, JSwingRipplesEIGNodeEvent.NODE_REMOVED,
                         JSwingRipplesEIGNodeEvent.NODE_ADDED});
         if (nodeEvents.length==0) return;
 
@@ -185,7 +185,7 @@ public class GraphBuilder implements JSwingRipplesEIGListener{
                     //TODO
                     break;
                 }
-                case JSwingRipplesEIGNodeEvent.NODE_MARK_CHANGED: {
+                case JSwingRipplesEIGNodeEvent.NODE_STATUS_CHANGED: {
                     final Mark mark=changedNode.getMark();
                     if (mark!=null)
                     {

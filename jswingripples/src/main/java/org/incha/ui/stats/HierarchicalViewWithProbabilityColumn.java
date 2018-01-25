@@ -8,6 +8,7 @@ import org.incha.ui.table.column.ClassShortNameColumn;
 import org.incha.ui.table.column.CommentColumn;
 import org.incha.ui.table.column.MarkColumn;
 import org.incha.ui.table.column.ProbabilityColumn;
+import org.incha.ui.table.column.PropagationSourceColumn;
 import org.incha.ui.table.column.SearchHitsColumn;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class HierarchicalViewWithProbabilityColumn extends HierarchicalView {
         return new ClassTreeDataModel(
                 new ClassShortNameColumn(this),
                 new MarkColumn(),
+                new PropagationSourceColumn(),
                 new ProbabilityColumn(),
                 new ClassFullNameColumn(),
                 new SearchHitsColumn(),
